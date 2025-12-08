@@ -26,7 +26,6 @@ const Nav: React.FC = () => {
       console.error('Logout failed', e)
     }
   }
-  console.log('Nav user:', user);
   return (
     <div className="relative">
       {/* <p>SSEDEE</p> Encabezado */}

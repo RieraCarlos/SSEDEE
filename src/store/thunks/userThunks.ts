@@ -71,7 +71,6 @@ export const updateUserProfile = createAsyncThunk<UserProfile, { userId: string;
     try {
       // Use the updates object directly to ensure id_club is included in the update
       const updatePayload = updates;
-      console.log('Updating user:', userId, 'with data:', updatePayload); // Added logging
       const { data, error } = await supabase
         .from("usuarios")
         .update(updatePayload)

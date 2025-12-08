@@ -45,8 +45,6 @@ export default function Login() {
   }, [isLoginView, dispatch]);
 
   const from = location.state?.from?.pathname || '/';
-  console.log('Cargando clubs: ', clubs);
-  console.log('Error clubs: ', clubsError); // Add this line
 
 
   const handleShowRegister = () => setIsLoginView(false);

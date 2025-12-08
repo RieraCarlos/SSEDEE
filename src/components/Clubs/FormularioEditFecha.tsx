@@ -67,7 +67,6 @@ export default function FormularioEditFecha({ matchDates, clubId }: FormularioEd
             ...prev,
             [recordId]: prev[recordId].filter((_, i) => i !== index)
         }));
-        console.log('Se esta removiendo la fecha: ', recordId, index);
     }, []);
 
     const handleUpdateDate = useCallback((recordId: string, index: number, value: string) => {

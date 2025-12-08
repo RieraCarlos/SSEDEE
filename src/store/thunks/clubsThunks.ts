@@ -48,7 +48,6 @@ export const uploadLogoAndCreateClub = createAsyncThunk(
                 console.error("No active session found before upload. User is not authenticated.");
                 throw new Error("No active session found before upload. User is not authenticated.");
             }
-            console.log("Session found, proceeding with upload.");
 
             // Subir al bucket
             const {data: storageData, error: storageError} = await supabase
@@ -302,7 +301,6 @@ export const editCupoSelectionTime = createAsyncThunk(
 export const updateMatchDates = createAsyncThunk(
     "clubs/updateMatchDates",
     async({recordId, newDates}: {recordId: string, newDates: string | string[]}) => {
-        console.log('Updating match dates for recordId:', recordId, 'with newDates:', newDates); // Added logging
         // Update the fecha_horarios record with new dates
         const { data, error } = await supabase
         .from('fecha_horarios')
@@ -322,7 +320,6 @@ export const updateMatchDates = createAsyncThunk(
 export const deleteMatchDate = createAsyncThunk(
     "clubs/deleteMatchDate",
     async({recordId}:{recordId:string}) => {
-        console.log('Eliminando fecha: ', recordId );
         //
         const {data, error} = await supabase
         .from('fecha_horarios')
@@ -332,7 +329,6 @@ export const deleteMatchDate = createAsyncThunk(
         .single();
 
         if(error){
-            console.log("Supabase delete error: ", error);
             throw error
         }
         //
@@ -343,7 +339,6 @@ export const deleteMatchDate = createAsyncThunk(
 export const createMatchDates = createAsyncThunk(
     "clubs/createMatchDates",
     async({clubId, dates}: {clubId: string, dates: string[]}) => {
-        console.log('Creating new match dates for clubId:', clubId, 'with dates:', dates); // Added logging
         const { data, error } = await supabase
         .from('fecha_horarios')
         .insert([{ id_club: clubId, fechas: dates }])
@@ -370,7 +365,6 @@ export const updateMatchHours = createAsyncThunk(
         .eq('id', recordId)
         .select()
         .single();
-        console.log('Array en supa: ', horario)
         if (error) throw error;
         // Asegurar que devolvemos el objeto completo
         return data || { id: recordId, horario };
