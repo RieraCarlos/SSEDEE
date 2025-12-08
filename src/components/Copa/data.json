@@ -1,0 +1,52 @@
+[
+  {
+    "equipo": "Panteras FC",
+    "jugadores": [
+      {
+        "id":1,
+        "camiseta": 1,
+        "nombre": "Pedro Alvarado",
+        "gol": 0,
+        "amarilla": 0,
+        "roja": 0,
+        "estado": "En cancha",
+        "tipoJugador":"titular"
+      },
+      {
+        "id":2,
+        "camiseta": 12,
+        "nombre": "Sofía Tapia",
+        "gol": 0,
+        "amarilla": 0,
+        "roja": 0,
+        "estado": "En cancha",
+        "tipoJugador":"titular"
+      }
+    ]
+  },
+  {
+    "equipo": "Leonas FC",
+    "jugadores": [
+      {
+        "id":1,
+        "camiseta": 1,
+        "nombre": "Pedro ÑAlvarado",
+        "gol": 0,
+        "amarilla": 0,
+        "roja": 0,
+        "estado": "En cancha",
+        "tipoJugador":"titular"
+      },
+      {
+        "id":2,
+        "camiseta": 12,
+        "nombre": "Sofía Ñapia",
+        "gol": 0,
+        "amarilla": 0,
+        "roja": 0,
+        "estado": "En cancha",
+        "tipoJugador":"titular"
+      }
+    ]
+  }
+]

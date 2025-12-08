@@ -1,0 +1,3 @@
+import {createClient} from "@supabase/supabase-js";
+
+export const supabase = createClient("https://zeiwwanzzgkwdwfqbqcw.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaXd3YW56emdrd2R3ZnFicWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MzU2MjMsImV4cCI6MjA3OTAxMTYyM30.16MFBffz4sndIHfHyuTObFt6FMaP2oHAC7ifXeSLIcc")

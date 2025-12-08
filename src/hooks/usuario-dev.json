@@ -1,0 +1,959 @@
+[
+    {
+        "nombre": "Pedro Alvarado",
+        "numero_camisa": 1,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero",
+        "email": "pedro.alvarado@indeficticio.com",
+        "role":"jugador"
+        },
+        {
+        "nombre": "Diana Pazmiño",
+        "numero_camisa": 2,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "diana.pazmino@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Javier Córdova",
+        "numero_camisa": 3,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "javier.cordova@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Carlos Garcés",
+        "numero_camisa": 4,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Izquierdo",
+        "email": "carlos.garces@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Luis Caicedo",
+        "numero_camisa": 5,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Defensivo",
+        "email": "luis.caicedo@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Karen Moreira",
+        "numero_camisa": 6,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Derecho",
+        "email": "karen.moreira@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Édison Mina",
+        "numero_camisa": 7,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Derecho",
+        "email": "edison.mina@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Alexandra López",
+        "numero_camisa": 8,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "alexandra.lopez@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Roberto Delgado",
+        "numero_camisa": 9,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Centro",
+        "email": "roberto.delgado@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Andrea Valencia",
+        "numero_camisa": 10,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Ofensivo",
+        "email": "andrea.valencia@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Jorge Zambrano",
+        "numero_camisa": 11,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Izquierdo",
+        "email": "jorge.zambrano@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Sofía Tapia",
+        "numero_camisa": 12,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero Suplente",
+        "email": "sofia.tapia@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Pablo Intriago",
+        "numero_camisa": 13,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central Suplente",
+        "email": "pablo.intriago@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Verónica Pérez",
+        "numero_camisa": 14,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "veronica.perez@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Juan Mendoza",
+        "numero_camisa": 15,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Derecho Suplente",
+        "email": "juan.mendoza@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Gabriela Cedeño",
+        "numero_camisa": 16,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista de Banda",
+        "email": "gabriela.cedeno@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Ricardo Noboa",
+        "numero_camisa": 17,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Segundo Delantero",
+        "email": "ricardo.noboa@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Valeria Jaramillo",
+        "numero_camisa": 18,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista de Contención",
+        "email": "valeria.jaramillo@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Daniel Herrera",
+        "numero_camisa": 19,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Suplente",
+        "email": "daniel.herrera@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "Estefanía Flores",
+        "numero_camisa": 20,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Izquierdo Suplente",
+        "email": "estefania.flores@indeficticio.com",
+        "role":"jugador"
+
+        },
+        {
+        "nombre": "José Cevallos",
+        "numero_camisa": 1,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero",
+        "email": "jose.cevallos@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "María Quiñónez",
+        "numero_camisa": 2,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "maria.quinonez@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Fernando León",
+        "numero_camisa": 3,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "fernando.leon@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Jorge Cruz",
+        "numero_camisa": 4,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Derecho",
+        "email": "jorge.cruz@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Cristian Noboa",
+        "numero_camisa": 5,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Defensivo",
+        "email": "cristian.noboa@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Gabriela Espinosa",
+        "numero_camisa": 6,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Izquierdo",
+        "email": "gabriela.espinosa@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Ángel Mena",
+        "numero_camisa": 7,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Derecho",
+        "email": "angel.mena@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Renata Troya",
+        "numero_camisa": 8,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "renata.troya@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Enner Valencia",
+        "numero_camisa": 9,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Centro",
+        "email": "enner.valencia@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Damián Díaz",
+        "numero_camisa": 10,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Ofensivo",
+        "email": "damian.diaz@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Felipe Caicedo",
+        "numero_camisa": 11,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Izquierdo",
+        "email": "felipe.caicedo@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Viviana Torres",
+        "numero_camisa": 12,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero Suplente",
+        "email": "viviana.torres@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Piero Hincapié",
+        "numero_camisa": 13,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central Suplente",
+        "email": "piero.hincapie@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Moisés Caicedo",
+        "numero_camisa": 14,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Box-to-Box",
+        "email": "moises.caicedo@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Leonardo Campana",
+        "numero_camisa": 15,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Suplente",
+        "email": "leonardo.campana@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Daniela Sánchez",
+        "numero_camisa": 16,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista de Contención",
+        "email": "daniela.sanchez@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Gonzalo Plata",
+        "numero_camisa": 17,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Suplente",
+        "email": "gonzalo.plata@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Jhegson Méndez",
+        "numero_camisa": 18,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Suplente",
+        "email": "jhegson.mendez@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Esteban Dreer",
+        "numero_camisa": 19,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Suplente (Comodín)",
+        "email": "esteban.dreer@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Ligia Álvarez",
+        "numero_camisa": 20,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Suplente",
+        "email": "ligia.alvarez@unionguayas.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Miguel Tenorio",
+        "numero_camisa": 1,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero",
+        "email": "miguel.tenorio@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Ana Luisa Jácome",
+        "numero_camisa": 2,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "ana.jacome@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Patricio Borja",
+        "numero_camisa": 3,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "patricio.borja@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Esteban Lema",
+        "numero_camisa": 4,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Derecho",
+        "email": "esteban.lema@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Juan Carlos Carvajal",
+        "numero_camisa": 5,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Defensivo",
+        "email": "juan.carvajal@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Adriana Ramos",
+        "numero_camisa": 6,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Izquierdo",
+        "email": "adriana.ramos@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Geovanny Guaman",
+        "numero_camisa": 7,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Derecho",
+        "email": "geovanny.guaman@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Samantha Viteri",
+        "numero_camisa": 8,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "samantha.viteri@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Wilson Salazar",
+        "numero_camisa": 9,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Centro",
+        "email": "wilson.salazar@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Sofía Paredes",
+        "numero_camisa": 10,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Ofensivo",
+        "email": "sofia.paredes@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Marcelo Torres",
+        "numero_camisa": 11,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Extremo Izquierdo",
+        "email": "marcelo.torres@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Jéssica Orozco",
+        "numero_camisa": 12,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Arquero Suplente",
+        "email": "jessica.orozco@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Daniel Paredes",
+        "numero_camisa": 13,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Defensa Central Suplente",
+        "email": "daniel.paredes@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Laura Mena",
+        "numero_camisa": 14,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista de Contención",
+        "email": "laura.mena@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Ricardo Jaramillo",
+        "numero_camisa": 15,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Lateral Suplente (Derecho)",
+        "email": "ricardo.jaramillo@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Elena Cedeño",
+        "numero_camisa": 16,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista de Banda",
+        "email": "elena.cedeno@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Pablo Yépez",
+        "numero_camisa": 17,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Segundo Delantero",
+        "email": "pablo.yepez@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Francisco Hidalgo",
+        "numero_camisa": 18,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Mediocampista Suplente",
+        "email": "francisco.hidalgo@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Verónica Pérez",
+        "numero_camisa": 19,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Delantero Suplente",
+        "email": "veronica.perez@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre": "Hugo Sarmiento",
+        "numero_camisa": 20,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177687.png",
+        "posicion_de_juego": "Comodín Defensivo",
+        "email": "hugo.sarmiento@condoresfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Alexander Domínguez",
+        "numero_camisa": 1,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Arquero",
+        "email": "a.dominguez@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Robert Arboleda",
+        "numero_camisa": 2,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "r.arboleda@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Piero Hincapié",
+        "numero_camisa": 3,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "p.hincapie@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Byron Castillo",
+        "numero_camisa": 4,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Lateral Derecho",
+        "email": "b.castillo@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Carlos Gruezo",
+        "numero_camisa": 5,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Defensivo",
+        "email": "c.gruezo@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Pervis Estupiñán",
+        "numero_camisa": 6,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Lateral Izquierdo",
+        "email": "p.estupinan@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Gonzalo Plata",
+        "numero_camisa": 7,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Extremo Derecho",
+        "email": "g.plata@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Jordy Alcívar",
+        "numero_camisa": 8,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "j.alcivar@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Enner Valencia",
+        "numero_camisa": 9,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Delantero Centro",
+        "email": "e.valencia@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Ángel Mena",
+        "numero_camisa": 10,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Ofensivo",
+        "email": "a.mena@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Michael Estrada",
+        "numero_camisa": 11,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Segundo Delantero",
+        "email": "m.estrada@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Hernán Galíndez",
+        "numero_camisa": 12,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Arquero Suplente",
+        "email": "h.galindez@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Félix Torres",
+        "numero_camisa": 13,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central Suplente",
+        "email": "f.torres@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Alan Franco",
+        "numero_camisa": 14,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Mixto",
+        "email": "a.franco@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Leonardo Campana",
+        "numero_camisa": 15,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Delantero Suplente",
+        "email": "l.campana@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Jhegson Méndez",
+        "numero_camisa": 16,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista de Contención",
+        "email": "j.mendez@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Jeremy Sarmiento",
+        "numero_camisa": 17,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Extremo Izquierdo",
+        "email": "j.sarmiento@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "William Pacho",
+        "numero_camisa": 18,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Suplente (Lateral/Central)",
+        "email": "w.pacho@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "José Cifuentes",
+        "numero_camisa": 19,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Suplente",
+        "email": "j.cifuentes@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Kendry Páez",
+        "numero_camisa": 20,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Ofensivo Suplente",
+        "email": "k.paez@volcanesfc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Darío Bone",
+        "numero_camisa": 1,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Arquero",
+        "email": "d.bone@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "William Rivera",
+        "numero_camisa": 2,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "w.rivera@eldoradofc.com"
+      },
+      {
+        "nombre_jugador": "Diana Castillo",
+        "numero_camisa": 3,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central",
+        "email": "d.castillo@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Walter Chalá",
+        "numero_camisa": 4,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Lateral Derecho",
+        "email": "w.chala@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Carlos Oña",
+        "numero_camisa": 5,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Defensivo",
+        "email": "c.ona@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Verónica Lema",
+        "numero_camisa": 6,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Lateral Izquierdo",
+        "email": "v.lema@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Julio Angulo",
+        "numero_camisa": 7,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Extremo Derecho",
+        "email": "j.angulo@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Kevin Minda",
+        "numero_camisa": 8,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Central",
+        "email": "k.minda@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Luis Armijos",
+        "numero_camisa": 9,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Delantero Centro",
+        "email": "l.armijos@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Estefanía Arias",
+        "numero_camisa": 10,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Ofensivo",
+        "email": "e.arias@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Joel Valencia",
+        "numero_camisa": 11,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Extremo Izquierdo",
+        "email": "j.valencia@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Ricardo Ortiz",
+        "numero_camisa": 12,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Arquero Suplente",
+        "email": "r.ortiz@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Sofía Guerrero",
+        "numero_camisa": 13,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Defensa Central Suplente",
+        "email": "s.guerrero@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Pedro Vite",
+        "numero_camisa": 14,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Mixto",
+        "email": "p.vite@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "José Quintero",
+        "numero_camisa": 15,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Lateral Derecho Suplente",
+        "email": "j.quintero@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Gabriela Paz",
+        "numero_camisa": 16,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista de Contención",
+        "email": "g.paz@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Renato Ibarra",
+        "numero_camisa": 17,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Extremo Suplente",
+        "email": "r.ibarra@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Michael Carcelén",
+        "numero_camisa": 18,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Mediocampista Suplente",
+        "email": "m.carcelen@eldoradofc.com",
+        "role":"jugador"
+
+      },
+      {
+        "nombre_jugador": "Kevin Rodríguez",
+        "numero_camisa": 19,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Delantero Suplente",
+        "email": "k.rodriguez@eldoradofc.com",
+        "role":"jugador"
+        
+      },
+      {
+        "nombre_jugador": "Rosa Tapia",
+        "numero_camisa": 20,
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/177/177660.png",
+        "posicion_de_juego": "Comodín Defensivo",
+        "email": "r.tapia@eldoradofc.com",
+        "role":"jugador"
+      },
+      {
+        "nombre": "Pedro Agente",
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/2862/2862596.png",
+        "email": "pedro.alvarado@indeficticio.com",
+        "role":"dt"
+
+      },
+      {
+        "nombre": "Juan Gonzalez",
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/2862/2862596.png",
+        "email": "juan.gonzalez@indeficticio.com",
+        "role":"dt"
+
+      },
+      {
+        "nombre": "Jose Jabancho",
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/2862/2862596.png",
+        "email": "jose.jabancho@indeficticio.com",
+        "role":"dt"
+
+      },
+      {
+        "nombre": "Benjamin Jaban",
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/2862/2862596.png",
+        "email": "benjamin.jabano@indeficticio.com",
+        "role":"dt"
+
+      },
+      {
+        "nombre": "Jhoel Jaramillo",
+        "link_de_imagen": "https://cdn-icons-png.flaticon.com/512/2862/2862596.png",
+        "email": "jhoel.jaramillo@indeficticio.com",
+        "role":"dt"
+      },
+      {
+        "nombre":"Alvarado Punin",
+        "email":"alvarado.punin@indeficticio.com",
+        "link_de_imagen":"https://cdn-icons-png.flaticon.com/256/452/452710.png",
+        "role":"admin"
+    },
+        {
+            "nombre":"Genesis Villaval",
+            "email":"genesis.villaval@indeficticio.com",
+            "link_de_imagen":"https://cdn-icons-png.flaticon.com/256/452/452710.png",
+            "role":"admin"
+
+        },
+        {
+            "nombre":"Fernando Prado",
+            "email":"fernando.prado@indeficticio.com",
+            "link_de_imagen":"https://cdn-icons-png.flaticon.com/256/452/452710.png",
+            "role":"admin"
+
+        },
+        {
+            "nombre":"Jimmy Reinoso",
+            "email":"jimmy.reinoso@indeficticio.com",
+            "link_de_imagen":"https://cdn-icons-png.flaticon.com/256/452/452710.png",
+            "role":"admin"
+        }
+
+]
