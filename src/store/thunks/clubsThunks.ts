@@ -50,17 +50,19 @@ export const uploadLogoAndCreateClub = createAsyncThunk(
             }
 
             // Subir al bucket
+            {/*}
             const {data: storageData, error: storageError} = await supabase
             .storage
             .from('logo_Clubs') 
             .upload(fileName, file);
-
+            
 
             if(storageError) {
                 // --- MORE DETAILED ERROR LOGGING ---
                 console.error("Error detallado de Supabase Storage:", storageError);
                 throw storageError;
             }
+            */}
     
             const logoUrl = supabase.storage.from("logo_Clubs").getPublicUrl(fileName).data.publicUrl;
     

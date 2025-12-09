@@ -1,3 +1,4 @@
+{/*
 import { useAuth } from "@/hooks/useAuth";
 import { useSchedule } from "./ScheduleContext";
 import { useLiveMatch } from "../../hooks/LiveMatchContext";
@@ -43,7 +44,7 @@ export default function C_MarcadorEnVivo() {
                                     </p>
                             </div>
                             <CardContent className="grid grid-cols-3 items-center gap-6">
-                                    {/*Local*/}
+                                    {/*Local
                                     <div className="flex flex-col items-center">
                                         <div className="grid h-20 w-20 place-items-center rounded-xl drop-shadow-[0_0_15px_rgba(10,233,138,0.15)]">
                                             <img src="https://img.pikbest.com/png-images/20240909/soccer-logo-or-football-club-sign-badge-football-logo-with-shield-vector-design_10824172.png!sw800" alt="" />
@@ -54,14 +55,14 @@ export default function C_MarcadorEnVivo() {
                                             {teamACards.red > 0 && <div className="w-4 h-5 bg-red-500 rounded flex items-center justify-center"><span className="text-white font-extrabold">{teamACards.red}</span></div>}
                                         </div>
                                     </div>
-                                    {/* Resultado */}
+                                    {/* Resultado 
                                     <div className="text-center">
                                         <div className="lg:text-5xl md:text-3xl text-2xl font-extrabold tabular-nums">
                                             <span className="text-4xl font-bold">{scoreA} - {scoreB}</span>
                                         </div>
                                         <span className="text-[10px] text-gray-400">{activeMatch.time}</span>
                                     </div>
-                                    {/* Visita */}
+                                    {/* Visita 
                                     <div className="flex flex-col items-center">
                                         <div className="grid h-20 w-20 place-items-center rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">
                                             <img src="https://img.pikbest.com/png-images/20240909/soccer-logo-or-football-club-sign-badge-football-logo-with-shield-vector-design_10824172.png!sw800" alt="" />
@@ -75,7 +76,7 @@ export default function C_MarcadorEnVivo() {
                             </CardContent>
                         </Card>
                     )}
-                    {/* --- SECCIÓN DEL DIALOG PARA EL ADMIN --- */}
+                    {/* --- SECCIÓN DEL DIALOG PARA EL ADMIN --- 
                     {user?.role === 'admin' && (
                         <Dialog open={isPanelOpen} onOpenChange={setIsPanelOpen}>
                             <DialogTrigger asChild>
@@ -96,3 +97,5 @@ export default function C_MarcadorEnVivo() {
         </>
     )
 }
+
+*/}

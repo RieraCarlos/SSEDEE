@@ -1,3 +1,4 @@
+{/*
 "use client"
 
 import * as React from "react"
@@ -554,3 +555,4 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     </Drawer>
   )
 }
+  */}
