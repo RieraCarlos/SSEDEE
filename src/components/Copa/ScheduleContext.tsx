@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, type ReactNode} from 'react';
 
 // 1. Definimos la forma de nuestros datos y del contexto
 interface Match {

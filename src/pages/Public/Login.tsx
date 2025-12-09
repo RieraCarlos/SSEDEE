@@ -4,9 +4,8 @@ import { LoginForm } from "@/components/auth/login-form"
 import RegisterForm from "@/components/auth/register-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { signIn, signUp } from "@/store/thunks/authThunks";
+import { signIn} from "@/store/thunks/authThunks";
 import { useEffect, useState } from "react";
-import { getDefaultRouteForRole } from "@/utils/navigation";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
 import type { Club } from "@/api/type/clubs.api";
@@ -20,7 +19,6 @@ export default function Login() {
   const [avatarUrls, setAvatarUrls] = useState<string[]>([]);
 
   const clubs = useAppSelector((state) => state.clubs.clubs as Club[]);
-  const clubsError = useAppSelector((state) => state.clubs.error); // Add this line
 
   // Fetch clubs and avatars when user switches to register view
   useEffect(() => {

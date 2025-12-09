@@ -3,7 +3,7 @@ export interface UserProfile {
     id: string;
     created_at?: string;
     id_club?: string;
-    email?: string;
+    email: string;
     fullname?: string;
     role?: string;
     posicion?: string;

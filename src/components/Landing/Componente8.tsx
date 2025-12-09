@@ -1,5 +1,4 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Users } from "lucide-react"
 import { useEffect, useState } from "react"
 import { getAllClubsWithPlayers, type ClubWithPlayers } from "../../services/clubs.services"
 

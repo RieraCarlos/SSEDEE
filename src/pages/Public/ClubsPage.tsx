@@ -1,7 +1,8 @@
+{/*
 import { useEffect } from "react";
-import { useDispatch, UseDispatch, useSelector } from "react-redux";
-import { fetchClubs } from "@/store/thunks/clubThunks";
-import ClubList from "@/components/Clubs/ClubList";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClubs } from "@/store/thunks/clubsThunks";
+import ClubList from "@/components/Clubs/clubsList";
 
 export default function ClubsPage(){
     const dispatch = useDispatch();
@@ -20,3 +21,4 @@ export default function ClubsPage(){
         </div>
     )
 }
+*/}

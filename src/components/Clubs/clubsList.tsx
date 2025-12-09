@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
@@ -8,7 +8,7 @@ export default function ClubList() {
         dispatch(fetchClubs());
     }, []);
     
-    const { clubs, loading, error } = useAppSelector((state) => state.clubs);
+    const { clubs} = useAppSelector((state) => state.clubs);
 
     return (
         <div className="space-y-4">
@@ -30,7 +30,7 @@ export default function ClubList() {
                         className="p-4 border rounded-lg shadow hover:shadow-md transition"
                     >
                         <h3 className="font-bold text-lg">{club.name}</h3>
-                        <p className="text-gray-600">Activo: {club.is_active ? 'Sí' : 'No'}</p>
+                        {/*<p className="text-gray-600">Activo: {club.is_active ? 'Sí' : 'No'}</p>*/}
                         <p className="text-gray-600">Creado: {club.created_at}</p>
                     </li>
                 ))}

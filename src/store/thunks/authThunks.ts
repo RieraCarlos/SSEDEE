@@ -6,6 +6,21 @@ import { setAuthLoading, setAuthUser, setAuthError, clearAuth } from '../slices/
 import type { AppDispatch } from '@/store/store'
 import type { AuthUser, SignUpData } from '@/api/type/auth.api'
 
+// Helper function to validate and transform profile to AuthUser
+const validateAndCreateAuthUser = (profile: any): AuthUser | null => {
+  if (profile && profile.id && profile.email && profile.fullname && profile.role) {
+    return {
+      id: profile.id,
+      email: profile.email,
+      role: profile.role,
+      id_club: profile.id_club || null,
+      fullname: profile.fullname,
+    };
+  }
+  return null;
+};
+
+
 // 1) Inicializar sesión (al cargar la app) — mapear usuario en tabla `users`
 export const initAuth = () => async (dispatch: AppDispatch) => {
   dispatch(setAuthLoading(true));
@@ -14,10 +29,11 @@ export const initAuth = () => async (dispatch: AppDispatch) => {
     const userId = sessionRes?.user?.id
     if (userId) {
       const { data: profile } = await AuthService.getProfile(userId);
-      if (profile) {
-        dispatch(setAuthUser(profile as AuthUser))
-        // NO redirigir aquí — dejar que el usuario navegue libremente
+      const authUser = validateAndCreateAuthUser(profile);
+      if (authUser) {
+        dispatch(setAuthUser(authUser))
       } else {
+        // Profile is incomplete or missing, treat as logged out
         dispatch(clearAuth())
       }
     } else {
@@ -34,9 +50,11 @@ export const initAuth = () => async (dispatch: AppDispatch) => {
     if (session?.user) {
       const userId = session.user.id
       const { data: profile } = await AuthService.getProfile(userId)
-      if (profile) {
-        dispatch(setAuthUser(profile as AuthUser))
-        // NO redirigir aquí — solo actualizar el estado
+      const authUser = validateAndCreateAuthUser(profile);
+      if (authUser) {
+        dispatch(setAuthUser(authUser))
+      } else {
+        dispatch(clearAuth())
       }
     } else {
       dispatch(clearAuth())
@@ -53,15 +71,22 @@ export const signIn = createAsyncThunk(
       const { error, data } = await AuthService.signIn(email, password)
       if (error) throw error
       const userId = data?.session?.user?.id
-      const userEmail = data?.session?.user?.email
-      const userRole = data?.session?.user?.role
       if (!userId) throw new Error('No se obtuvo id de usuario')
+
       const { data: profile } = await AuthService.getProfile(userId)
-      // If profile doesn't exist in usuarios table, use auth user data as fallback
-      const userProfile = profile || { id: userId, email: userEmail, role: userRole, id_club: null }
-      dispatch(setAuthUser(userProfile as AuthUser))
+      const authUser = validateAndCreateAuthUser(profile);
+
+      if (!authUser) {
+        // This case can happen if the DB trigger failed for an old user.
+        // We log them out to prevent an inconsistent state.
+        await AuthService.signOut();
+        dispatch(clearAuth());
+        throw new Error('Tu perfil de usuario está incompleto o dañado. Por favor, contacta a soporte.');
+      }
       
-      return userProfile
+      dispatch(setAuthUser(authUser))
+      
+      return authUser
     } catch (err: any) {
       dispatch(setAuthError(err?.message ?? 'Error en inicio de sesión'))
       return rejectWithValue(err?.message ?? 'Error en inicio de sesión')
@@ -94,7 +119,6 @@ export const signUp = createAsyncThunk(
       dispatch(setAuthLoading(true));
 
       // 1. Prepara los datos del perfil que se pasarán a Supabase.
-      //    Estos datos se almacenarán en `raw_user_meta_data` y un trigger los usará.
       const profileData = {
         role,
         id_club: id_club || null,
@@ -105,7 +129,6 @@ export const signUp = createAsyncThunk(
         fecha_nacimiento: fecha_nacimiento || null,
         lugar: lugar || null,
         avatar: avatar || null,
-        // Incluimos el email aquí para que el trigger pueda insertarlo en `usuarios`.
         email: email,
       };
 
@@ -122,20 +145,19 @@ export const signUp = createAsyncThunk(
       }
 
       // 3. Después del registro, el trigger en la DB ya debió crear el perfil.
-      //    Ahora obtenemos ese perfil para guardarlo en el estado de Redux.
       const { data: userProfile, error: profileError } = await AuthService.getProfile(userId);
 
       if (profileError) {
-        // Si hay un error aquí, puede que el trigger no exista o haya fallado.
         console.error("Error fetching profile after sign up, check DB trigger:", profileError);
         throw profileError;
       }
 
-      if (!userProfile) {
-        throw new Error("No se encontró el perfil de usuario después del registro. Asegúrate de que el trigger 'handle_new_user' esté funcionando correctamente en tu base de datos.");
+      const authUser = validateAndCreateAuthUser(userProfile);
+      if (!authUser) {
+        throw new Error("No se pudo validar el perfil de usuario después del registro. Asegúrate de que el trigger 'handle_new_user' esté funcionando y guardando el email.");
       }
       
-      dispatch(setAuthUser(userProfile as AuthUser));
+      dispatch(setAuthUser(authUser));
 
       return data;
     } catch (err: any) {

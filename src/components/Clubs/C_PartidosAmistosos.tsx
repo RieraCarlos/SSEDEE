@@ -1,3 +1,4 @@
+{/*
 "use client";
 
 import { useEffect, useState } from "react";
@@ -64,7 +65,7 @@ export default function C_PartidosAmistosos() {
 
   return (
     <div className="bg-black text-white min-h-screen p-4 md:p-6 lg:p-8 space-y-6">
-      {/* Barra superior: progreso + botón Club */}
+      {/* Barra superior: progreso + botón Club 
       <div className="flex items-center justify-between">
         <div className="flex-1 mr-4">
           <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
@@ -81,9 +82,9 @@ export default function C_PartidosAmistosos() {
         </button>
       </div>
 
-      {/* Fila superior: Cupos + Resultado + 3 chips (ver/actualizar/editar) */}
+      {/* Fila superior: Cupos + Resultado + 3 chips (ver/actualizar/editar) 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {/* Cupos (bloque grande izq) */}
+        {/* Cupos (bloque grande izq) 
         <div className="col-span-1 lg:col-span-2 bg-gray-800 border-2 border-gray-600 rounded-3xl h-56 flex items-center justify-center">
           {loading ? (
             <div className="animate-pulse w-2/3 h-10 bg-gray-700 rounded-lg" />
@@ -92,7 +93,7 @@ export default function C_PartidosAmistosos() {
           )}
         </div>
 
-        {/* Columna derecha */}
+        {/* Columna derecha 
         <div className="md:col-span-2 lg:col-span-2 space-y-4">
           <div className="bg-gray-800 border-2 border-gray-600 rounded-3xl h-20 flex items-center justify-center">
             {loading ? (
@@ -115,7 +116,7 @@ export default function C_PartidosAmistosos() {
         </div>
       </div>
 
-      {/* Copas abiertas */}
+      {/* Copas abiertas 
       <section>
         <h2 className="text-gray-300 text-lg md:text-xl mb-3">Copas abiertas</h2>
         <div className="space-y-3">
@@ -155,12 +156,12 @@ export default function C_PartidosAmistosos() {
         </div>
       </section>
 
-      {/* Crear partido amistoso */}
+      {/* Crear partido amistoso 
       <section className="space-y-3">
         <h2 className="text-gray-300 text-lg md:text-xl">Crear partido amistoso</h2>
 
         <div className="grid grid-cols-3 gap-6 items-center">
-          {/* tarjeta “nuevo” */}
+          {/* tarjeta “nuevo” 
           <button
             disabled={!data?.amistosos?.nuevoHabilitado}
             className={[
@@ -174,10 +175,10 @@ export default function C_PartidosAmistosos() {
             <span className="text-sm mt-1">[nuevo]</span>
           </button>
 
-          {/* VS */}
+          {/* VS 
           <div className="text-center font-extrabold text-2xl text-gray-300">VS</div>
 
-          {/* botón buscar */}
+          {/* botón buscar 
           <button
             disabled={!data?.amistosos?.buscarHabilitado}
             className={[
@@ -194,3 +195,4 @@ export default function C_PartidosAmistosos() {
     </div>
   );
 }
+*/}

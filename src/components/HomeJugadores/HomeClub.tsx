@@ -4,7 +4,6 @@ import C_Perfil from "../Clubs/C_Perfil";
 import C_UbicacionCancha from "../Clubs/C_UbicacionCancha";
 import C_Chalecos from "../Clubs/C_Chalecos";
 import C_Equipos from "../Clubs/C_Equipos";
-import C_CopasAbiertas from "../Clubs/C_CopasAbiertas";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { selectAuthUser } from "@/store/slices/authSlice";
 import { useAppDispatch } from "@/hooks/useAppDispatch";

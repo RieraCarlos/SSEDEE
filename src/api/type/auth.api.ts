@@ -16,7 +16,7 @@ export interface SignUpData {
 
 export interface AuthUser {
   id: string
-  email: string
+  email?: string
   role: Role
   id_club?: string | null
   fullname: string

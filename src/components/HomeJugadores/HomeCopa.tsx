@@ -1,3 +1,4 @@
+{/*
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -16,14 +17,11 @@ import C_TablaPosiciones from "../Copa/C_TablaPosiciones";
 import C_Alineacion from "../Copa/C_Alineacion";
 import C_RPC from "../Copa/C_RPC";
 
-/* ====== UI helpers ====== */
-{/*}
 const ChevronRight = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={props.className}>
     <path d="M9 18l6-6-6-6" />
   </svg>
 );
-*/}
 function Pill({ label }: { label: string }) {
   return (
     <button className="bg-green-500 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-[#0ae98a] transition-colors">
@@ -34,7 +32,6 @@ function Pill({ label }: { label: string }) {
 function Card({ className = "", children }: { className?: string; children: React.ReactNode }) {
   return <div className={`bg-[#13161c] border-2 border-[#13161c] rounded-2xl p-6 ${className}`}>{children}</div>;
 }
-{/*
 function LinkAction({ children = "Ver" }: { children?: React.ReactNode }) {
   return (
     <button className="group inline-flex items-center text-xs cursor-pointer   font-semibold text-[#0ae98a] hover:text-white transition-colors">
@@ -43,9 +40,7 @@ function LinkAction({ children = "Ver" }: { children?: React.ReactNode }) {
     </button>
   );
 }
-*/}
 
-/* ====== Tipos del JSON (flexibles) ====== */
 type Partido = {
   grupo?: string;
   estado?: string;
@@ -109,7 +104,6 @@ export default function HomeCopa({ user }: Props) {
   const partido = data?.partidoActual ?? {};
   const tabla = data?.tablaPosiciones ?? [];
 
-  /* ====== Helpers robustos para alineaciones ====== */
   const alin = data?.alineacion as any;
   const eq = data?.equipos;
 
@@ -135,24 +129,19 @@ export default function HomeCopa({ user }: Props) {
 
   return (
     <div className="text-white flex flex-col space-y-8 w-full">
-      {/* Saludo */}
       <div className="text-3xl font-bold text-[#13161c]">Bienvenido, Pedro Alvarado</div>
 
-      {/* GRID principal */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-4 flex-1">
 
-        {/* Marcador / Partido */}
         <C_MarcadorEnVivo user={user} partido={partido} />
 
-        {/* Resultado anterior + Perfil + Cancha */}
         <C_RPC data={data} />
 
-        {/* Tabla de posiciones */}
         <C_TablaPosiciones />
 
-        {/* Alineaciones Local y Visita */}
         <C_Alineacion localTitulares={localTitulares} localSuplentes={localSuplentes} visitaTitulares={visitaTitulares} visitaSuplentes={visitaSuplentes} partido={partido} />
       </div>
     </div>
   );
 }
+*/}

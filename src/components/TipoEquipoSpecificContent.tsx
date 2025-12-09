@@ -1,3 +1,4 @@
+{/*
 import { type User } from '@/hooks/useAuth';
 import HomeClub from './HomeJugadores/HomeClub';
 import HomeCopa from './HomeJugadores/HomeCopa';
@@ -65,3 +66,4 @@ export default function TipoEquipoSpecificContent({ user }: { user: User | null 
 
   return <ComponentToRender {...componentProps} />;
 };
+*/}

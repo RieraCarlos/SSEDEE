@@ -284,7 +284,7 @@ const clubsSlice = createSlice({
             state.loading = true;
             state.error = null;
         })
-        .addCase(saveMatchResult.fulfilled, (state, action) => {
+        .addCase(saveMatchResult.fulfilled, (state) => {
             state.loading = false;
             // Optionally, update the state with the saved match result
         })

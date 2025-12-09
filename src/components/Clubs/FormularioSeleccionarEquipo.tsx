@@ -1,8 +1,9 @@
 import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { Crown } from "lucide-react";
 import { useState } from "react";
+import { type Player } from "./C_Equipos";
+
 
 interface FormularioSeleccionarEquipoGanadorProps {
     teamA: Player[];
@@ -11,8 +12,7 @@ interface FormularioSeleccionarEquipoGanadorProps {
     onSave: (winningTeam: 'A' | 'B') => void;
 }
 
-export default function FormularioSeleccionarEquipoGanador({ teamA, teamB, partidoId, onSave }: FormularioSeleccionarEquipoGanadorProps) {
-    const dispatch = useAppDispatch();
+export default function FormularioSeleccionarEquipoGanador({ onSave }: FormularioSeleccionarEquipoGanadorProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleSelectWinner = (winner: 'A' | 'B') => {

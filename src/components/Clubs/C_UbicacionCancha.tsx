@@ -53,7 +53,7 @@ export default function C_UbicacionCancha() {
       toast.success("Ubicación actualizada correctamente.");
       setIsDialogOpen(false);
     } catch (error) {
-      toast.error(`Error al actualizar la ubicación: ${error.message || 'Error desconocido'}`);
+      toast.error(`Error al actualizar la ubicación: ${error || 'Error desconocido'}`);
       console.error("Error updating ubicacion:", error);
     }
   };

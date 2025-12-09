@@ -1,3 +1,4 @@
+{/*
 import C_MarcadorEnVivo from '@/components/Copa/C_MarcadorEnVivo';
 import C_TablaPosiciones, {standingsData} from '@/components/Copa/C_TablaPosiciones';
 import  DataTableS  from '@/components/Copa/tableC_Sucesos';
@@ -9,7 +10,7 @@ import { useLiveMatch } from '@/hooks/LiveMatchContext';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as autoTable from 'jspdf-autotable'; 
-/* ====== Tipos del JSON (flexibles) ====== */
+/* ====== Tipos del JSON (flexibles) ====== 
 type Partido = {
   grupo?: string;
   estado?: string;
@@ -238,31 +239,31 @@ const Admin: React.FC = () => {
     };
   return (
     <div className='text-white min-h-screen flex flex-col space-y-2'>
-      {/*Header */}
+      {/*Header 
         <Nav/>
-      {/* Contenido de la página */}
+      {/* Contenido de la página 
       <div className='px-5 md:px-15 lg:px-35 mb-15'>
         <div className="text-white flex flex-col space-y-8 w-full">
           <div className="text-3xl font-bold text-gray-400 ">Bienvenido, Alvarado Punin</div>
           <div className='fex flex-col space-y-4 '>
-            {/* Sección de la Copa y el Marcador */}
+            {/* Sección de la Copa y el Marcador 
             <C_MarcadorEnVivo />
             
 
-            {/* Sección de Sucesos del Partido */}
+            {/* Sección de Sucesos del Partido 
             <div className="bg-[#13161c] border-2 border-[#13161c] rounded-2xl p-4 md:p-6 lg:p-8 flex-grow">
               <h2 className="text-white text-xl font-bold mb-2">Sucesos del partido</h2>
               
-              {/* Bloque del Equipo A */}
+              {/* Bloque del Equipo A 
               <div className="mb-8">
                 <h3 className="text-gray-400 text-lg mb-4">{activeMatch?.teamA}</h3>
-                {/* Tabla de jugadores */}
+                {/* Tabla de jugadores 
                 <DataTableS equipoNombre={activeMatch?.teamA}/>
               </div>
-              {/* Bloque del Equipo B */}
+              {/* Bloque del Equipo B 
               <div className='mb-8'>
                 <h3 className="text-gray-400 text-lg mb-4">{activeMatch?.teamB}</h3>
-                {/* Tabla de jugadores */}
+                {/* Tabla de jugadores 
                 <DataTableS equipoNombre={activeMatch?.teamB}/>
               </div>
               <div className='flex justify-center items-center '>
@@ -270,16 +271,17 @@ const Admin: React.FC = () => {
               </div>
             </div>
 
-            {/* Sección de la Tabla de posiciones */}
+            {/* Sección de la Tabla de posiciones 
             <C_TablaPosiciones/>
           </div>
           
         </div>
       </div>
-      {/* Footer */}
+      {/* Footer 
       <Footer/>
     </div>
   );
 };
 
 export default Admin;
+*/}

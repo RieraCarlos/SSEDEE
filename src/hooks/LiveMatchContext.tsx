@@ -1,3 +1,4 @@
+{/*
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useSchedule } from '../components/Copa/ScheduleContext';
 import { type Player } from '../components/Copa/tableC_Sucesos'
@@ -106,3 +107,4 @@ export const useLiveMatch = () => {
   }
   return context;
 };
+*/}

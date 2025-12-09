@@ -4,9 +4,9 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '@/store/store';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/store/store';
 import { uploadLogoAndCreateClub } from '@/store/thunks/clubsThunks';
 import { updateUserProfile } from '@/store/thunks/userThunks';
 import { supabase } from '@/api/supabaseClient';
@@ -23,7 +23,6 @@ export default function CreateClubForm({ user }: CreateClubFormProps) {
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { tournaments, loading: tournamentsLoading } = useSelector((state: RootState) => state.tournaments);
 
   // Form state
   const [clubName, setClubName] = useState('');
@@ -171,7 +170,7 @@ export default function CreateClubForm({ user }: CreateClubFormProps) {
           <Input id="clubColor" type="color" value={clubColor} onChange={e => setClubColor(e.target.value)} required className="w-full h-10 cursor-pointer" />
         </div>
         
-        <Button type="submit" disabled={isLoading || isCheckingClubName || tournamentsLoading} className="w-full mt-4">
+        <Button type="submit" disabled={isLoading || isCheckingClubName} className="w-full mt-4">
           {isLoading ? 'Creando Club...' : 'Finalizar y Crear Club'}
         </Button>
       </form>

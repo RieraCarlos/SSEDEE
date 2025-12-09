@@ -1,5 +1,4 @@
 import C_Cupos from "@/components/Clubs/C_Cupos";
-import C_CopasAbiertas from "../Clubs/C_CopasAbiertas";
 import C_Equipos from "../Clubs/C_Equipos";
 import C_Chalecos from "../Clubs/C_Chalecos";
 import C_UbicacionCancha from "../Clubs/C_UbicacionCancha";

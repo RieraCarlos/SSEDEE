@@ -1,3 +1,4 @@
+{/*
 import { useDispatch, UseDispatch } from "react-redux";
 import { useState } from "react";
 import { uploadLogoAndCreateClub } from "@/store/thunks/clubsThunks";
@@ -33,3 +34,4 @@ export default function ClubForm(){
         </form>
     )
 }   
+*/}

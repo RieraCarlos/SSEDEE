@@ -22,7 +22,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
   height,
   birthdate,
   country,
-  rating,
   image,
   background,
 }) => {

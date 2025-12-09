@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Footer from "../Landing/Footer";
 import Nav from "../Landing/Nav";
 import { useAppSelector } from '@/hooks/useAppSelector';
@@ -15,7 +15,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 export default function C_solicitudesClub(){
     const dispatch = useAppDispatch();

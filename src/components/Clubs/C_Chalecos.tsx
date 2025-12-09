@@ -9,13 +9,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 
-interface Player {
-  id: number | string;
-  name: string;
-  posicion: string;
-  isAssigned: boolean;
-}
-
 export default function C_Chalecos() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectAuthUser);

@@ -13,8 +13,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Type for a single match in the history
+interface MatchHistory {
+  id: string | number;
+  fecha_juego: string;
+  equipo_ganador: string;
+}
+
+// Props for the dialog component
+interface HistorialDialogoProps {
+  isOpen: boolean;
+  onClose: () => void;
+  historial: MatchHistory[];
+}
+
 // Helper to format date
-const formatDate = (dateString) => {
+const formatDate = (dateString:string) => {
   if (!dateString) return "Fecha no disponible";
   return new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
@@ -23,7 +37,7 @@ const formatDate = (dateString) => {
   }).format(new Date(dateString));
 };
 
-export const HistorialDialogo = ({ isOpen, onClose, historial }) => {
+export const HistorialDialogo = ({ isOpen, onClose, historial }: HistorialDialogoProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-[#181b22] border-gray-700 text-white max-w-md w-full">

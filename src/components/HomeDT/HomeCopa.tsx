@@ -1,3 +1,4 @@
+{/*
 import React from "react";
 import C_MarcadorEnVivo from "../Copa/C_MarcadorEnVivo";
 import C_RPC from "../Copa/C_RPC";
@@ -30,7 +31,7 @@ type BdJson = {
     | { titulares?: string[]; suplentes?: string[] }; // formato antiguo
 };
 
-export default function HomeCopaDT({user}:{user:any}) {
+export default function HomeCopaDT() {
     const [data, setData] = React.useState<BdJson | null>(null);
     const [loading, setLoading] = React.useState(true);
     
@@ -62,7 +63,7 @@ export default function HomeCopaDT({user}:{user:any}) {
 
     const partido = data?.partidoActual ?? {};
 
-     /* ====== Helpers robustos para alineaciones ====== */
+     /* ====== Helpers robustos para alineaciones ====== 
     const alin = data?.alineacion as any;
     const eq = data?.equipos;
 
@@ -90,15 +91,16 @@ export default function HomeCopaDT({user}:{user:any}) {
         <div className="text-white flex flex-col space-y-8 w-full">
             <div className="text-3xl font-bold text-gray-400">Bienvenido, Juan Gonzalez</div>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-4 flex-1">
-                {/*Marcador / Partido */}
+                {/*Marcador / Partido 
                 <C_MarcadorEnVivo/>
-                {/*Resultados anteriore + Perfil + Cancha */}
+                {/*Resultados anteriore + Perfil + Cancha 
                 <C_RPC data={data}/>
-                {/* Tabla de posiciones */}
+                {/* Tabla de posiciones 
                 <C_TablaPosiciones/>
-                {/* Alineacion Local y Visita */}
+                {/* Alineacion Local y Visita 
                 <C_Alineacion localTitulares={localTitulares} localSuplentes={localSuplentes} visitaTitulares={visitaTitulares} visitaSuplentes={visitaSuplentes} partido={partido} />
             </div>
         </div>
     );
 }
+*/}

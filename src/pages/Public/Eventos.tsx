@@ -1,3 +1,4 @@
+{/*
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth, type User } from '@/hooks/useAuth';
 //import eventosData from '@/hooks/BD_Admin.json';
@@ -197,7 +198,7 @@ export default function Eventos({user}:{user:EventoProps['user']}) {
     <div className="space-y-6 p-1 md:p-4 max-h-[85vh] overflow-y-auto">
       <h1 className="text-2xl md:text-3xl font-bold text-center">Panel de Control: {currentEvent.evento}</h1>
 
-      {/* 1. Tabla de Clubes Inscritos */}
+      {/* 1. Tabla de Clubes Inscritos 
       <Card>
         <CardHeader><CardTitle>Clubes Inscritos</CardTitle></CardHeader>
         <CardContent>
@@ -212,12 +213,12 @@ export default function Eventos({user}:{user:EventoProps['user']}) {
         </CardContent>
       </Card>
 
-      {/* 2. Gestión de Horarios (dos secciones) */}
+      {/* 2. Gestión de Horarios (dos secciones) 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader><CardTitle>Generador Automático</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            {/* Parámetros de generación automática */}
+            {/* Parámetros de generación automática 
             <div className="space-y-2">
               <Label>Tipo de Torneo</Label>
               <Select onValueChange={(value: 'league' | 'knockout') => setTournamentType(value)} defaultValue="league">
@@ -243,7 +244,7 @@ export default function Eventos({user}:{user:EventoProps['user']}) {
           <CardHeader><CardTitle>Creador Manual de Partidos</CardTitle></CardHeader>
           <CardContent>
             <form onSubmit={handleManualSubmit} className="space-y-4">
-              {/* Formulario de creación manual */}
+              {/* Formulario de creación manual 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Equipo Local</Label><Select onValueChange={setManualTeamA} value={manualTeamA}><SelectTrigger><SelectValue placeholder="Seleccionar"/></SelectTrigger><SelectContent>{clubs.map(c => <SelectItem key={`A-${c.nombre}`} value={c.nombre}>{c.nombre}</SelectItem>)}</SelectContent></Select></div>
                 <div className="space-y-2"><Label>Equipo Visitante</Label><Select onValueChange={setManualTeamB} value={manualTeamB}><SelectTrigger><SelectValue placeholder="Seleccionar"/></SelectTrigger><SelectContent>{clubs.filter(c => c.nombre !== manualTeamA).map(c => <SelectItem key={`B-${c.nombre}`} value={c.nombre}>{c.nombre}</SelectItem>)}</SelectContent></Select></div>
@@ -258,15 +259,15 @@ export default function Eventos({user}:{user:EventoProps['user']}) {
         </Card>
       </div>
 
-      {/* Diagrama del Torneo (sin cambios) */}
+      {/* Diagrama del Torneo (sin cambios) 
       {tournamentType === 'knockout' && schedule.length > 0 && (
         <Card>
           <CardHeader><CardTitle>Diagrama del Torneo (Bracket)</CardTitle></CardHeader>
-          <CardContent>{/* ... (lógica de renderBracket) ... */}</CardContent>
+          <CardContent>{/* ... (lógica de renderBracket) ... </CardContent>
         </Card>
       )}
 
-        {/* 3. Partidos Programados con Flujo de Botones Mejorado */}
+        {/* 3. Partidos Programados con Flujo de Botones Mejorado 
         <Card>
             <CardHeader><CardTitle>Partidos Programados</CardTitle></CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -301,3 +302,4 @@ export default function Eventos({user}:{user:EventoProps['user']}) {
     </div>
   );
 }
+*/}

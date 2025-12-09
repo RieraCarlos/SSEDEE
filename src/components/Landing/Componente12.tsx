@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Linkedin, Twitter, Github, Instagram } from "lucide-react";
+import { Twitter, Instagram } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +11,7 @@ const teamMembers = [
   {
     name: "Carlos Riera",
     role: "Fundador",
-    image: "/src/images/Persona1.png",
+    image: "/public/images/Persona1.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -20,7 +20,7 @@ const teamMembers = [
   {
     name: "Jennifer Pin",
     role: "Asesora en ventas",
-    image: "/src/images/Persona2.png",
+    image: "/public/images/Persona2.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -29,7 +29,7 @@ const teamMembers = [
   {
     name: "Heyner Moreira",
     role: "Desarrollador Frontend",
-    image: "/src/images/Persona3.png",
+    image: "/public/images/Persona3.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -38,7 +38,7 @@ const teamMembers = [
   {
     name: "Jhair Chacha",
     role: "Desarrollador Backend",
-    image: "/src/images/Persona4.png",
+    image: "/public/images/Persona4.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -47,7 +47,7 @@ const teamMembers = [
   {
     name: "Darwin Esmeralda",
     role: "Desarrollador Backend",
-    image: "/src/images/Persona5.png",
+    image: "/public/images/Persona5.png",
     social: {
       instagram: "#",
       twitter: "#",

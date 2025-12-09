@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { BadgeDollarSign } from "lucide-react"
 
 export default function ClubLogoOffer() {
   return (

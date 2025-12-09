@@ -25,7 +25,7 @@ export const getAllClubsWithPlayers = async (): Promise<ClubWithPlayers[]> => {
 
     for (const club of clubsData) {
       const { data: playersData, error: playersError } = await supabase
-        .from('user_profiles')
+        .from('usuarios')
         .select('*')
         .eq('id_club', club.id);
 

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
-import LogoB from '../../images/LogoB.png';
+import LogoB from '/public/images/LogoB.png';
 
 const Nav: React.FC = () => {
   const dispatch = useAppDispatch()

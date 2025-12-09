@@ -1,9 +1,7 @@
 import Nav from '@/components/Landing/Nav';
-import { useAuth} from '@/hooks/useAuth';
 import Footer from '@/components/Landing/Footer';
 import HomeClub from '@/components/HomeJugadores/HomeClub';
 // Render según tipoEquipo
-import TipoEquipoSpecificContent from '@/components/TipoEquipoSpecificContent';
 
 export default function Jugador(){
   

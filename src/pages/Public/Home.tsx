@@ -2,8 +2,6 @@ import Nav from "../../components/Landing/Nav";
 import Componente1 from "@/components/Landing/Componente1";
 import Componente2 from "@/components/Landing/Componente2";
 import Componente3 from "@/components/Landing/Componente3";
-import Componente4 from "@/components/Landing/Componente4";
-import Componente5 from "@/components/Landing/Componente5";
 import HowToCreateClub from "@/components/Landing/Componente7";
 import RegisteredClubs from "@/components/Landing/Componente8";
 import MVPServicesList from "@/components/Landing/Componente9";

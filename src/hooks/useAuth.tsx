@@ -1,3 +1,4 @@
+{/*
 import { createContext, useState, useContext } from 'react';
 import type { ReactNode } from 'react';
 import users from './usuario-dev.json';
@@ -48,3 +49,4 @@ export const useAuth = () => {
   }
   return context;
 };
+*/}
