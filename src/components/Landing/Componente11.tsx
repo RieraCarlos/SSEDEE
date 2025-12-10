@@ -10,42 +10,42 @@ const merchandiseProducts = [
     id: 1,
     title: "Camiseta 'Blanca'",
     description: "Hecha con algodón premium, resistente y cómoda para cualquier misión.",
-    image: "/public/images/Camisa1.avif",
+    image: "/images/Camisa1.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en la Camiseta Blanca."
   },
   {
     id: 2,
     title: "Taza Coleccionable",
     description: "Empieza tu día con la taza oficial. Cerámica de alta calidad.",
-    image: "/public/images/Taza1.avif",
+    image: "/images/Taza1.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en la Taza Coleccionable."
   },
   {
     id: 3,
     title: "Botella deportiva 'Blanca'",
     description: "Protección y estilo en el juego.",
-    image: "/public/images/Tomatodo1.avif",
+    image: "/images/Tomatodo1.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en la la botalla 'Blanca'."
   },
   {
     id: 4,
     title: "Abrido 'Blanco'",
     description: "Muestra tu lealtad con este abrigo de alta calidad.",
-    image: "/public/images/Abrigo1.avif",
+    image: "/images/Abrigo1.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en el Abrigo 'Blanco'."
   },
   {
     id: 5,
     title: "Botella deportiva",
     description: "Mantente hidratado. Acero inoxidable, con aislamiento térmico.",
-    image: "/public/images/Tomatodo2.avif",
+    image: "/images/Tomatodo2.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en la Botella de Agua 'deportiva'."
   },
   {
     id: 6,
     title: "Camiseta 'Blanca'",
     description: "Hecha con algodón premium, resistente y cómoda.",
-    image: "/public/images/Camisa2.avif",
+    image: "/images/Camisa2.avif",
     whatsappUrl: "https://wa.me/593995875130?text=Hola, estoy interesado en la Camisa 'Blanca 2'."
   },
 ];

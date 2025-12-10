@@ -11,7 +11,7 @@ const teamMembers = [
   {
     name: "Carlos Riera",
     role: "Fundador",
-    image: "/public/images/Persona1.png",
+    image: "/images/Persona1.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -20,7 +20,7 @@ const teamMembers = [
   {
     name: "Jennifer Pin",
     role: "Asesora en ventas",
-    image: "/public/images/Persona2.png",
+    image: "/images/Persona2.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -29,7 +29,7 @@ const teamMembers = [
   {
     name: "Heyner Moreira",
     role: "Desarrollador Frontend",
-    image: "/public/images/Persona3.png",
+    image: "/images/Persona3.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -38,7 +38,7 @@ const teamMembers = [
   {
     name: "Jhair Chacha",
     role: "Desarrollador Backend",
-    image: "/public/images/Persona4.png",
+    image: "/images/Persona4.png",
     social: {
       instagram: "#",
       twitter: "#",
@@ -47,7 +47,7 @@ const teamMembers = [
   {
     name: "Darwin Esmeralda",
     role: "Desarrollador Backend",
-    image: "/public/images/Persona5.png",
+    image: "/images/Persona5.png",
     social: {
       instagram: "#",
       twitter: "#",
