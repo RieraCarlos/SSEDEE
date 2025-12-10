@@ -6,12 +6,17 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Fundador from "../../../public/images/Persona1.png"
+import Jennifer from "../../../public/images/Persona2.png"
+import Heyner from "../../../public/images/Persona3.png"
+import Jhair from "../../../public/images/Persona4.png"
+import Darwin from "../../../public/images/Persona5.png"
 
 const teamMembers = [
   {
     name: "Carlos Riera",
     role: "Fundador",
-    image: "/images/Persona1.png",
+    image: Fundador,
     social: {
       instagram: "#",
       twitter: "#",
@@ -20,7 +25,7 @@ const teamMembers = [
   {
     name: "Jennifer Pin",
     role: "Asesora en ventas",
-    image: "/images/Persona2.png",
+    image: Jennifer,
     social: {
       instagram: "#",
       twitter: "#",
@@ -29,7 +34,7 @@ const teamMembers = [
   {
     name: "Heyner Moreira",
     role: "Desarrollador Frontend",
-    image: "/images/Persona3.png",
+    image: Heyner,
     social: {
       instagram: "#",
       twitter: "#",
@@ -38,7 +43,7 @@ const teamMembers = [
   {
     name: "Jhair Chacha",
     role: "Desarrollador Backend",
-    image: "/images/Persona4.png",
+    image: Jhair,
     social: {
       instagram: "#",
       twitter: "#",
@@ -47,7 +52,7 @@ const teamMembers = [
   {
     name: "Darwin Esmeralda",
     role: "Desarrollador Backend",
-    image: "/images/Persona5.png",
+    image: Darwin,
     social: {
       instagram: "#",
       twitter: "#",
