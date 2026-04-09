@@ -27,11 +27,13 @@ export function AvatarDialog({ children, avatars, onSelect }: AvatarDialogProps)
               className="cursor-pointer"
               onClick={() => onSelect(avatar)}
             >
-              <img
-                src={avatar}
-                alt={`Avatar ${index + 1}`}
-                className="rounded-full object-cover h-20 w-20"
-              />
+              {avatar && avatar !== "" && (
+                <img
+                  src={avatar}
+                  alt={`Avatar ${index + 1}`}
+                  className="rounded-full object-cover h-20 w-20"
+                />
+              )}
             </div>
           ))}
         </div>

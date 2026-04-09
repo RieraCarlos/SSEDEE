@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
-import LogoB from '../../../public/images/LogoB.png';
+const LogoB = '/images/LogoB.png';
 
 const Nav: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -31,7 +31,7 @@ const Nav: React.FC = () => {
       {/* <p>SSEDEE</p> Encabezado */}
       <div className="flex items-center justify-between bg-[#13161c] h-20 px-7 md:px-15 lg:px-30 mb-8">
         <div className="font-bold text-2xl text-[#0ae98a] rounded-full">
-          <img src={LogoB} alt="" className='h-10'/>
+          <img src={LogoB} alt="" className='h-10' />
         </div>
 
         {/* Hamburger menu icon for small screens */}
@@ -53,6 +53,8 @@ const Nav: React.FC = () => {
             <li className="cursor-pointer" onClick={() => navigate('/', { state: { scrollTo: 'servicios' } })}>Servicios</li>
             <li className="cursor-pointer" onClick={() => navigate('/', { state: { scrollTo: 'nosotros' } })}>Nosotros</li>
             <li className="cursor-pointer" onClick={() => navigate('/', { state: { scrollTo: 'contactanos' } })}>Contactanos</li>
+            <li className="cursor-pointer" onClick={() => navigate('/eventos')}>Eventos</li>
+
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -70,7 +72,7 @@ const Nav: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : null}
-            {user?.role === 'admin' && <Link to={'/eventos'}>Eventos</Link>}
+            {/*<Link to={'/eventos'}>Eventos</Link>*/}
           </ul>
           {!user ? (
             <button className=" text-white font-bold py-2 px-6 border-2 border-[#0ae98a] rounded-xl shadow-lg hover:bg-[#0ae98a] hover:text-[#13161c] transition-colors">
@@ -90,6 +92,7 @@ const Nav: React.FC = () => {
           <li className="cursor-pointer" onClick={() => { navigate('/', { state: { scrollTo: 'servicios' } }); setIsOpen(false); }}>Servicios</li>
           <li className="cursor-pointer" onClick={() => { navigate('/', { state: { scrollTo: 'nosotros' } }); setIsOpen(false); }}>Nosotros</li>
           <li className="cursor-pointer" onClick={() => { navigate('/', { state: { scrollTo: 'contactanos' } }); setIsOpen(false); }}>Contactanos</li>
+          <li className="cursor-pointer" onClick={() => { navigate('/eventos'); setIsOpen(false); }}>Eventos</li>
           {user ? (
             <>
               <li className="cursor-pointer" onClick={() => navigate(user.role === 'dt' ? '/dt' : '/jugador')}>
@@ -102,7 +105,6 @@ const Nav: React.FC = () => {
               )}
             </>
           ) : null}
-          {user?.role === 'admin' && <Link to={'/eventos'}>Eventos</Link>}
           {user?.role === 'dt' && <Link to={'/solicitudes'}>Solicitudes</Link>}
           <div className="pt-4">
             {!user ? (

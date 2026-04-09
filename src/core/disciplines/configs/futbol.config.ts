@@ -1,0 +1,33 @@
+import type { DisciplineConfig } from "../types";
+
+export const futbolConfig: DisciplineConfig = {
+    id: "futbol",
+    name: "Fútbol",
+    icon: "Trophy",
+    layoutMode: "versus",
+    labels: {
+        score: "Goles",
+        period: "Tiempo",
+        local: "Local",
+        visita: "Visitante"
+    },
+    scoreRules: [
+        { id: "gol", label: "Gol", points: 1, icon: "Circle" }
+    ],
+    stats: [
+        { id: "gol", label: "Gol", type: "counter", category: "positive" },
+        { id: "amarilla", label: "Tarj. Amarilla", type: "counter", category: "neutral", icon: "Square" },
+        { id: "roja", label: "Tarj. Roja", type: "counter", category: "negative", icon: "Square" }
+    ],
+    periods: {
+        count: 2,
+        name: "Tiempo",
+        duration: 45
+    },
+    standingsLayout: {
+        columnIds: ['pj', 'puntos', 'dg']
+    },
+    color: "#10b981"
+};
+
+export default futbolConfig;

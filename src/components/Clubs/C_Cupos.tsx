@@ -108,8 +108,8 @@ const SeatAssignment: React.FC<SeatAssignmentProps> = ({ clubId, teamData, onSol
   
   const [startHour, endHour] = getDisplayHours();
 
-  const renderPlayerTable = (section: TeamSection) => (
-    <div className="mb-8 last:mb-0">
+  const renderPlayerTable = (section: TeamSection, index: number) => (
+    <div key={section.title || index} className="mb-8 last:mb-0">
       <h2 className="text-2xl font-semibold mb-3 tracking-wider text-orange-400">{section.title}</h2>
 
       {/* --- Vista de Tabla para Escritorio (sm y superior) --- */}
@@ -257,7 +257,7 @@ const SeatAssignment: React.FC<SeatAssignmentProps> = ({ clubId, teamData, onSol
           </header>
 
           <div className="max-h-[60vh] overflow-y-auto hide-scrollbar">
-            {teamData.map(section => renderPlayerTable(section))}
+            {teamData.map((section, index) => renderPlayerTable(section, index))}
           </div>
         </CardContent>
       </Card>

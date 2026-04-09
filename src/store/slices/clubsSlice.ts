@@ -27,6 +27,9 @@ interface ClubState{
     clubName: string | null;
     backgroundClub:string | null;
     currentClub: Club | null;
+    // Ingestion state
+    ingestionStep: string | null;
+    isIngesting: boolean;
 }
 
 const initialState: ClubState = {
@@ -42,6 +45,8 @@ const initialState: ClubState = {
     clubName: null,
     backgroundClub:null,
     currentClub: null,
+    ingestionStep: null,
+    isIngesting: false,
 }
 
 const clubsSlice = createSlice({
@@ -57,6 +62,23 @@ const clubsSlice = createSlice({
         },
         setClubError(state, action:PayloadAction<string | null>){
             state.error = action.payload;
+        },
+        setIngestionStep(state, action: PayloadAction<string | null>) {
+            state.ingestionStep = action.payload;
+        },
+        startIngestion(state) {
+            state.isIngesting = true;
+            state.ingestionStep = 'Iniciando proceso...';
+        },
+        finishIngestion(state) {
+            state.isIngesting = false;
+            state.ingestionStep = null;
+        },
+        updateClubLogoUrl(state, action: PayloadAction<{ clubId: string; logoUrl: string }>) {
+            const index = state.clubs.findIndex(c => c.id === action.payload.clubId);
+            if (index !== -1) {
+                state.clubs[index].logo_url = action.payload.logoUrl;
+            }
         },
     },
     extraReducers: (builder) => {
@@ -374,12 +396,35 @@ const clubsSlice = createSlice({
             state.error = action.error.message ?? 'Error fetching club details';
             state.currentClub = null;
         })
-        ;
-
+        // Global matchers for loading state and errors
+        .addMatcher(
+            (action) => action.type.startsWith('clubs/') && action.type.endsWith('/pending'),
+            (state) => {
+                state.loading = true;
+                state.error = null;
+            }
+        )
+        .addMatcher(
+            (action) => action.type.startsWith('clubs/') && (action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected')),
+            (state, action) => {
+                state.loading = false;
+                if (action.type.endsWith('/rejected')) {
+                    state.error = action.error?.message ?? 'Unknown error';
+                }
+            }
+        );
     }
 });
 
-export const {setClubLoading, setClubs, setClubError} = clubsSlice.actions;
+export const {
+    setClubLoading, 
+    setClubs, 
+    setClubError, 
+    setIngestionStep, 
+    startIngestion, 
+    finishIngestion,
+    updateClubLogoUrl
+} = clubsSlice.actions;
 
 // --- Selectors ---
 

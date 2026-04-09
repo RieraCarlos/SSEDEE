@@ -119,21 +119,22 @@ export const signUp = createAsyncThunk(
       dispatch(setAuthLoading(true));
 
       // 1. Prepara los datos del perfil que se pasarán a Supabase.
-      const profileData = {
+      const profileData: SignUpData = {
+        email,
+        password,
         role,
-        id_club: id_club || null,
-        fullname: fullname || null,
-        posicion: posicion || null,
-        alias: alias || null,
-        altura: altura || null,
-        fecha_nacimiento: fecha_nacimiento || null,
-        lugar: lugar || null,
-        avatar: avatar || null,
-        email: email,
+        id_club: id_club || "",
+        fullname: fullname || "",
+        posicion: posicion || "",
+        alias: alias || "",
+        altura: altura || "",
+        fecha_nacimiento: fecha_nacimiento || "",
+        lugar: lugar || "",
+        avatar: avatar || "",
       };
 
       // 2. Llama a signUp pasando los datos del perfil en las opciones.
-      const { error, data } = await AuthService.signUp(email, password, profileData);
+      const { error, data } = await AuthService.signUp(profileData);
       
       if (error) {
         throw error;

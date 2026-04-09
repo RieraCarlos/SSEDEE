@@ -19,7 +19,7 @@ export const fetchUserProfile = createAsyncThunk<UserProfile, string>(
         }
         throw error;
       }
-      
+
       return data as UserProfile;
     } catch (error: any) {
       return rejectWithValue(error.message);

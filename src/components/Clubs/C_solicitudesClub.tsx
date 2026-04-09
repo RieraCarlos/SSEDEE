@@ -53,7 +53,7 @@ export default function C_solicitudesClub(){
             <Nav />
             <div className='px-5 md:px-15 lg:px-35'>
                 <div className='flex justify-center my-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.35)]'>
-                    {clubLogoUrl && (
+                    {clubLogoUrl && clubLogoUrl !== "" && (
                         <img src={clubLogoUrl} alt={`${clubName || 'Club'} Logo`} className="w-30 h-30 object-contain rounded-full" />
                     )}
                 </div>

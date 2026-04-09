@@ -1,14 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "@/api/supabaseClient";
-import type { Club } from "../../api/type/clubs.api"; // Import Club interface
+import type { Club } from "../../api/type/clubs.api";
+import { ClubsService } from "@/services/clubs.services";
 
 export const fetchClubs = createAsyncThunk(
     "clubs/fetchClubs",
-    async ( ) => {
-        const {data, error} = await supabase
-        .from('clubes')
-        .select('*')
-        .order("created_at", {ascending: false});
+    async (_, { signal }) => {
+        const { data, error } = await ClubsService.getClubsAdminData(signal);
         if (error) throw error;
         return data;
     }

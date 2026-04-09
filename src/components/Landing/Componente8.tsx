@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { useEffect, useState } from "react"
-import { getAllClubsWithPlayers, type ClubWithPlayers } from "../../services/clubs.services"
+import { ClubsService } from "../../services/clubs.services"
+import type { ClubWithPlayers } from "../../services/clubs.services"
 
 export default function RegisteredClubs() {
   const [clubs, setClubs] = useState<ClubWithPlayers[]>([]);
@@ -10,9 +11,10 @@ export default function RegisteredClubs() {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const data = await getAllClubsWithPlayers();
-        setClubs(data);
-      } catch (err) {
+        const { data, error: apiError } = await ClubsService.getAllClubsWithPlayers();
+        if (apiError) throw new Error(apiError.message);
+        setClubs(data || []);
+      } catch (err: any) {
         setError("Failed to fetch clubs.");
         console.error(err);
       } finally {
@@ -58,7 +60,11 @@ export default function RegisteredClubs() {
 
                 {/* Icon */}
                 <div className="w-20 h-20 rounded-2xl border-0 flex items-center justify-center group-hover:border-[#0ae98a] transition-all">
-                  <img src={club.logo_url} alt={`${club.name} logo`} className="w-full h-full object-contain" />
+                  {club.logo_url && club.logo_url !== "" ? (
+                    <img src={club.logo_url} alt={`${club.name} logo`} className="w-full h-full object-contain" />
+                  ) : (
+                    <div className="text-white opacity-20 text-4xl font-black italic">S</div>
+                  )}
                 </div>
 
                 {/* Club name */}

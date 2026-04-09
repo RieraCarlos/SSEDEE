@@ -67,11 +67,13 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            <img
-                src={image}
-                alt="player"
-                className="h-55 relative top-12 mask-[linear-gradient(#000_70%,#0000)]"
-            />
+            {image && image !== "" && (
+              <img
+                  src={image}
+                  alt="player"
+                  className="h-55 relative top-12 mask-[linear-gradient(#000_70%,#0000)]"
+              />
+            )}
           
         </div>
 

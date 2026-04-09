@@ -1,9 +1,8 @@
 {/*
 import React from "react";
-import C_MarcadorEnVivo from "../Copa/C_MarcadorEnVivo";
-import C_RPC from "../Copa/C_RPC";
-import C_TablaPosiciones from "../Copa/C_TablaPosiciones";
-import C_Alineacion from "../Copa/C_Alineacion";
+import MatchResultCard from "../Copa/MatchResultCard";
+import PosicionesCard from "../Copa/PosicionesCard";
+import AlineacionCard from "../Copa/AlineacionCard";
 
 // Tipos de JSON 
 type Partido = {
@@ -92,15 +91,15 @@ export default function HomeCopaDT() {
             <div className="text-3xl font-bold text-gray-400">Bienvenido, Juan Gonzalez</div>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-4 flex-1">
                 {/*Marcador / Partido 
-                <C_MarcadorEnVivo/>
-                {/*Resultados anteriore + Perfil + Cancha 
-                <C_RPC data={data}/>
-                {/* Tabla de posiciones 
-                <C_TablaPosiciones/>
-                {/* Alineacion Local y Visita 
-                <C_Alineacion localTitulares={localTitulares} localSuplentes={localSuplentes} visitaTitulares={visitaTitulares} visitaSuplentes={visitaSuplentes} partido={partido} />
-            </div>
-        </div>
+                {/* <C_MarcadorEnVivo/> 
+{/*Resultados anteriore + Perfil + Cancha 
+<MatchResultCard data={data} />
+{/* Tabla de posiciones 
+<PosicionesCard />
+{/* Alineacion Local y Visita 
+<AlineacionCard localTitulares={localTitulares} localSuplentes={localSuplentes} visitaTitulares={visitaTitulares} visitaSuplentes={visitaSuplentes} partido={partido} />
+            </div >
+        </div >
     );
 }
 */}

@@ -239,7 +239,11 @@ export default function RegisterForm({ className, isLoading, onSwitchToLogin, cl
                     {clubs.map(club => (
                       <SelectItem key={club.id} value={club.id}>
                         <div className='flex items-center gap-2'>
-                          <img src={club.logo_url} alt={club.name} className='w-6 h-6 object-contain'/>
+                          {club.logo_url && club.logo_url !== "" ? (
+                            <img src={club.logo_url} alt={club.name} className='w-6 h-6 object-contain'/>
+                          ) : (
+                            <div className='w-6 h-6 bg-gray-700 rounded-full flex items-center justify-center text-[8px]'>C</div>
+                          )}
                           <span>{club.name}</span>
                         </div>
                       </SelectItem>
@@ -303,7 +307,9 @@ export default function RegisterForm({ className, isLoading, onSwitchToLogin, cl
                     className={`cursor-pointer rounded-full overflow-hidden border-4 hover:border-green-300  ${formData.avatar_url === url ? 'border-green-400 ring-2 ring-green-400' : 'border-transparent'}`}
                     onClick={() => handleAvatarSelect(url)}
                   >
-                    <img src={url} alt="Avatar" className="w-full h-full"/>
+                    {url && url !== "" && (
+                      <img src={url} alt="Avatar" className="w-full h-full"/>
+                    )}
                   </div>
                 ))}
               </div>

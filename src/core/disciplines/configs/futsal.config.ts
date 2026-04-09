@@ -1,0 +1,34 @@
+import type { DisciplineConfig } from "../types";
+
+export const futsalConfig: DisciplineConfig = {
+    id: "futsal",
+    name: "Fútbol Sala",
+    icon: "Target",
+    layoutMode: "versus",
+    labels: {
+        score: "Goles",
+        period: "Tiempo",
+        local: "Local",
+        visita: "Visita"
+    },
+    scoreRules: [
+        { id: "gol", label: "Gol", points: 1 }
+    ],
+    stats: [
+        { id: "gol", label: "Gol", type: "counter", category: "positive", icon: "⚽" },
+        { id: "falta", label: "Falta", type: "counter", category: "negative", icon: "🚫" },
+        { id: "amarilla", label: "T. Amarilla", type: "counter", category: "negative", icon: "🟨" },
+        { id: "roja", label: "T. Roja", type: "counter", category: "negative", icon: "🟥" }
+    ],
+    periods: {
+        count: 2,
+        name: "Tiempo",
+        duration: 20
+    },
+    standingsLayout: {
+        columnIds: ['pj', 'ganados', 'empatados', 'perdidos', 'gf', 'gc', 'gd', 'puntos']
+    },
+    color: "#10b981" // Green for Futsal
+};
+
+export default futsalConfig;

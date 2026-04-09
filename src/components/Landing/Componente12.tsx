@@ -6,11 +6,11 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import Fundador from "../../../public/images/Persona1.png"
-import Jennifer from "../../../public/images/Persona2.png"
-import Heyner from "../../../public/images/Persona3.png"
-import Jhair from "../../../public/images/Persona4.png"
-import Darwin from "../../../public/images/Persona5.png"
+const Fundador = "/images/Persona1.png";
+const Jennifer = "/images/Persona2.png";
+const Heyner = "/images/Persona3.png";
+const Jhair = "/images/Persona4.png";
+const Darwin = "/images/Persona5.png";
 
 const teamMembers = [
   {
@@ -94,7 +94,13 @@ export default function Equipo() {
               <CardContent className="w-full h-full px-0">
                 <div className="overflow-hidden w-full h-full bg-gradient-to-b from-[#13161c]/50 to-[#07080a] rounded-2xl  text-center shadow-lg hover:shadow-xl transition-all duration-300">
                   <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 drop-shadow-[0_0_25px_rgba(255,255,255,0.25)]">
-                    <img src={member.image} alt={member.name} className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-500" />
+                    {member.image && member.image !== "" ? (
+                      <img src={member.image} alt={member.name} className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                        <User className="text-white opacity-20 w-20 h-20" />
+                      </div>
+                    )}
                     <div className="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-[#07080a] via-[#13161c]/88 to-transparent flex flex-col justify-end items-start px-4 pb-5">
                       <h3 className="text-base font-medium text-white">{member.name}</h3>
                       <p className="text-xs text-gray-500 dark:text-gray-400">

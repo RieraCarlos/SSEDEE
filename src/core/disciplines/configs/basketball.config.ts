@@ -1,0 +1,36 @@
+import type { DisciplineConfig } from "../types";
+
+export const basketballConfig: DisciplineConfig = {
+    id: "basketball",
+    name: "Basketball",
+    icon: "Dribbble",
+    layoutMode: "versus",
+    labels: {
+        score: "Puntos",
+        period: "Cuarto",
+        local: "Local",
+        visita: "Visita"
+    },
+    scoreRules: [
+        { id: "canasta_1", label: "Tiro Libre", points: 1 },
+        { id: "canasta_2", label: "Canasta 2 Pts", points: 2 },
+        { id: "canasta_3", label: "Triple", points: 3 }
+    ],
+    stats: [
+        { id: "canasta_2", label: "Canasta (2 Pts)", type: "counter", category: "positive", icon: "🏀" },
+        { id: "canasta_3", label: "Triple (3 Pts)", type: "counter", category: "positive", icon: "🏀" },
+        { id: "canasta_1", label: "Tiro Libre (1 Pt)", type: "counter", category: "positive", icon: "🏀" },
+        { id: "falta", label: "Falta Personal", type: "counter", category: "negative" }
+    ],
+    periods: {
+        count: 4,
+        name: "Cuarto",
+        duration: 12
+    },
+    standingsLayout: {
+        columnIds: ['pj', 'ganados', 'perdidos', 'puntos']
+    },
+    color: "#f97316"
+};
+
+export default basketballConfig;

@@ -193,7 +193,9 @@ export default function CreateClubForm({ user }: CreateClubFormProps) {
                     setIsBackgroundDialogOpen(false);
                   }}
                 >
-                  <img src={url} alt="Background" className="w-full h-auto object-cover"/>
+                  {url && url !== "" && (
+                    <img src={url} alt="Background" className="w-full h-auto object-cover"/>
+                  )}
                 </div>
               ))}
             </div>

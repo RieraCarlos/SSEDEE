@@ -4,12 +4,12 @@ import { type CarouselApi } from "@/components/ui/carousel";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import Camisa1 from "../../../public/images/Camisa1.avif"
-import Taza1 from "../../../public/images/Taza1.avif"
-import Tomatodo1 from "../../../public/images/Tomatodo1.avif"
-import Abrigo1 from "../../../public/images/Abrigo1.avif"
-import Tomatomdo2 from "../../../public/images/Tomatodo2.avif"
-import Camisa2 from "../../../public/images/Camisa2.avif"
+const Camisa1 = "/images/Camisa1.avif";
+const Taza1 = "/images/Taza1.avif";
+const Tomatodo1 = "/images/Tomatodo1.avif";
+const Abrigo1 = "/images/Abrigo1.avif";
+const Tomatomdo2 = "/images/Tomatodo2.avif";
+const Camisa2 = "/images/Camisa2.avif";
 
 
 const merchandiseProducts = [
@@ -96,11 +96,17 @@ export default function Productos() {
               <CarouselItem key={product.id} className="pl-4 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                 <Card className="overflow-hidden rounded-lg w-full bg-gradient-to-br from-[#13161c]/75 to-[#07080a] border-none hover:border-[#0ae98a]">
                   <CardContent className="p-0">
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-48 object-cover"
-                    />
+                    {product.image && product.image !== "" ? (
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-48 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-48 bg-slate-800 flex items-center justify-center">
+                        <Shield className="text-white opacity-10 w-12 h-12" />
+                      </div>
+                    )}
                     <div className="p-4">
                       <h3 className="text-sm font-bold text-white">{product.title}</h3>
                       <p className="text-xs text-gray-300  h-12 mt-1">
