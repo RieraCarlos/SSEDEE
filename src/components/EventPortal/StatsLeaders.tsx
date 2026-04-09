@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/api/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Medal, Crown, Shield, Zap, TrendingUp, ChevronRight, Target } from 'lucide-react';
+import { Crown, Shield, Zap, TrendingUp, ChevronRight, Target } from 'lucide-react';
 
 interface LeaderStat {
   name: string;

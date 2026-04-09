@@ -57,7 +57,6 @@ export const generateKnockoutFixtures = (
     }
 
     const realPairingsCount = pairings.filter(p => p.home !== "BYE" && p.away !== "BYE").length;
-    const byePairingsCount = pairings.filter(p => p.home === "BYE" || p.away === "BYE").length;
 
     const totalMatches = matchType === "idaVuelta" 
         ? (realPairingsCount * 2) 

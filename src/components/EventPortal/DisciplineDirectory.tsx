@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/api/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Group, Shield, ChevronRight, Zap, Target } from 'lucide-react';
+import { Trophy, Shield, Zap, Target } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -16,7 +16,7 @@ interface Discipline {
   icon: string;
 }
 
-const DisciplineDirectory: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
+const DisciplineDirectory: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('futbol');
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);

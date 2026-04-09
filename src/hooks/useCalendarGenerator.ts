@@ -6,7 +6,6 @@ import Papa from 'papaparse';
 
 export const useCalendarGenerator = (tournament: any) => {
   const [generatedMatches, setGeneratedMatches] = useState<FixtureMatch[]>([]);
-  const [loading, setLoading] = useState(false);
 
   const generate = useCallback((config: {
     startTime: string;
@@ -70,7 +69,6 @@ export const useCalendarGenerator = (tournament: any) => {
   return {
     generatedMatches,
     setGeneratedMatches,
-    loading,
     generate,
     exportToCSV
   };

@@ -18,11 +18,9 @@ import C_solicitudesClub from './components/Clubs/C_solicitudesClub'
 import Admin from './pages/Admin/Admin'
 import LiveMatch from './pages/Live/LiveMatch'
 import MasterEventPortal from './pages/Public/MasterEventPortal'
-import { useAppSelector } from './hooks/useAppSelector'
-import { selectAuthUser } from './store/slices/authSlice'
+
 
 function App() {
-  const user = useAppSelector(selectAuthUser)
   const dispatch = useAppDispatch()
   useEffect(() => {
     // Inicializar sesión sin pasar navigate (ya no redirige automáticamente)
@@ -51,8 +49,8 @@ function App() {
         } />
         <Route path='/form' element={<FormularioUsuario />} />
         <Route path="/live/match/:matchId" element={<LiveMatch />} />
-        <Route path="/eventos" element={<Eventos user={user} />} />
-        <Route path="/evento/:slug" element={<Eventos user={user} />} />
+        <Route path="/eventos" element={<Eventos />} />
+        <Route path="/evento/:slug" element={<Eventos />} />
         <Route path="/portal/:tournamentId" element={<MasterEventPortal />} />
       </Routes>
     </ScheduleProvider>

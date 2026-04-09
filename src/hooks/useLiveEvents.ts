@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/api/supabaseClient';
-import type { MatchEvent } from '@/core/disciplines';
 
 export interface LiveMatch {
   id: string;

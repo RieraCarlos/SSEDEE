@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/api/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, MapPin, Zap, ChevronRight, Trophy, Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
+import { Clock, MapPin, Zap, Trophy, Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
 import * as Collapsible from '@radix-ui/react-collapsible';
 
 interface TimelineMatch {
@@ -105,7 +105,7 @@ const MatchTimeline: React.FC<{ tournamentId?: string | string[] }> = ({ tournam
             exit={{ opacity: 0 }}
             className="space-y-10"
           >
-            {tournaments.map((tName, tIdx) => (
+            {tournaments.map((tName) => (
               <Collapsible.Root 
                 key={tName}
                 open={openTournaments[tName]}
@@ -165,7 +165,7 @@ const MatchTimeline: React.FC<{ tournamentId?: string | string[] }> = ({ tournam
 
                         {/* Day's Matches List */}
                         <div className="grid grid-cols-1 gap-4 pr-2">
-                          {groupedByTournament[tName][date].map((match, idx) => (
+                          {groupedByTournament[tName][date].map((match) => (
                             <motion.div
                               key={match.id}
                               whileHover={{ x: 10 }}

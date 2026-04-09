@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Activity, Zap } from 'lucide-react';
+import { Activity, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LiveMatch } from '@/hooks/useLiveEvents';
 

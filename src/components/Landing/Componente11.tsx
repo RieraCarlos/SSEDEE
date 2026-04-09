@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Shield } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";

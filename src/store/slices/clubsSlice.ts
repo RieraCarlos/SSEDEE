@@ -1,4 +1,4 @@
-import {createSlice, type PayloadAction, createSelector} from '@reduxjs/toolkit'
+import {createSlice, type PayloadAction, createSelector, isPending, isFulfilled, isRejected} from '@reduxjs/toolkit'
 import {fetchClubs, createClub, fetchClubPlayers, fetchNominaCupos, assignCupoToPlayer, removeCupoFromPlayer, editMatchDate, editCupoSelectionTime, fetchMatchDate, updateMatchDates, updateMatchHours, updateClubHorario, updateTeamsPlayers, getTeamsPlayers, fetchGuardadoMatches, toggleMatchDateState, saveMatchResult, assignPlayerToChaleco, fetchChalecoPlayer, updatePartidoUbicacion, fetchPartidoUbicacion, fetchClubNameById, fetchClub } from '@/store/thunks/clubsThunks'
 import type { Club } from '@/api/type/clubs.api';
 import type { RootState } from '../store';
@@ -396,20 +396,20 @@ const clubsSlice = createSlice({
             state.error = action.error.message ?? 'Error fetching club details';
             state.currentClub = null;
         })
-        // Global matchers for loading state and errors
+        // Global matchers for loading state and errors (Scoped to clubs/ prefix)
         .addMatcher(
-            (action) => action.type.startsWith('clubs/') && action.type.endsWith('/pending'),
+            (action) => action.type.startsWith('clubs/') && isPending(action),
             (state) => {
                 state.loading = true;
                 state.error = null;
             }
         )
         .addMatcher(
-            (action) => action.type.startsWith('clubs/') && (action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected')),
+            (action) => action.type.startsWith('clubs/') && (isFulfilled(action) || isRejected(action)),
             (state, action) => {
                 state.loading = false;
-                if (action.type.endsWith('/rejected')) {
-                    state.error = action.error?.message ?? 'Unknown error';
+                if (isRejected(action)) {
+                    state.error = (action.payload as string) || action.error?.message || 'Unknown error';
                 }
             }
         );

@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Twitter, Instagram } from "lucide-react";
+import { Twitter, Instagram, User } from "lucide-react";
 import {
   Carousel,
   CarouselContent,

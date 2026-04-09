@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, isPending, isFulfilled, isRejected } from '@reduxjs/toolkit';
 import { DeportesService } from '@/services/deportes.services';
 import { CategoriasService } from '@/services/categorias.services';
 import type { Deporte } from '@/api/type/deporte.api';
@@ -94,22 +94,17 @@ const administrationSlice = createSlice({
         state.categorias.push(action.payload);
       })
       // Global matchers for loading state
-      .addMatcher(
-        (action) => action.type.endsWith('/pending'),
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected'),
-        (state, action) => {
-          state.loading = false;
-          if (action.type.endsWith('/rejected')) {
-            state.error = action.payload as string || action.error.message || 'Unknown error';
-          }
-        }
-      );
+      .addMatcher(isPending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addMatcher(isFulfilled, (state) => {
+        state.loading = false;
+      })
+      .addMatcher(isRejected, (state, action) => {
+        state.loading = false;
+        state.error = (action.payload as string) || action.error.message || 'Unknown error';
+      });
   },
 });
 

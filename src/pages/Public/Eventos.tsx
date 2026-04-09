@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Variants } from 'framer-motion';
-import { Trophy, ArrowLeft, Globe, Shield, Zap, Sparkles } from 'lucide-react';
-import type { AuthUser } from '@/api/type/auth.api';
-
+import { Trophy, Globe, Shield, Zap, Sparkles } from 'lucide-react';
 // Portal Components
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import EventHero from '@/components/EventPortal/EventHero';
@@ -114,7 +112,7 @@ const PortalSection: React.FC<{
   );
 };
 
-export default function Eventos({ user }: { user: AuthUser | null }) {
+export default function Eventos() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
@@ -275,7 +273,7 @@ export default function Eventos({ user }: { user: AuthUser | null }) {
                     subtitle="Explora los clubes por disciplina" 
                     icon={<Globe size={32} />}
                   >
-                    <DisciplineDirectory tournamentId={DISTRITO_ID} />
+                    <DisciplineDirectory />
                   </PortalSection>
 
                   {/* 4. SCHEDULE / TIMELINE */}

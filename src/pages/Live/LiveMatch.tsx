@@ -11,7 +11,7 @@ import { useDisciplineConfig } from '@/hooks/useDisciplineConfig';
 import { generateMatchReportPDF } from '@/utils/generateMatchReport';
 import { selectAuthUser } from '@/store/slices/authSlice';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { Loader2, FileText, CheckCircle2, ChevronRight, AlertCircle, Waves, Trophy, Settings, Shield, FastForward } from 'lucide-react';
+import { Loader2, FileText, CheckCircle2, ChevronRight, AlertCircle, Waves, Trophy, Settings, FastForward } from 'lucide-react';
 import { useMatchLogic } from '@/hooks/useMatchLogic';
 import SportIcon from '@/components/common/SportIcon';
 

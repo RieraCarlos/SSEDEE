@@ -1,18 +1,16 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Minus, FastForward } from 'lucide-react';
+import { FastForward } from 'lucide-react';
 import { useMatchLogic } from '@/hooks/useMatchLogic';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectLiveMatchState } from '@/store/slices/liveMatchSlice';
 
 interface AdminControlsProps {
-  localName: string;
-  visitaName: string;
   onFinalize: () => void;
   loading: boolean;
 }
 
-const AdminControls: React.FC<AdminControlsProps> = ({ localName, visitaName, onFinalize, loading }) => {
+const AdminControls: React.FC<AdminControlsProps> = ({ onFinalize, loading }) => {
   const { advancePeriod, currentPeriodName, currentPeriod } = useMatchLogic();
   const { config, events } = useAppSelector(selectLiveMatchState);
 

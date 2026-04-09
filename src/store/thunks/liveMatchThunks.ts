@@ -90,6 +90,7 @@ export const fetchLiveMatchData = createAsyncThunk(
         playerId: e.jugador_id,
         playerName: e.jugador_nombre,
         minute: e.minuto || 0,
+        periodo: e.periodo || e.metadata?.periodo || 1,
         timestamp: e.created_at,
         metadata: e.metadata || {}
       }));

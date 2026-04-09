@@ -11,7 +11,7 @@ import PosicionesTable from "../Copa/PosicionesTable";
 import MatchResultCard from "../Copa/MatchResultCard";
 import CreateTournamentModal from "../Copa/CreateTournamentModal";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, LayoutDashboard, Trophy, Users, CalendarDays, Shield } from "lucide-react";
+import { ChevronDown, LayoutDashboard, Trophy, Users, CalendarDays } from "lucide-react";
 import SportIcon from "../common/SportIcon";
 
 export default function HomeAdmin() {

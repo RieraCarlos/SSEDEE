@@ -1,12 +1,11 @@
 import Footer from '@/components/Landing/Footer';
 import Nav from '@/components/Landing/Nav';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import HomeClub from '@/components/HomeDT/HomeClub'; // Corrected path for DT's home
 import LoadingSpinner from '@/components/LoadingSpinner';
 import HomeAdmin from '@/components/HomeAdmin/Home';
 
 export default function Admin() {
-  const { user, loading } = useAppSelector((state) => state.auth);
+  const { loading } = useAppSelector((state) => state.auth);
 
   if (loading) {
     return (

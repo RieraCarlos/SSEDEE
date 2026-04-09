@@ -317,6 +317,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                 isOpen={!!selectedMatchResults} 
                 onClose={() => setSelectedMatchResults(null)}
                 match={selectedMatchResults}
+                disciplineId={tournament.id_categoria ? 'futbol' : 'futbol'} // TODO: Resolver id_deporte real
             />
         </div>
     );

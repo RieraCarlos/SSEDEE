@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { useTournamentFactory } from "@/hooks/useTournamentFactory";
 import { Trophy, Layers, Settings2, ChevronRight, ChevronLeft, Plus } from "lucide-react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
     userId: string;

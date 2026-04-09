@@ -8,13 +8,18 @@ import {
 } from "@/components/ui/dialog";
 import { generateMatchReportPDF } from '@/utils/generateMatchReport';
 
+import { useDisciplineConfig } from '@/hooks/useDisciplineConfig';
+
 interface MatchResultDialogProps {
   isOpen: boolean;
   onClose: () => void;
   match: any; // El objeto partido del calendario
+  disciplineId?: string;
 }
 
-const MatchResultDialog: React.FC<MatchResultDialogProps> = ({ isOpen, onClose, match }) => {
+const MatchResultDialog: React.FC<MatchResultDialogProps> = ({ isOpen, onClose, match, disciplineId = 'futbol' }) => {
+  const { config } = useDisciplineConfig(disciplineId);
+  
   if (!match || !match.reporte_final) return null;
 
   const report = match.reporte_final;
@@ -30,11 +35,13 @@ const MatchResultDialog: React.FC<MatchResultDialogProps> = ({ isOpen, onClose, 
         type: e.type, // 'gol', 'amarilla', 'roja'
         minute: e.minute || 0,
         playerName: e.playerName,
-        team: e.team
+        team: e.team,
+        periodo: e.periodo || 1
       })),
       observations: report.observaciones,
       fecha: new Date(match.fecha_partido_raw || match.fecha_hora || new Date()).toLocaleDateString(),
-      header_oficial: "Sistema de Seguimiento y Entretenimiento Deportivo en Ecuador"
+      header_oficial: "Sistema de Seguimiento y Entretenimiento Deportivo en Ecuador",
+      config: config
     });
   };
 

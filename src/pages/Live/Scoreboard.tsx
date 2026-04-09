@@ -7,7 +7,7 @@ import { useMatchLogic } from '@/hooks/useMatchLogic';
 import { useFutsalRules } from '@/hooks/useFutsalRules';
 
 const Scoreboard: React.FC = () => {
-  const { localName, localLogoUrl, visitaName, visitaLogoUrl, isLoading, config, events } = useAppSelector(selectLiveMatchState);
+  const { localName, localLogoUrl, visitaName, visitaLogoUrl, isLoading, config } = useAppSelector(selectLiveMatchState);
   const { scoreLocal, scoreVisita } = useAppSelector(selectLiveScores);
   const { currentPeriodName, cardSummary } = useMatchLogic();
   const { foulState, isFutsal } = useFutsalRules(async () => {}); // Solo vista

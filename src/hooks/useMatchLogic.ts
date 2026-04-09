@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import { useAppSelector } from './useAppSelector';
 import { useAppDispatch } from './useAppDispatch';
-import { selectLiveMatchState, setCurrentPeriod, updateAccumulatedFouls } from '@/store/slices/liveMatchSlice';
+import { selectLiveMatchState, setCurrentPeriod } from '@/store/slices/liveMatchSlice';
 import { supabase } from '@/api/supabaseClient';
 import { toast } from 'sonner';
 
@@ -15,17 +15,13 @@ export function useMatchLogic() {
     activeMatchId, 
     config, 
     events, 
-    currentPeriod, 
-    accumulatedFouls,
-    localId,
-    visitaId 
+    currentPeriod 
   } = useAppSelector(selectLiveMatchState);
 
   // 1. Nombre dinámico del periodo (e.g., "1er Cuarto", "2do Tiempo")
   const currentPeriodName = useMemo(() => {
     if (!config) return 'En Juego';
     const name = config.periods.name;
-    const count = config.periods.count;
     
     // Lógica para EcuaVoley (Sets)
     if (config.id === 'ecuavoley') {
@@ -41,24 +37,7 @@ export function useMatchLogic() {
     return `${currentPeriod}º ${name}`;
   }, [config, currentPeriod]);
 
-  // 2. Lógica de Futsal: Alerta de Faltas Acumulativas
-  const futsalFoulAlert = useMemo(() => {
-    if (config?.id !== 'futbol' && config?.id !== 'futsal' && config?.id !== 'futbol sala') return { local: false, visita: false, localCount: 0, visitaCount: 0 };
-    
-    // Contar faltas del periodo actual
-    const localFouls = events.filter(e => e.type === 'falta' && e.team === 'local' && (e.metadata?.periodo === currentPeriod)).length;
-    const visitaFouls = events.filter(e => e.type === 'falta' && e.team === 'visita' && (e.metadata?.periodo === currentPeriod)).length;
-
-    return {
-      local: localFouls >= 6,
-      visita: visitaFouls >= 6,
-      localCount: localFouls,
-      visitaCount: visitaFouls,
-      alertIcon: '⚠️'
-    };
-  }, [config, events, currentPeriod]);
-
-  // 2.1 Resumen de Tarjetas (Amarillas y Rojas)
+  // 2. Resumen de Tarjetas (Amarillas y Rojas)
   const cardSummary = useMemo(() => {
     const localYellow = events.filter(e => e.type === 'amarilla' && e.team === 'local').length;
     const localRed = events.filter(e => e.type === 'roja' && e.team === 'local').length;

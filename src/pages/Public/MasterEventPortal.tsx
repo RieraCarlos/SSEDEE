@@ -14,7 +14,7 @@ import StatsLeaders from '@/components/EventPortal/StatsLeaders';
  */
 const MasterEventPortal: React.FC = () => {
   const { tournamentId } = useParams<{ tournamentId: string }>();
-  const { activeMatches, loading } = useLiveEvents(tournamentId);
+  const { activeMatches } = useLiveEvents(tournamentId || '');
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-emerald-500/30">
@@ -54,7 +54,7 @@ const MasterEventPortal: React.FC = () => {
           {/* 3. DISCIPLINE DIRECTORY & STATS */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-              <DisciplineDirectory tournamentId={tournamentId} />
+              <DisciplineDirectory />
             </div>
             <div className="space-y-8">
               <StatsLeaders tournamentId={tournamentId} />
