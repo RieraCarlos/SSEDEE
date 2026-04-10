@@ -82,7 +82,13 @@ const administrationSlice = createSlice({
         state.deportes = action.payload;
       })
       .addCase(fetchCategorias.fulfilled, (state, action) => {
-        state.categorias = action.payload;
+        // En lugar de sobrescribir, fusionamos para no perder la lista maestra de Home.tsx
+        const newCats = action.payload as Categoria[];
+        newCats.forEach(cat => {
+            if (!state.categorias.find(c => c.id === cat.id)) {
+                state.categorias.push(cat);
+            }
+        });
       })
       .addCase(fetchAllCategorias.fulfilled, (state, action) => {
         state.categorias = action.payload;

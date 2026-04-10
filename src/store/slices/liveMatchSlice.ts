@@ -164,4 +164,34 @@ export const selectLiveScores = createSelector(
   }
 );
 
+export const selectLiveStatsSummary = createSelector(
+  [selectLiveMatchState],
+  (live) => {
+    const stats = {
+      faltas_local: 0,
+      faltas_visita: 0,
+      amarillas_local: 0,
+      amarillas_visita: 0,
+      rojas_local: 0,
+      rojas_visita: 0,
+      periodo: live.currentPeriod
+    };
+
+    live.events.forEach(e => {
+      if (e.type === 'falta') {
+        if (e.team === 'local') stats.faltas_local++;
+        else stats.faltas_visita++;
+      } else if (e.type === 'amarilla') {
+        if (e.team === 'local') stats.amarillas_local++;
+        else stats.amarillas_visita++;
+      } else if (e.type === 'roja') {
+        if (e.team === 'local') stats.rojas_local++;
+        else stats.rojas_visita++;
+      }
+    });
+
+    return stats;
+  }
+);
+
 export default liveMatchSlice.reducer;

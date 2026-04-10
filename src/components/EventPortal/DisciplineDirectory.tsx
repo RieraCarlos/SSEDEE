@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/api/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Shield, Zap, Target } from 'lucide-react';
+
+// Redux
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { fetchTournamentTeams } from '@/store/thunks/tournamentsThunks';
+import { selectTournamentTeams, selectTeamsLoading } from '@/store/slices/tournamentsSlice';
 
 interface Team {
   id: string;
@@ -17,83 +22,49 @@ interface Discipline {
 }
 
 const DisciplineDirectory: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState<string>('futbol');
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [loading, setLoading] = useState(true);
-
-    const disciplines: Discipline[] = [
-      { id: 'futbol', name: 'Fútbol', icon: '⚽' },
-      { id: 'futsal', name: 'Fútbol Sala', icon: '👟' },
-      { id: 'basketball', name: 'Basketball', icon: '🏀' },
-      { id: 'voley', name: 'Voley', icon: '🏐' },
-      { id: 'natacion', name: 'Natación', icon: '🏊' }
-    ];
   
-    useEffect(() => {
-      const fetchTeams = async () => {
-        setLoading(true);
-        
-        const sportToTournament: Record<string, string> = {
-          futbol: 'da1c6eec-e4b6-47de-8885-dbefb7b043bc',
-          basketball: '9ff781b9-69b5-4d42-b4ec-ed8ae4a3ac26',
-          voley: 'a01eeea7-a34f-419d-b970-9b1e485d15d3',
-          futsal: 'futsal_placeholder',
-          natacion: 'natacion_placeholder'
-        };
+  // Selectores de Redux
+  const reduxTeams = useAppSelector(selectTournamentTeams);
+  const loading = useAppSelector(selectTeamsLoading);
 
-      const targetTournamentId = sportToTournament[activeTab];
+  const disciplines: Discipline[] = [
+    { id: 'futbol', name: 'Fútbol', icon: '⚽' },
+    { id: 'futsal', name: 'Fútbol Sala', icon: '👟' },
+    { id: 'basketball', name: 'Basketball', icon: '🏀' },
+    { id: 'voley', name: 'Voley', icon: '🏐' },
+    { id: 'natacion', name: 'Natación', icon: '🏊' }
+  ];
 
-      // Omitir consulta si el ID es un placeholder (no es un UUID válido)
-      if (targetTournamentId.includes('placeholder')) {
-        setTeams([]);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // 1. Get the list of team IDs from the tournament
-        const { data: tournamentData, error: tError } = await supabase
-          .from('torneos')
-          .select('equipos')
-          .eq('id', targetTournamentId)
-          .single();
-
-        if (tError || !tournamentData?.equipos || tournamentData.equipos.length === 0) {
-          setTeams([]);
-          setLoading(false);
-          return;
-        }
-
-        const teamIds = tournamentData.equipos;
-
-        // 2. Fetch club details for those IDs
-        const { data: clubsData, error: cError } = await supabase
-          .from('clubes')
-          .select('id, name, logo_url')
-          .in('id', teamIds);
-
-        if (!cError && clubsData) {
-          const formattedTeams = clubsData.map((club: any) => ({
-            id: club.id,
-            name: club.name || 'Club Desconocido',
-            discipline: activeTab.toUpperCase(),
-            logo_url: club.logo_url || `https://api.dicebear.com/7.x/identicon/svg?seed=${club.id}&backgroundColor=0f172a`
-          }));
-          
-          setTeams(formattedTeams);
-        } else {
-          setTeams([]);
-        }
-      } catch (err) {
-        console.error("Error fetching teams from tournament schema:", err);
-        setTeams([]);
-      }
-      
-      setLoading(false);
+  useEffect(() => {
+    const sportToTournament: Record<string, string> = {
+      futbol: import.meta.env.VITE_ID_TOURNAMENT_FUTBOL,
+      basketball: import.meta.env.VITE_ID_TOURNAMENT_BASKETBALL,
+      voley: import.meta.env.VITE_ID_TOURNAMENT_VOLEY,
+      futsal: import.meta.env.VITE_ID_TOURNAMENT_FUTSAL,
+      natacion: import.meta.env.VITE_ID_TOURNAMENT_NATACION
     };
 
-    fetchTeams();
-  }, [activeTab]);
+    const targetTournamentId = sportToTournament[activeTab];
+
+    // Omitir consulta si el ID es un placeholder (no es un UUID válido)
+    if (!targetTournamentId || targetTournamentId.includes('placeholder')) {
+      // Opcional: Podríamos limpiar el estado de Redux aquí si fuera necesario
+      return;
+    }
+
+    // Despachar el thunk de Redux
+    dispatch(fetchTournamentTeams(targetTournamentId));
+  }, [activeTab, dispatch]);
+
+  // Formatear los equipos obtenidos de Redux para la UI
+  const teams: Team[] = reduxTeams.map((club: any) => ({
+    id: club.id,
+    name: club.name || 'Club Desconocido',
+    discipline: activeTab.toUpperCase(),
+    logo_url: club.logo_url || `https://api.dicebear.com/7.x/identicon/svg?seed=${club.id}&backgroundColor=0f172a`
+  }));
 
   return (
     <div className="space-y-12">
@@ -101,9 +72,8 @@ const DisciplineDirectory: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">
-            Directorio de <span className="text-emerald-500">Equipos</span>
+            Disciplinas y <span className="text-emerald-500">Equipos</span>
           </h2>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Explora los clubes por disciplina</p>
         </div>
 
         <div className="flex items-center space-x-2 p-1.5 bg-white/5 backdrop-blur-md rounded-2xl border border-white/5 overflow-x-auto">
@@ -112,8 +82,8 @@ const DisciplineDirectory: React.FC = () => {
               key={d.id}
               onClick={() => setActiveTab(d.id)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 whitespace-nowrap ${activeTab === d.id
-                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/30'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/30'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
             >
               <span className="text-sm">{d.icon}</span>

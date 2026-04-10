@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '@/api/supabaseClient';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy } from 'lucide-react';
+
+// Redux
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { fetchTournamentDetails } from '@/store/thunks/tournamentsThunks';
+import { selectActiveTournamentMeta } from '@/store/slices/tournamentsSlice';
 
 interface EventMeta {
   name: string;
@@ -11,29 +15,21 @@ interface EventMeta {
 }
 
 const EventHero: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
-  const [meta, setMeta] = useState<EventMeta | null>(null);
+  const dispatch = useAppDispatch();
+  
+  // Selectores de Redux
+  const meta = useAppSelector(selectActiveTournamentMeta) as EventMeta | null;
 
   useEffect(() => {
     if (!tournamentId) return;
-    const fetchMeta = async () => {
-      const { data, error } = await supabase
-        .from('torneos')
-        .select('name')
-        .eq('id', tournamentId)
-        .single();
+    dispatch(fetchTournamentDetails(tournamentId));
+  }, [tournamentId, dispatch]);
 
-      if (!error && data) {
-        setMeta(data as any);
-      }
-    };
-    fetchMeta();
-  }, [tournamentId]);
-
-  const displayName = meta?.name || "Distrito de Lago Agrio";
+  const displayName = meta?.name || "Olimpiadas Docentes 2026";
   const displayDesc = meta?.description || "Vive la pasión del deporte en tiempo real con la tecnología y el respaldo de SSEDEE.";
 
   return (
-    <div className="relative h-[500px] w-full flex items-center justify-center overflow-hidden ">
+    <div className="relative h-[500px] w-full flex items-center justify-center overflow-hidden">
       {/* Background Layer with Depth */}
       <div className="absolute inset-0 z-0">
         {meta?.banner_url && meta.banner_url !== "" ? (
@@ -75,13 +71,11 @@ const EventHero: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
           className="relative inline-block"
         >
           <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full scale-125" />
-          {meta?.logo_url ? (
-            <img src={meta.logo_url} className="h-28 md:h-36 w-auto relative z-10 object-contain drop-shadow-2xl" alt="Logo Corporativo" />
-          ) : (
-            <div className="bg-slate-900 border-2 border-emerald-500/50 p-6 rounded-[2.5rem] relative z-10">
-              <Trophy className="h-16 w-16 md:h-20 md:w-20 text-emerald-500" />
-            </div>
-          )}
+          <div className="flex items-end justify-center">
+            <img src="https://zeiwwanzzgkwdwfqbqcw.supabase.co/storage/v1/object/public/Imagenes%20Publicas/Imagen1_Nero_AI_Image_Upscaler_Photo_Face.png" className="h-8 md:h-20 w-auto relative z-10 object-contain drop-shadow-2xl" alt="Logo Corporativo" />
+            <img src="https://zeiwwanzzgkwdwfqbqcw.supabase.co/storage/v1/object/public/Imagenes%20Publicas/771fe0a1-5b43-4acc-90ba-433c57e07814-Photoroom.png" className="h-28 md:h-40 w-auto relative z-10 object-contain drop-shadow-2xl -ml-3" alt="Logo Corporativo" />
+            <img src="https://zeiwwanzzgkwdwfqbqcw.supabase.co/storage/v1/object/public/Imagenes%20Publicas/Eventos%20deportivos%20(10).png" className="h-6 md:h-16 w-auto relative z-10 object-contain drop-shadow-2xl -ml-3" alt="Logo Corporativo" />
+          </div>
         </motion.div>
 
         {/* Main Presentation Title */}
@@ -91,10 +85,10 @@ const EventHero: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
           transition={{ delay: 0.3 }}
           className="space-y-4"
         >
-          <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase italic leading-[0.85]">
+          <h1 className="text-3xl md:text-6xl font-black text-white tracking-tighter uppercase italic leading-[0.85]">
             {displayName}
           </h1>
-          <p className="text-slate-300 text-sm md:text-lg max-w-2xl mx-auto font-medium leading-relaxed opacity-80 mt-4 px-8">
+          <p className="text-slate-300 text-xs md:text-lg max-w-xl mx-auto font-medium leading-relaxed opacity-80 mt-4 px-8">
             {displayDesc}
           </p>
         </motion.div>

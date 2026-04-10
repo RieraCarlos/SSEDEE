@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '@/api/supabaseClient';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, Shield, Zap, TrendingUp, ChevronRight, Target } from 'lucide-react';
+
+// Redux
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { fetchTournamentStatsLeaders } from '@/store/thunks/tournamentsThunks';
+import { selectPortalStats, selectStatsLoading } from '@/store/slices/tournamentsSlice';
 
 interface LeaderStat {
   name: string;
@@ -11,51 +16,34 @@ interface LeaderStat {
 }
 
 const StatsLeaders: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
-  const [leaders, setLeaders] = useState<LeaderStat[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  
+  // Selectores de Redux
+  const rawEvents = useAppSelector(selectPortalStats);
+  const loading = useAppSelector(selectStatsLoading);
 
   useEffect(() => {
     if (!tournamentId) return;
+    dispatch(fetchTournamentStatsLeaders(tournamentId));
+  }, [tournamentId, dispatch]);
 
-    const fetchLeaders = async () => {
-      setLoading(true);
-      // Logic: Aggregate 'gol' events from partidos_sucesos linked to matches of this tournament
-      const { data, error } = await supabase
-        .from('partidos_sucesos')
-        .select(`
-          jugador_nombre,
-          tipo,
-          equipo,
-          partido:partidos_calendario!inner(torneo_id)
-        `)
-        .eq('partido.torneo_id', tournamentId)
-        .in('tipo', ['gol', 'punto_basket', 'punto_voley']);
+  // Procesar los eventos de Redux para calcular los líderes
+  const counts: Record<string, { count: number; team: string; type: string }> = {};
+  rawEvents.forEach((event: any) => {
+    const name = event.jugador_nombre;
+    if (!counts[name]) counts[name] = { count: 0, team: event.equipo, type: event.tipo };
+    counts[name].count++;
+  });
 
-      if (!error && data) {
-        const counts: Record<string, { count: number; team: string; type: string }> = {};
-        data.forEach((event: any) => {
-          const name = event.jugador_nombre;
-          if (!counts[name]) counts[name] = { count: 0, team: event.equipo, type: event.tipo };
-          counts[name].count++;
-        });
-
-        const sorted = Object.entries(counts)
-          .map(([name, info]) => ({
-            name,
-            value: info.count,
-            team: info.team,
-            discipline: info.type === 'gol' ? 'Fútbol' : 'General'
-          }))
-          .sort((a, b) => b.value - a.value)
-          .slice(0, 6);
-
-        setLeaders(sorted);
-      }
-      setLoading(false);
-    };
-
-    fetchLeaders();
-  }, [tournamentId]);
+  const leaders: LeaderStat[] = Object.entries(counts)
+    .map(([name, info]) => ({
+      name,
+      value: info.count,
+      team: info.team,
+      discipline: info.type === 'gol' ? 'Fútbol' : 'General'
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 6);
 
   return (
     <div className="bg-[#0f172a]/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col h-full">

@@ -1,5 +1,3 @@
-import Footer from '@/components/Landing/Footer';
-import Nav from '@/components/Landing/Nav';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import HomeClub from '@/components/HomeDT/HomeClub'; // Corrected path for DT's home
 import CreateClubForm from '@/components/Clubs/CreateClubForm';
@@ -20,11 +18,9 @@ export default function DT() {
   if (user && user.role === 'dt' && !user.id_club) {
     return (
       <div className="text-white min-h-screen flex flex-col">
-        <Nav />
         <div className="flex-grow flex items-center justify-center p-4">
           <CreateClubForm user={user} />
         </div>
-        <Footer />
       </div>
     );
   }
@@ -32,11 +28,9 @@ export default function DT() {
   // Otherwise, show the normal DT dashboard.
   return (
     <div className="text-white min-h-screen flex flex-col space-y-2">
-      <Nav />
       <div className='px-5 md:px-15 lg:px-35 mb-15 '>
         <HomeClub />
       </div>
-      <Footer />
     </div>
   );
 }

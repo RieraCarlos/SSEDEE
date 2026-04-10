@@ -1,6 +1,6 @@
 import React from 'react';
-import { Activity, Zap } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Activity, Zap, ShieldAlert, Timer } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { LiveMatch } from '@/hooks/useLiveEvents';
 
 interface PublicScoreboardProps {
@@ -23,108 +23,210 @@ const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
   const disciplineKey = (match.discipline || 'futbol').toLowerCase();
   const accentColor = colors[disciplineKey] || '#10b981';
 
+  // Helpers for displaying periods
+  const getPeriodLabel = (p?: number) => {
+    if (!p) return 'En Progreso';
+    if (p === 1) return '1er Tiempo';
+    if (p === 2) return '2do Tiempo';
+    if (p === 3) return 'Tiempo Extra';
+    return `${p}º Periodo`;
+  };
+
   return (
     <div 
-      className="group relative bg-[#0f172a]/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] overflow-hidden transition-all duration-700 shadow-2xl"
-      style={{ boxShadow: `0 30px 60px -20px ${accentColor}20` }}
+      className="group relative bg-[#0f172a]/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] md:rounded-[3rem] overflow-hidden transition-all duration-700 shadow-2xl hover:border-white/20"
+      style={{ boxShadow: `0 30px 100px -20px ${accentColor}15` }}
     >
-      {/* Glow Effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      {/* Premium Glass Top Highlight */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-      {/* Header Info: Scoreboard Style */}
-      <div className="flex items-center justify-between px-8 py-4 bg-white/[0.03] border-b border-white/5">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center gap-2">
+      {/* 1. Header: Meta Info & Status */}
+      <div className="flex items-center justify-between px-6 md:px-10 py-5 bg-white/[0.04] border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-600"></span>
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500">Live Result</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-rose-500">Live Result</span>
           </div>
-          <div className="h-4 w-px bg-white/10" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Match ID: {match.id.slice(0, 5)}</span>
+          <div className="hidden md:block h-3 w-px bg-white/10" />
+          <div className="hidden md:flex items-center gap-2 text-slate-500 font-bold text-[9px] uppercase tracking-widest">
+             <Timer size={10} />
+             {getPeriodLabel(match.periodo)}
+          </div>
         </div>
         
-        <div className="flex items-center space-x-2 text-emerald-400">
-           <Zap size={14} className="animate-pulse" />
-           <span className="text-[10px] font-black uppercase tracking-widest">{match.discipline || 'Competencia'}</span>
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+           <Zap size={12} style={{ color: accentColor }} className="animate-pulse" />
+           <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-300">
+             {match.discipline || 'Competencia'}
+           </span>
         </div>
       </div>
 
-      {/* Main Scoreboard Action */}
-      <div className="p-10 md:p-14 flex items-center justify-between relative overflow-hidden">
-        {/* Background Decorative Activity */}
-        <Activity className="absolute bottom-[-20%] right-[-5%] w-40 h-40 text-white/[0.02] -rotate-12" />
+      {/* 2. Main Scoreboard: The Duel */}
+      <div className="relative p-8 md:p-16">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-0 relative z-10">
+        
+        {/* Mobile Period Indicator (Mobile Only) */}
+        <div className="md:hidden flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
+            <Timer size={12} className="text-slate-400" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                {getPeriodLabel(match.periodo)}
+            </span>
+        </div>
 
-        {/* Local Team */}
-        <div className="flex flex-col items-center flex-1 space-y-6">
+        {/* --- LOCAL TEAM --- */}
+        <div className="flex flex-col items-center flex-1 w-full md:w-auto order-1 md:order-1">
           <motion.div 
-            whileHover={{ scale: 1.1 }}
-            className="w-20 h-20 md:w-24 md:h-24 bg-slate-900 border border-white/10 rounded-3xl flex items-center justify-center p-4 shadow-2xl relative"
+            whileHover={{ scale: 1.05 }}
+            className="w-24 h-24 md:w-32 md:h-32 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-[2rem] flex items-center justify-center p-5 shadow-2xl relative group/logo"
           >
-             <div className="absolute inset-0 bg-white/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+             <div className="absolute inset-0 bg-white/5 blur-2xl rounded-full opacity-0 group-hover/logo:opacity-100 transition-opacity" />
              <img 
                 src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.local_name}&backgroundColor=0f172a`} 
-                className="w-full h-full object-contain relative z-10" 
+                className="w-full h-full object-contain relative z-10 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" 
                 alt="Local" 
              />
           </motion.div>
-          <h3 className="text-sm md:text-base font-black text-white uppercase italic tracking-tighter text-center h-12 flex items-center">
-            {match.local_name}
-          </h3>
+          
+          <div className="mt-6 text-center">
+            <h3 className="text-lg md:text-2xl xl:text-2xl font-black text-white italic uppercase tracking-tighter leading-none mb-4">
+              {match.local_name}
+            </h3>
+
+            {/* Local Stats Breakdown */}
+            <div className="flex items-center justify-center gap-3">
+              {/* Tarjetas Amarillas */}
+              {match.amarillas_local !== undefined && (
+                <div className="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded-lg">
+                  <div className="w-2 h-3 bg-yellow-400 rounded-sm shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
+                  <span className="text-[10px] font-black text-yellow-400">{match.amarillas_local}</span>
+                </div>
+              )}
+              {/* Tarjetas Rojas */}
+              {match.rojas_local !== undefined && (
+                <div className="flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-1 rounded-lg">
+                  <div className="w-2 h-3 bg-rose-500 rounded-sm shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
+                  <span className="text-[10px] font-black text-rose-400">{match.rojas_local}</span>
+                </div>
+              )}
+              {/* Faltas */}
+              {match.faltas_local !== undefined && (
+                <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg">
+                  <ShieldAlert size={12} className="text-blue-400" />
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">F: {match.faltas_local}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Score Display (The Heart of the Shield) */}
-        <div className="flex flex-col items-center px-6 md:px-12">
-            <div className="flex items-center space-x-6">
-                <motion.span 
-                  key={`local-${match.goles_local}`}
-                  initial={{ scale: 1.5, color: '#10b981' }}
-                  animate={{ scale: 1, color: '#fff' }}
-                  className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                >
-                    {match.goles_local}
-                </motion.span>
-                <span className="text-3xl md:text-5xl font-black text-slate-700 animate-pulse">:</span>
-                <motion.span 
-                  key={`visita-${match.goles_visitante}`}
-                  initial={{ scale: 1.5, color: '#10b981' }}
-                  animate={{ scale: 1, color: '#fff' }}
-                  className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                >
-                    {match.goles_visitante}
-                </motion.span>
+        {/* --- CENTRAL SCORE --- */}
+        <div className="flex flex-col items-center px-4 md:px-16 order-2 md:order-2">
+            <div className="flex items-center gap-6 md:gap-10">
+                <AnimatePresence mode="popLayout">
+                    <motion.span 
+                      key={`local-${match.goles_local}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+                    >
+                        {match.goles_local}
+                    </motion.span>
+                </AnimatePresence>
+                
+                <span className="text-3xl md:text-6xl font-black text-white/10 animate-pulse">:</span>
+                
+                <AnimatePresence mode="popLayout">
+                    <motion.span 
+                      key={`visita-${match.goles_visitante}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="text-6xl md:text-8xl font-black tabular-nums tracking-tighter text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+                    >
+                        {match.goles_visitante}
+                    </motion.span>
+                </AnimatePresence>
             </div>
-            <div className="mt-8 flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                <Activity size={12} className="text-emerald-400" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">En Progreso</span>
+            
+            <div className="mt-4 md:mt-2 flex items-center gap-2 px-5 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full shadow-lg shadow-emerald-500/5">
+                <Activity size={14} className="text-emerald-400" />
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400">Match Action</span>
             </div>
         </div>
 
-        {/* Visitor Team */}
-        <div className="flex flex-col items-center flex-1 space-y-6">
+        {/* --- VISITOR TEAM --- */}
+        <div className="flex flex-col items-center flex-1 w-full md:w-auto order-3 md:order-3">
           <motion.div 
-            whileHover={{ scale: 1.1 }}
-            className="w-20 h-20 md:w-24 md:h-24 bg-slate-900 border border-white/10 rounded-3xl flex items-center justify-center p-4 shadow-2xl relative"
+            whileHover={{ scale: 1.05 }}
+            className="w-24 h-24 md:w-32 md:h-32 bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-[2rem] flex items-center justify-center p-5 shadow-2xl relative group/logo"
           >
-             <div className="absolute inset-0 bg-white/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+             <div className="absolute inset-0 bg-white/5 blur-2xl rounded-full opacity-0 group-hover/logo:opacity-100 transition-opacity" />
              <img 
                 src={`https://api.dicebear.com/7.x/identicon/svg?seed=${match.visita_name}&backgroundColor=0f172a`} 
-                className="w-full h-full object-contain relative z-10" 
+                className="w-full h-full object-contain relative z-10 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" 
                 alt="Visita" 
              />
           </motion.div>
-          <h3 className="text-sm md:text-base font-black text-white uppercase italic tracking-tighter text-center h-12 flex items-center">
-            {match.visita_name}
-          </h3>
+          
+          <div className="mt-6 text-center">
+            <h3 className="text-lg md:text-2xl xl:text-2xl font-black text-white italic uppercase tracking-tighter leading-none mb-4">
+              {match.visita_name}
+            </h3>
+
+            {/* Visitor Stats Breakdown */}
+            <div className="flex items-center justify-center gap-3">
+              {/* Tarjetas Amarillas */}
+              {match.amarillas_visita !== undefined && (
+                <div className="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 px-2 py-1 rounded-lg">
+                  <div className="w-2 h-3 bg-yellow-400 rounded-sm shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
+                  <span className="text-[10px] font-black text-yellow-400">{match.amarillas_visita}</span>
+                </div>
+              )}
+              {/* Tarjetas Rojas */}
+              {match.rojas_visita !== undefined && (
+                <div className="flex items-center gap-1.5 bg-rose-500/10 border border-rose-500/20 px-2 py-1 rounded-lg">
+                  <div className="w-2 h-3 bg-rose-500 rounded-sm shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
+                  <span className="text-[10px] font-black text-rose-400">{match.rojas_visita}</span>
+                </div>
+              )}
+              {/* Faltas */}
+              {match.faltas_visita !== undefined && (
+                <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg">
+                  <ShieldAlert size={12} className="text-blue-400" />
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-tighter">F: {match.faltas_visita}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        </div>
+
+        {/* Ambient Activity Icon (Background Decoration) */}
+        <Activity className="absolute bottom-[-10%] right-[-5%] w-64 h-64 text-white/[0.01] -rotate-12 pointer-events-none" />
       </div>
 
-      {/* Footer Branded Stats Only */}
-      <div className="py-4 bg-white/[0.02] border-t border-white/5 flex justify-center items-center space-x-8">
-          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-            DATOS SUMINISTRADOS POR <span className="text-slate-300">SSEDEE MONITOR</span>
-          </p>
+      {/* 3. Footer: Institutional Branding */}
+      <div className="py-5 bg-white/[0.03] border-t border-white/5 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12">
+          <div className="flex items-center gap-3">
+            <div className="h-px w-8 bg-white/10" />
+            <p className="text-[8px] md:text-[9px] font-black text-slate-500 uppercase tracking-[0.4em]">
+              Suministro de Datos: <span className="text-slate-300">SSEDEE Monitor</span>
+            </p>
+            <div className="h-px w-8 bg-white/10" />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
+            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest leading-none">
+              Real-time Sync Active
+            </p>
+          </div>
       </div>
     </div>
   );

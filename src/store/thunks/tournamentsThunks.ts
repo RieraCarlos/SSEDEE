@@ -33,14 +33,26 @@ export const addTeamToTournament = createAsyncThunk<
 // Fase 2: Persistencia de Partidos (Thunks)
 export const fetchTournamentMatches = createAsyncThunk(
   "tournaments/fetchMatches",
-  async (tournamentId: string, { rejectWithValue }) => {
-    const { data, error } = await supabase
-      .from('partidos_calendario')
-      .select('*')
-      .eq('torneo_id', tournamentId);
-    
-    if (error) return rejectWithValue(error.message);
-    return data;
+  async (tournamentId: string | string[], { rejectWithValue }) => {
+    try {
+      const ids = Array.isArray(tournamentId) ? tournamentId : [tournamentId];
+      const { data, error } = await supabase
+        .from('partidos_calendario')
+        .select(`
+          *,
+          torneos(name),
+          local:equipo_local_id(name),
+          visita:equipo_visitante_id(name)
+        `)
+        .in('torneo_id', ids)
+        .order('fecha_partido', { ascending: true })
+        .order('hora_inicio', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -75,5 +87,93 @@ export const fetchStandings = createAsyncThunk(
     
     if (error) return rejectWithValue(error.message);
     return data;
+  }
+);
+
+export const fetchTournamentTeams = createAsyncThunk(
+  "tournaments/fetchTeams",
+  async (tournamentId: string, { rejectWithValue }) => {
+    try {
+      // 1. Obtener IDs de equipos del torneo
+      const { data: tournament, error: tError } = await supabase
+        .from('torneos')
+        .select('equipos')
+        .eq('id', tournamentId)
+        .single();
+      
+      if (tError) throw tError;
+      if (!tournament?.equipos || tournament.equipos.length === 0) return [];
+
+      // 2. Obtener detalles de los clubes
+      const { data: clubs, error: cError } = await supabase
+        .from('clubes')
+        .select('id, name, logo_url')
+        .in('id', tournament.equipos);
+      
+      if (cError) throw cError;
+
+      return clubs || [];
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchTournamentDetails = createAsyncThunk(
+  "tournaments/fetchDetails",
+  async (tournamentId: string, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from('torneos')
+        .select('name')
+        .eq('id', tournamentId)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchTournamentStatsLeaders = createAsyncThunk(
+  "tournaments/fetchStatsLeaders",
+  async (tournamentId: string, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from('partidos_sucesos')
+        .select(`
+          jugador_nombre,
+          tipo,
+          equipo,
+          partido:partidos_calendario!inner(torneo_id)
+        `)
+        .eq('partido.torneo_id', tournamentId)
+        .in('tipo', ['gol', 'punto_basket', 'punto_voley']);
+      
+      if (error) throw error;
+      return data || [];
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const updateTournamentMatch = createAsyncThunk(
+  "tournaments/updateMatch",
+  async ({ matchId, data }: { matchId: string; data: { fecha_partido: string; hora_inicio: string } }, { rejectWithValue }) => {
+    try {
+      const { data: updated, error } = await supabase
+        .from('partidos_calendario')
+        .update(data)
+        .eq('id', matchId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return updated;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
   }
 );

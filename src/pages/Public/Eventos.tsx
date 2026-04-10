@@ -13,8 +13,6 @@ import StatsLeaders from '@/components/EventPortal/StatsLeaders';
 // UI Components
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import Nav from '@/components/Landing/Nav';
-import Footer from '@/components/Landing/Footer';
 
 /**
  * Animation Variants (Premium Tech Aesthetic)
@@ -53,18 +51,18 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { ChevronDown, Calendar } from 'lucide-react';
 
 // Reusable Collapsible Section for the Portal
-const PortalSection: React.FC<{ 
-  title: string; 
-  subtitle: string; 
-  icon: React.ReactNode; 
+const PortalSection: React.FC<{
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
   children: React.ReactNode;
   defaultOpen?: boolean;
 }> = ({ title, subtitle, icon, children, defaultOpen = true }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <Collapsible.Root 
-      open={isOpen} 
+    <Collapsible.Root
+      open={isOpen}
       onOpenChange={setIsOpen}
       className="w-full space-y-4"
     >
@@ -82,8 +80,8 @@ const PortalSection: React.FC<{
         </div>
 
         <Collapsible.Trigger asChild>
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="group flex items-center gap-3 bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/30 rounded-2xl px-6 py-8 transition-all duration-500"
           >
             <span className="text-[10px] font-black text-slate-400 group-hover:text-emerald-400 uppercase tracking-widest">
@@ -112,18 +110,20 @@ const PortalSection: React.FC<{
   );
 };
 
+// Mapeo dinámico de eventos por slug (Mantenido fuera para estabilidad de referencias)
+const EVENT_CONFIGS: Record<string, string[]> = {
+  distrito: [
+    import.meta.env.VITE_ID_TOURNAMENT_FUTBOL,
+    import.meta.env.VITE_ID_TOURNAMENT_BASKETBALL,
+    import.meta.env.VITE_ID_TOURNAMENT_VOLEY
+  ]
+};
+
 export default function Eventos() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
 
-  // Mapeo dinámico de eventos por slug
-  const EVENT_CONFIGS: Record<string, string[]> = {
-    distrito: [
-      "da1c6eec-e4b6-47de-8885-dbefb7b043bc", // Fútbol
-      "9ff781b9-69b5-4d42-b4ec-ed8ae4a3ac26", // Basket
-      "a01eeea7-a34f-419d-b970-9b1e485d15d3"  // Voley
-    ]
-  };
+
 
   // El modo portada se activa si existe un slug válido
   const activeSlug = slug?.toLowerCase();
@@ -137,8 +137,6 @@ export default function Eventos() {
 
   return (
     <div className="min-h-screen bg-[#07080a] text-white flex flex-col font-sans selection:bg-emerald-500/30">
-      <Nav />
-
       <main className="flex-1 relative">
         {/* Ambient Global Glow */}
         <div className="fixed inset-0 pointer-events-none">
@@ -257,9 +255,9 @@ export default function Eventos() {
                   {/* 2. LIVE MONITOR */}
                   <AnimatePresence>
                     {activeMatches.length > 0 && (
-                      <PortalSection 
-                        title="En Vivo" 
-                        subtitle="Monitor de encuentros actuales" 
+                      <PortalSection
+                        title="En Vivo"
+                        subtitle="Monitor de encuentros actuales"
                         icon={<Zap size={32} className="animate-pulse" />}
                       >
                         <LiveMonitor matches={activeMatches} />
@@ -268,27 +266,27 @@ export default function Eventos() {
                   </AnimatePresence>
 
                   {/* 3. DIRECTORY (Teams Gallery) */}
-                  <PortalSection 
-                    title="Directorio de Equipos" 
-                    subtitle="Explora los clubes por disciplina" 
+                  <PortalSection
+                    title="Directorio Deportivo"
+                    subtitle="Explora los clubes por disciplina"
                     icon={<Globe size={32} />}
                   >
                     <DisciplineDirectory />
                   </PortalSection>
 
                   {/* 4. SCHEDULE / TIMELINE */}
-                  <PortalSection 
-                    title="Cronograma Oficial" 
-                    subtitle="Calendario unificado por deportes" 
+                  <PortalSection
+                    title="Cronograma Oficial"
+                    subtitle="Calendario unificado por deportes"
                     icon={<Calendar size={32} />}
                   >
                     <MatchTimeline tournamentId={DISTRITO_IDS} />
                   </PortalSection>
 
                   {/* 5. STATS & LEADERS */}
-                  <PortalSection 
-                    title="Líderes de Estadísticas" 
-                    subtitle="Máximos anotadores del evento" 
+                  <PortalSection
+                    title="Líderes de Estadísticas"
+                    subtitle="Máximos anotadores del evento"
                     icon={<Trophy size={32} />}
                   >
                     <StatsLeaders tournamentId={DISTRITO_ID} />
@@ -296,26 +294,10 @@ export default function Eventos() {
 
                 </div>
               </main>
-
-              {/* 5. PORTADA FOOTER */}
-              <footer className="border-t border-white/5 py-16 text-center bg-black/20">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  className="space-y-4"
-                >
-                  <div className="h-px w-20 bg-emerald-500/30 mx-auto" />
-                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.6em] hover:text-emerald-400 transition-colors cursor-default">
-                    SSEDEE ECUADOR OFFICIAL SYSTEM
-                  </p>
-                </motion.div>
-              </footer>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
-
-      <Footer />
     </div>
   );
 }

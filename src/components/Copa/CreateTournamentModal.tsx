@@ -14,9 +14,10 @@ import { Trophy } from "lucide-react";
 
 interface Props {
     userId: string;
+    onSuccess?: () => void;
 }
 
-export default function CreateTournamentModal({ userId }: Props) {
+export default function CreateTournamentModal({ userId, onSuccess }: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -46,7 +47,13 @@ export default function CreateTournamentModal({ userId }: Props) {
                 </div>
                 
                 <div className="p-6">
-                    <TournamentStepper userId={userId} onClose={() => setIsOpen(false)} />
+                    <TournamentStepper 
+                        userId={userId} 
+                        onClose={() => {
+                            setIsOpen(false);
+                            onSuccess?.();
+                        }} 
+                    />
                 </div>
             </DialogContent>
         </Dialog>

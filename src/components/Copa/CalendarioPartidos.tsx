@@ -5,14 +5,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { 
+    Dialog, 
+    DialogContent, 
+    DialogHeader, 
+    DialogTitle, 
+    DialogFooter,
+    DialogDescription 
+} from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Calendar, Clock, Trophy, Settings2, PlayCircle, Save, Download } from "lucide-react";
+import { fetchTournamentMatches, saveTournamentFixture, updateTournamentMatch } from "@/store/thunks/tournamentsThunks";
+import { Calendar as CalendarIcon, Clock, Trophy, Settings2, PlayCircle, Save, Download, Edit2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLiveMatchSupabase } from "@/hooks/useLiveMatchSupabase";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
-import { fetchTournamentMatches, saveTournamentFixture } from "@/store/thunks/tournamentsThunks";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
+import type { Club } from "@/api/type/clubs.api";
 import { useCalendarGenerator } from "@/hooks/useCalendarGenerator";
 import { PdfReportService } from "@/services/pdf-report.services";
 import MatchResultDialog from "./MatchResultDialog";
@@ -31,6 +40,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingPdf, setLoadingPdf] = useState(false);
     const [selectedMatchResults, setSelectedMatchResults] = useState<any | null>(null);
+    const [editingMatch, setEditingMatch] = useState<any | null>(null);
     const { activateMatch, loading: loadingLive } = useLiveMatchSupabase();
 
     const { 
@@ -39,38 +49,39 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
         generate 
     } = useCalendarGenerator(tournament);
 
+    const hydrateFromInventory = async () => {
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        if (!tournament.id || !uuidRegex.test(tournament.id)) return;
+
+        const resultAction = await dispatch(fetchTournamentMatches(tournament.id));
+        if (fetchTournamentMatches.fulfilled.match(resultAction)) {
+            const data = resultAction.payload as any[];
+            if (data && data.length > 0) {
+                const hydrated = data.map(d => ({
+                    id: d.id,
+                    home: d.equipo_local_id || "Equipo A",
+                    away: d.equipo_visitante_id || "Equipo B",
+                    date: d.fecha_partido || "Sin fecha",
+                    time: d.hora_inicio || "Sin hora",
+                    round: d.fase || "Fase de Eliminación",
+                    is_active: d.is_active,
+                    reporte_final: d.reporte_final,
+                    goles_local: d.goles_local,
+                    goles_visitante: d.goles_visitante,
+                }));
+                setGeneratedMatches(hydrated);
+                setIsDbHydrated(true);
+            }
+        }
+    };
+
     useEffect(() => {
         dispatch(fetchClubs());
     }, [dispatch]);
 
     useEffect(() => {
-        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-        if (!tournament.id || !uuidRegex.test(tournament.id)) return;
-
-        const hydrate = async () => {
-            const resultAction = await dispatch(fetchTournamentMatches(tournament.id));
-            if (fetchTournamentMatches.fulfilled.match(resultAction)) {
-                const data = resultAction.payload as any[];
-                if (data && data.length > 0) {
-                    const hydrated = data.map(d => ({
-                        id: d.id,
-                        home: d.equipo_local_id || "Equipo A",
-                        away: d.equipo_visitante_id || "Equipo B",
-                        date: d.fecha_partido || "Sin fecha",
-                        time: d.hora_inicio || "Sin hora",
-                        round: d.fase || "Fase de Eliminación",
-                        is_active: d.is_active,
-                        reporte_final: d.reporte_final,
-                        goles_local: d.goles_local,
-                        goles_visitante: d.goles_visitante,
-                    }));
-                    setGeneratedMatches(hydrated);
-                    setIsDbHydrated(true);
-                }
-            }
-        };
-        hydrate();
-    }, [tournament.id, dispatch, setGeneratedMatches]);
+        hydrateFromInventory();
+    }, [tournament.id, dispatch]);
 
     const handleSave = async () => {
         setLoadingSave(true);
@@ -82,7 +93,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                 .map(m => {
                     const resolveId = (nameOrId: string) => {
                         if (uuidRegex.test(nameOrId)) return nameOrId;
-                        const club = allClubs.find(c => c.name.toLowerCase() === nameOrId.toLowerCase());
+                        const club = (allClubs as Club[]).find(c => c.name.toLowerCase() === nameOrId.toLowerCase());
                         return club ? club.id : null;
                     };
 
@@ -115,6 +126,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
             if (saveTournamentFixture.fulfilled.match(resultAction)) {
                 setIsDbHydrated(true);
                 toast.success("Fixtures guardados en la Base de Datos");
+                hydrateFromInventory();
             } else {
                 throw new Error(resultAction.payload as string || "Error al guardar");
             }
@@ -128,11 +140,10 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
     const handleExportPdf = async () => {
         setLoadingPdf(true);
         try {
-            // Resolvemos IDs a Nombres antes de enviar al servicio de PDF
             const resolvedMatches = generatedMatches.map(m => ({
                 ...m,
-                home: allClubs.find(c => c.id === m.home)?.name || m.home,
-                away: allClubs.find(c => c.id === m.away)?.name || m.away,
+                home: (allClubs as Club[]).find(c => c.id === m.home)?.name || m.home,
+                away: (allClubs as Club[]).find(c => c.id === m.away)?.name || m.away,
             }));
 
             await PdfReportService.generateTournamentReport(tournament, resolvedMatches);
@@ -142,6 +153,29 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
             toast.error("Error al generar el PDF");
         } finally {
             setLoadingPdf(false);
+        }
+    };
+
+    const handleUpdateMatch = async () => {
+        if (!editingMatch) return;
+        try {
+            const resultAction = await dispatch(updateTournamentMatch({
+                matchId: editingMatch.id,
+                data: {
+                    fecha_partido: editingMatch.date,
+                    hora_inicio: editingMatch.time
+                }
+            }));
+
+            if (updateTournamentMatch.fulfilled.match(resultAction)) {
+                toast.success("Horario de partido actualizado");
+                setEditingMatch(null);
+                hydrateFromInventory();
+            } else {
+                toast.error("Error al actualizar el partido");
+            }
+        } catch (error) {
+            toast.error("Error inesperado al editar");
         }
     };
 
@@ -253,6 +287,15 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex justify-between items-center opacity-70 group-hover:opacity-100 transition-opacity">
                                     {match.round}
                                     <div className="flex gap-2">
+                                        {isDbHydrated && !match.reporte_final && !match.is_active && (
+                                            <button 
+                                                onClick={() => setEditingMatch(match)}
+                                                className="hover:text-white transition-colors p-1"
+                                                title="Editar horario"
+                                            >
+                                                <Edit2 size={12} />
+                                            </button>
+                                        )}
                                         {match.reporte_final ? (
                                             <Badge variant="secondary" className="text-[9px] bg-blue-500/10 text-blue-400 border-blue-500/20">FINALIZADO</Badge>
                                         ) : match.is_active ? (
@@ -267,7 +310,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                                 <div className="flex flex-col items-center gap-3 mb-4">
                                     <div className="flex items-center justify-between w-full gap-2">
                                         <span className="text-xs font-bold truncate flex-1 text-right">
-                                            {allClubs.find(c => c.id === match.home)?.name || match.home}
+                                            {(allClubs as Club[]).find(c => c.id === match.home)?.name || match.home}
                                         </span>
                                         
                                         <div className="flex flex-col items-center">
@@ -285,12 +328,12 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                                         </div>
 
                                         <span className="text-xs font-bold truncate flex-1 text-left">
-                                            {allClubs.find(c => c.id === match.away)?.name || match.away}
+                                            {(allClubs as Club[]).find(c => c.id === match.away)?.name || match.away}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center text-[10px] text-gray-500 font-bold uppercase tracking-tighter">
-                                    <div className="flex items-center gap-1"><Calendar size={12} className="text-emerald-500/50" /> {match.date}</div>
+                                    <div className="flex items-center gap-1"><CalendarIcon size={12} className="text-emerald-500/50" /> {match.date}</div>
                                     <div className="flex items-center gap-1"><Clock size={12} className="text-emerald-500/50" /> {match.time}</div>
                                 </div>
 
@@ -319,6 +362,67 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                 match={selectedMatchResults}
                 disciplineId={tournament.id_categoria ? 'futbol' : 'futbol'} // TODO: Resolver id_deporte real
             />
+
+            <Dialog open={!!editingMatch} onOpenChange={() => setEditingMatch(null)}>
+                <DialogContent className="bg-[#13161c] text-white border-gray-800">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 italic font-black uppercase tracking-tighter">
+                            <Edit2 className="text-emerald-500" size={18} />
+                            REPROGRAMAR PARTIDO
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-500 text-[10px] uppercase font-bold tracking-widest">
+                            Ajuste de fecha y hora para el encuentro oficial
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {editingMatch && (
+                        <div className="py-6 space-y-6">
+                            <div className="flex items-center justify-between bg-black/20 p-4 rounded-lg border border-gray-800">
+                                <span className="text-xs font-bold uppercase">{(allClubs as Club[]).find(c => c.id === editingMatch.home)?.name || editingMatch.home}</span>
+                                <span className="text-[10px] text-emerald-500 font-black italic">VS</span>
+                                <span className="text-xs font-bold uppercase">{(allClubs as Club[]).find(c => c.id === editingMatch.away)?.name || editingMatch.away}</span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] uppercase font-black text-gray-400">Nueva Fecha</Label>
+                                    <Input 
+                                        type="date" 
+                                        className="bg-[#1d2029] border-gray-700"
+                                        value={editingMatch.date}
+                                        onChange={(e) => setEditingMatch({...editingMatch, date: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="text-[10px] uppercase font-black text-gray-400">Nueva Hora</Label>
+                                    <Input 
+                                        type="time" 
+                                        className="bg-[#1d2029] border-gray-700"
+                                        value={editingMatch.time}
+                                        onChange={(e) => setEditingMatch({...editingMatch, time: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => setEditingMatch(null)}
+                            className="text-gray-400 hover:text-white"
+                        >
+                            Cancelar
+                        </Button>
+                        <Button 
+                            onClick={handleUpdateMatch}
+                            className="bg-emerald-500 hover:bg-emerald-600 text-[#13161c] font-black italic"
+                        >
+                            Confirmar Cambio
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

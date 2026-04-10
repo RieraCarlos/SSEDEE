@@ -12,6 +12,14 @@ export interface LiveMatch {
   local_name?: string;
   visita_name?: string;
   discipline?: string;
+  // Estadísticas Extendidas
+  faltas_local?: number;
+  faltas_visita?: number;
+  amarillas_local?: number;
+  amarillas_visita?: number;
+  rojas_local?: number;
+  rojas_visita?: number;
+  periodo?: number;
 }
 
 /**
@@ -23,9 +31,10 @@ export const useLiveEvents = (tournamentIds: string | string[]) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!tournamentIds || (Array.isArray(tournamentIds) && tournamentIds.length === 0)) return;
-
+    if (!tournamentIds) return;
     const ids = Array.isArray(tournamentIds) ? tournamentIds : [tournamentIds];
+    const validIds = ids.filter(id => id && id.length > 0);
+    if (validIds.length === 0) return;
 
     // 1. Initial Fetch
     const fetchActiveMatches = async () => {
@@ -43,7 +52,7 @@ export const useLiveEvents = (tournamentIds: string | string[]) => {
             )
           )
         `)
-        .in('torneo_id', ids)
+        .in('torneo_id', validIds)
         .eq('is_active', true);
 
       if (!error && data) {
@@ -61,7 +70,7 @@ export const useLiveEvents = (tournamentIds: string | string[]) => {
     fetchActiveMatches();
 
     // 2. Realtime Subscriptions (One channel per tournament ID)
-    const channels = ids.map(id => {
+    const channels = validIds.map(id => {
       return supabase
         .channel(`live-matches-${id}`)
         .on(

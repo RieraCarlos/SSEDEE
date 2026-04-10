@@ -19,6 +19,8 @@ import Admin from './pages/Admin/Admin'
 import LiveMatch from './pages/Live/LiveMatch'
 import MasterEventPortal from './pages/Public/MasterEventPortal'
 
+import MainLayout from './components/shared/MainLayout'
+
 
 function App() {
   const dispatch = useAppDispatch()
@@ -31,26 +33,32 @@ function App() {
     <ScheduleProvider>
       <Toaster richColors />
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Rutas con Layout Principal (Nav y Footer persistentes) */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/evento/:slug" element={<Eventos />} />
+          
+          <Route path="/jugador" element={
+            <ProtectedRoute role="jugador"><Jugador /></ProtectedRoute>
+          } />
+          <Route path="/dt" element={
+            <ProtectedRoute role="dt"><DT /></ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute role="admin"><Admin /></ProtectedRoute>
+          } />
+          <Route path='/nomina' element={
+            <ProtectedRoute role='dt'>
+              <C_solicitudesClub />
+            </ProtectedRoute>
+          } />
+        </Route>
+
+        {/* Rutas sin Layout Principal o con Layouts Propios */}
         <Route path="/login" element={<Login />} />
-        <Route path="/jugador" element={
-          <ProtectedRoute role="jugador"><Jugador /></ProtectedRoute>
-        } />
-        <Route path="/dt" element={
-          <ProtectedRoute role="dt"><DT /></ProtectedRoute>
-        } />
-        <Route path="/admin" element={
-          <ProtectedRoute role="admin"><Admin /></ProtectedRoute>
-        } />
-        <Route path='/nomina' element={
-          <ProtectedRoute role='dt'>
-            <C_solicitudesClub />
-          </ProtectedRoute>
-        } />
         <Route path='/form' element={<FormularioUsuario />} />
         <Route path="/live/match/:matchId" element={<LiveMatch />} />
-        <Route path="/eventos" element={<Eventos />} />
-        <Route path="/evento/:slug" element={<Eventos />} />
         <Route path="/portal/:tournamentId" element={<MasterEventPortal />} />
       </Routes>
     </ScheduleProvider>

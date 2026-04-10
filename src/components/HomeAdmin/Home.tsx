@@ -3,8 +3,9 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { selectAuthUser } from "@/store/slices/authSlice";
 import { selectTournaments, selectStandings, selectTournamentsLoading } from "@/store/slices/tournamentsSlice";
 import { selectCategories, selectSport, fetchDeportes, fetchAllCategorias } from "@/store/slices/administrationSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchTournaments, fetchStandings } from "@/store/thunks/tournamentsThunks";
+import { fetchClubs } from "@/store/thunks/clubsThunks";
 import EquiposTorneo from "../Copa/EquiposTorneo";
 import CalendarioPartidos from "../Copa/CalendarioPartidos";
 import PosicionesTable from "../Copa/PosicionesTable";
@@ -25,14 +26,19 @@ export default function HomeAdmin() {
 
     const [expandedTournaments, setExpandedTournaments] = useState<string[]>([]);
 
-    useEffect(() => {
+    const refreshAllData = useCallback(() => {
         if (user?.id) {
             dispatch(fetchTournaments());
             dispatch(fetchStandings());
             dispatch(fetchDeportes());
             dispatch(fetchAllCategorias());
+            dispatch(fetchClubs());
         }
     }, [user?.id, dispatch]);
+
+    useEffect(() => {
+        refreshAllData();
+    }, [refreshAllData]);
 
     const toggleTournament = (id: string) => {
         setExpandedTournaments(prev =>
@@ -65,7 +71,12 @@ export default function HomeAdmin() {
                         </h1>
                         <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1 opacity-70">Control Central de Competencias</p>
                     </div>
-                    {isAdmin && user?.id && <CreateTournamentModal userId={user.id.toString()} />}
+                    {isAdmin && user?.id && (
+                        <CreateTournamentModal 
+                            userId={user.id.toString()} 
+                            onSuccess={refreshAllData}
+                        />
+                    )}
                 </div>
             </div>
 
@@ -98,10 +109,15 @@ export default function HomeAdmin() {
                                         <div className="text-left">
                                             {(() => {
                                                 const category = categories.find(c => c.id === tournament.id_categoria);
-                                                const sport = Sport.find(s => s.id === category?.id_deporte);
+                                                const sportName = Sport.find(s => s.id === category?.id_deporte)?.nombre;
+                                                
+                                                // Robust rendering to avoid flicker during sync
+                                                const categoryName = category?.nombre || 'S/C';
+                                                const disciplineName = sportName || 'S/D';
+
                                                 return (
                                                     <h3 className="text-xl font-black italic tracking-tight uppercase">
-                                                        {tournament.name} / {category?.nombre || 'S/C'} / {sport?.nombre || 'S/D'}
+                                                        {tournament.name} <span className="text-emerald-500/50 mx-1">/</span> {categoryName} <span className="text-emerald-500/50 mx-1">/</span> {disciplineName}
                                                     </h3>
                                                 );
                                             })()}

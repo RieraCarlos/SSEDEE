@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/api/supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, MapPin, Zap, Trophy, Calendar as CalendarIcon, ChevronDown } from 'lucide-react';
 import * as Collapsible from '@radix-ui/react-collapsible';
+
+// Redux
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { fetchTournamentMatches } from '@/store/thunks/tournamentsThunks';
+import { selectPortalMatches, selectTimelineLoading } from '@/store/slices/tournamentsSlice';
 
 interface TimelineMatch {
   id: string;
@@ -19,49 +24,31 @@ interface TimelineMatch {
 }
 
 const MatchTimeline: React.FC<{ tournamentId?: string | string[] }> = ({ tournamentId }) => {
-  const [matches, setMatches] = useState<TimelineMatch[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  
+  // Selectores de Redux
+  const reduxMatches = useAppSelector(selectPortalMatches);
+  const loading = useAppSelector(selectTimelineLoading);
 
   useEffect(() => {
     if (!tournamentId || (Array.isArray(tournamentId) && tournamentId.length === 0)) return;
+    dispatch(fetchTournamentMatches(tournamentId));
+  }, [tournamentId, dispatch]);
 
-    const fetchMatches = async () => {
-      setLoading(true);
-      const ids = Array.isArray(tournamentId) ? tournamentId : [tournamentId];
-      
-      const { data, error } = await supabase
-        .from('partidos_calendario')
-        .select(`
-          *,
-          torneos(name),
-          local:equipo_local_id(name),
-          visita:equipo_visitante_id(name)
-        `)
-        .in('torneo_id', ids)
-        .order('fecha_partido', { ascending: true })
-        .order('hora_inicio', { ascending: true });
-
-      if (!error && data) {
-        const formatted = data.map((m: any) => ({
-          id: m.id,
-          local_name: m.local?.name || 'Por definir',
-          visita_name: m.visita?.name || 'Por definir',
-          fecha: m.fecha_partido,
-          hora: m.hora_inicio,
-          tournament_name: m.torneos?.name || 'Torneo General',
-          status: (m.is_active ? 'active' : (m.reporte_final ? 'finished' : 'pending')) as 'pending' | 'active' | 'finished',
-          score_local: m.goles_local || 0,
-          score_visita: m.goles_visitante || 0,
-          discipline: m.discipline || 'Fútbol',
-          field: m.field || 'Campo Central'
-        }));
-        setMatches(formatted);
-      }
-      setLoading(false);
-    };
-
-    fetchMatches();
-  }, [tournamentId]);
+  // Formatear los partidos obtenidos de Redux para la UI
+  const matches: TimelineMatch[] = reduxMatches.map((m: any) => ({
+    id: m.id,
+    local_name: m.local?.name || 'Por definir',
+    visita_name: m.visita?.name || 'Por definir',
+    fecha: m.fecha_partido,
+    hora: m.hora_inicio,
+    tournament_name: m.torneos?.name || 'Torneo General',
+    status: (m.is_active ? 'active' : (m.reporte_final ? 'finished' : 'pending')) as 'pending' | 'active' | 'finished',
+    score_local: m.goles_local || 0,
+    score_visita: m.goles_visitante || 0,
+    discipline: m.discipline || 'Fútbol',
+    field: m.field || 'Campo Central'
+  }));
 
   // Hierarchical Grouping: Tournament (Sport) -> Date
   const groupedByTournament = matches.reduce((acc: Record<string, Record<string, TimelineMatch[]>>, match) => {

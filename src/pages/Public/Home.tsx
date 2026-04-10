@@ -1,4 +1,3 @@
-import Nav from "../../components/Landing/Nav";
 import Componente1 from "@/components/Landing/Componente1";
 import Componente2 from "@/components/Landing/Componente2";
 import Componente3 from "@/components/Landing/Componente3";
@@ -9,7 +8,6 @@ import ClubLogoOffer from "@/components/Landing/Componente10";
 import Productos from "@/components/Landing/Componente11";
 import Equipo from "@/components/Landing/Componente12";
 import Contactanos from "@/components/Landing/Componente13";
-import Footer from "@/components/Landing/Footer";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -33,7 +31,6 @@ export default function Home() {
 
     return (
         <div className="bg-[#07080a] text-white flex flex-col ">
-            <Nav/>
             <div className="px-6 md:px-20 lg:px-40">
                 <Componente1/>
                 <Componente2/>
@@ -53,7 +50,6 @@ export default function Home() {
                     <Contactanos/>
                 </div>
             </div>
-            <Footer/>
         </div>
     );
 }
