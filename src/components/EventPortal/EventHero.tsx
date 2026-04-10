@@ -16,7 +16,7 @@ interface EventMeta {
 
 const EventHero: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
   const dispatch = useAppDispatch();
-  
+
   // Selectores de Redux
   const meta = useAppSelector(selectActiveTournamentMeta) as EventMeta | null;
 
@@ -25,7 +25,7 @@ const EventHero: React.FC<{ tournamentId?: string }> = ({ tournamentId }) => {
     dispatch(fetchTournamentDetails(tournamentId));
   }, [tournamentId, dispatch]);
 
-  const displayName = meta?.name || "Olimpiadas Docentes 2026";
+  const displayName = "Olimpiadas Docentes 2026";
   const displayDesc = meta?.description || "Vive la pasión del deporte en tiempo real con la tecnología y el respaldo de SSEDEE.";
 
   return (
