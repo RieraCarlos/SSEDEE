@@ -29,7 +29,7 @@ const Nav: React.FC = () => {
   return (
     <div className="relative">
       {/* <p>SSEDEE</p> Encabezado */}
-      <div className="flex items-center justify-between bg-[#13161c] h-20 px-7 md:px-15 lg:px-30 mb-8">
+      <div className="flex items-center justify-between bg-[#1d2029] h-20 px-7 md:px-15 lg:px-30 mb-8">
         <div className="font-bold text-2xl text-[#0ae98a] rounded-full">
           <img src={LogoB} alt="" className='h-10' />
         </div>

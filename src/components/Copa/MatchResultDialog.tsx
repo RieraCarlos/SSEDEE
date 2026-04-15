@@ -85,7 +85,7 @@ const MatchResultDialog: React.FC<MatchResultDialogProps> = ({ isOpen, onClose, 
             <div className="h-[200px] overflow-y-auto pr-4 custom-scrollbar">
               <div className="space-y-3">
                 {report.eventos && report.eventos.length > 0 ? (
-                  report.eventos.sort((a: any, b: any) => a.minute - b.minute).map((event: any, idx: number) => (
+                  [...report.eventos].sort((a: any, b: any) => a.minute - b.minute).map((event: any, idx: number) => (
                     <div key={idx} className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/5">
                       <span className="text-emerald-500 font-bold text-sm w-10">{event.minute}'</span>
                       <div className="flex-grow">

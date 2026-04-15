@@ -1,18 +1,19 @@
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { selectAuthUser } from "@/store/slices/authSlice";
-import { selectTournaments, selectStandings, selectTournamentsLoading } from "@/store/slices/tournamentsSlice";
-import { selectCategories, selectSport, fetchDeportes, fetchAllCategorias } from "@/store/slices/administrationSlice";
-import { useEffect, useState, useCallback } from "react";
-import { fetchTournaments, fetchStandings } from "@/store/thunks/tournamentsThunks";
+import { selectTournaments, selectStandings, selectTournamentsLoading, selectPortalMatches } from "@/store/slices/tournamentsSlice";
+import { fetchDeportes, fetchAllCategorias } from "@/store/slices/administrationSlice";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { fetchTournaments, fetchStandings, fetchTournamentMatches } from "@/store/thunks/tournamentsThunks";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
 import EquiposTorneo from "../Copa/EquiposTorneo";
 import CalendarioPartidos from "../Copa/CalendarioPartidos";
 import PosicionesTable from "../Copa/PosicionesTable";
 import MatchResultCard from "../Copa/MatchResultCard";
 import CreateTournamentModal from "../Copa/CreateTournamentModal";
+import { useLiveMatchSupabase } from "@/hooks/useLiveMatchSupabase";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, LayoutDashboard, Trophy, Users, CalendarDays } from "lucide-react";
+import { ChevronDown, Play, Clock } from "lucide-react";
 import SportIcon from "../common/SportIcon";
 
 export default function HomeAdmin() {
@@ -21,10 +22,10 @@ export default function HomeAdmin() {
     const tournaments = useAppSelector(selectTournaments);
     const standings = useAppSelector(selectStandings);
     const loading = useAppSelector(selectTournamentsLoading);
-    const categories = useAppSelector(selectCategories);
-    const Sport = useAppSelector(selectSport);
 
     const [expandedTournaments, setExpandedTournaments] = useState<string[]>([]);
+    const { activateMatch, loading: loadingLive } = useLiveMatchSupabase();
+
 
     const refreshAllData = useCallback(() => {
         if (user?.id) {
@@ -39,6 +40,46 @@ export default function HomeAdmin() {
     useEffect(() => {
         refreshAllData();
     }, [refreshAllData]);
+
+    // Obtener los IDs de torneos para cargar sus partidos
+    useEffect(() => {
+        if (tournaments.length > 0) {
+            const tournamentIds = tournaments.map(t => t.id);
+            console.log('HomeAdmin - Despachando fetchTournamentMatches con IDs:', tournamentIds);
+            dispatch(fetchTournamentMatches(tournamentIds));
+        }
+    }, [tournaments, dispatch]);
+
+    // Selector de todos los partidos desde Redux
+    const reduxMatches = useAppSelector(selectPortalMatches);
+
+    // Filtrar únicamente los partidos de los próximos 7 días
+    const upcomingMatches = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysLater = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        console.log('reduxMatches:', reduxMatches);
+        console.log('Total de partidos en Redux:', reduxMatches?.length || 0);
+
+        return (reduxMatches || [])
+            .filter((match: any) => {
+                const matchDate = new Date(match.fecha_partido);
+                const isInRange = matchDate >= today && matchDate <= sevenDaysLater;
+                console.log(`Match: ${match.id}, Fecha: ${match.fecha_partido}, En rango: ${isInRange}`);
+                return isInRange;
+            })
+            .sort((a: any, b: any) => {
+                const dateA = new Date(a.fecha_partido);
+                const dateB = new Date(b.fecha_partido);
+                if (dateA.getTime() !== dateB.getTime()) {
+                    return dateA.getTime() - dateB.getTime();
+                }
+                return a.hora_inicio.localeCompare(b.hora_inicio);
+            });
+    }, [reduxMatches]);
+
+    const loadingMatches = loading;
 
     const toggleTournament = (id: string) => {
         setExpandedTournaments(prev =>
@@ -57,134 +98,228 @@ export default function HomeAdmin() {
     const isAdmin = user?.role === 'admin';
 
     return (
-        <div className="text-white min-h-screen flex flex-col space-y-8 bg-[#0a0c10] pb-20 rounded-xl px-6">
-            {/* Header Moderno con Glassmorphism */}
-            <div className="sticky top-0 z-50 bg-[#0a0c10]/80 backdrop-blur-md border-b border-gray-800/50 pb-6 pt-4  sm:px-0 rounded-xl">
-                <div className="flex justify-between items-center max-w-7xl mx-auto w-full">
+        <div className="text-white min-h-screen flex flex-col bg-[#13161c] pb-16 rounded-xl">
+
+            {/* HEADER */}
+            <div className="sticky top-0 z-50 bg-[#13161c]/95 backdrop-blur-xl border-b border-[#1d2029] px-4 sm:px-6 py-4 rounded-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 max-w-7xl mx-auto">
                     <div>
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/70">Sistema en Vivo</span>
-                        </div>
-                        <h1 className="text-4xl font-black italic tracking-tighter text-white">
-                            PANEL <span className="text-emerald-500 text-stroke-thin">ADMIN</span>
+                        <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+                            PANEL <span className="text-[#0ae98a]">ADMIN</span>
                         </h1>
-                        <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1 opacity-70">Control Central de Competencias</p>
+                        <p className="text-xs text-gray-400 mt-1">Control de competiciones</p>
                     </div>
+
                     {isAdmin && user?.id && (
-                        <CreateTournamentModal 
-                            userId={user.id.toString()} 
-                            onSuccess={refreshAllData}
-                        />
+                        <div className="w-full sm:w-auto">
+                            <CreateTournamentModal 
+                                userId={user.id.toString()} 
+                                onSuccess={refreshAllData}
+                            />
+                        </div>
                     )}
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto w-full px-4 sm:px-0 space-y-12">
-                {/* Tournaments Section con Progressive Disclosure */}
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3 mb-6">
-                        <Trophy className="text-emerald-500" size={24} />
-                        <h2 className="text-2xl font-black italic tracking-tighter uppercase text-gray-300">Torneos Activos</h2>
-                        <div className="flex-1 border-t border-gray-800/50 ml-4" />
+            {/* ENCUENTROS PRÓXIMOS - CARRUSEL HORIZONTAL */}
+            <div className="border-b border-[#1d2029] bg-gradient-to-r from-[#13161c] via-[#13161c] to-transparent">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Clock className="text-[#0ae98a]" size={20} />
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-300">
+                            Próximos encuentros (7 días)
+                        </h2>
+                        <span className="text-xs px-2 py-1 rounded-full bg-[#0ae98a]/10 text-[#0ae98a] font-semibold">
+                            {upcomingMatches.length}
+                        </span>
+                    </div>
+
+                    {loadingMatches ? (
+                        <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="flex-shrink-0 w-80 h-32 bg-[#1d2029] rounded-lg animate-pulse" />
+                            ))}
+                        </div>
+                    ) : upcomingMatches.length > 0 ? (
+                        <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
+                            {upcomingMatches.map((match) => {
+                                const matchDate = new Date(match.fecha_partido);
+                                const formattedDate = matchDate.toLocaleDateString('es-AR', { month: 'short', day: 'numeric' });
+                                const formattedDay = matchDate.toLocaleDateString('es-AR', { weekday: 'short' });
+
+                                return (
+                                    <motion.div
+                                        key={match.id}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="flex-shrink-0 w-80 bg-[#1d2029] rounded-lg border border-[#1d2029] overflow-hidden hover:border-[#0ae98a]/30 transition-all shadow-lg hover:shadow-[#0ae98a]/10 p-4"
+                                    >
+                                        {/* Encabezado del partido */}
+                                        <div className="flex flex-col gap-3">
+                                            {/* Fecha y hora */}
+                                            <div className="flex items-center justify-between text-xs">
+                                                <span className="text-[#0ae98a] font-semibold uppercase">
+                                                    {formattedDay} {formattedDate}
+                                                </span>
+                                                <span className="text-gray-400 font-medium">
+                                                    {match.hora_inicio}
+                                                </span>
+                                            </div>
+
+                                            {/* Equipos */}
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1">
+                                                        <p className="text-sm font-semibold text-gray-300 truncate">
+                                                            {match.local?.name || 'Local'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center justify-center">
+                                                    <div className="px-2 py-1 text-xs font-bold text-[#0ae98a] bg-[#0ae98a]/10 rounded">
+                                                        vs
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1">
+                                                        <p className="text-sm font-semibold text-gray-300 truncate">
+                                                            {match.visita?.name || 'Visitante'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Torneos info */}
+                                            <div className="text-xs text-gray-500 border-t border-[#13161c] pt-2">
+                                                <p className="text-xs text-gray-400">{match.torneos?.name || 'Torneo sin nombre'}</p>
+                                            </div>
+
+                                            {/* Botones de acción */}
+                                            <div className="flex gap-2 pt-2 border-t border-[#13161c]">
+                                                <button
+                                                    onClick={() => activateMatch(match.id)}
+                                                    disabled={loadingLive}
+                                                    className="flex-1 flex items-center justify-center gap-2 bg-[#0ae98a] hover:bg-[#09d47a] disabled:opacity-50 disabled:cursor-not-allowed text-[#13161c] font-bold py-2 px-3 rounded-lg transition-all text-sm uppercase tracking-wide"
+                                                >
+                                                    <Play size={14} />
+                                                    {loadingLive ? 'Activando...' : 'LIVE'}
+                                                </button>
+                                                <button
+                                                    className="flex-1 bg-[#1d2029] hover:bg-[#2a2f38] border border-[#1d2029] hover:border-[#0ae98a]/30 text-gray-300 font-bold py-2 px-3 rounded-lg transition-all text-sm uppercase tracking-wide"
+                                                >
+                                                    Detalle
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="text-center py-6 bg-[#1d2029]/40 rounded-lg border border-dashed border-[#0ae98a]/20">
+                            <p className="text-gray-400 text-sm">No hay encuentros programados para los próximos 7 días</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/*Partidos a disputar*/}
+            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 space-y-10 mt-6">
+
+                {/* TORNEOS */}
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-300">
+                            Torneos activos
+                        </h2>
+                        <span className="text-[10px] px-3 py-1 rounded-full bg-[#0ae98a]/10 text-[#0ae98a] font-semibold tracking-wide">
+                            LIVE
+                        </span>
                     </div>
 
                     {loading ? (
-                        <div className="space-y-4">
-                            {[1, 2].map(i => (
-                                <div key={i} className="h-24 bg-gray-800/20 rounded-xl animate-pulse border border-gray-800/50" />
+                        <div className="space-y-3">
+                            {[1,2].map(i => (
+                                <div key={i} className="h-20 bg-[#1d2029] rounded-xl animate-pulse" />
                             ))}
                         </div>
                     ) : tournaments.length > 0 ? (
-                        tournaments.map(tournament => (
-                            <div key={tournament.id} className="bg-[#13161c] rounded-2xl border border-gray-800/50 shadow-2xl overflow-hidden transition-all hover:border-emerald-500/20 group">
-                                <button
-                                    onClick={() => toggleTournament(tournament.id)}
-                                    className="w-full flex items-center justify-between p-6 cursor-pointer hover:bg-white/[0.02] transition-colors"
-                                >
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-[#13161c] transition-all">
-                                            <SportIcon disciplineId={Sport.find(s => s.id === categories.find(c => c.id === tournament.id_categoria)?.id_deporte)?.nombre} size={20} />
-                                        </div>
-                                        <div className="text-left">
-                                            {(() => {
-                                                const category = categories.find(c => c.id === tournament.id_categoria);
-                                                const sportName = Sport.find(s => s.id === category?.id_deporte)?.nombre;
-                                                
-                                                // Robust rendering to avoid flicker during sync
-                                                const categoryName = category?.nombre || 'S/C';
-                                                const disciplineName = sportName || 'S/D';
+                        <div className="space-y-4">
+                            {tournaments.map(tournament => (
+                                <div key={tournament.id} className="bg-[#1d2029] rounded-xl border border-[#1d2029] overflow-hidden hover:border-[#0ae98a]/30 transition-all shadow-lg hover:shadow-[#0ae98a]/10">
 
-                                                return (
-                                                    <h3 className="text-xl font-black italic tracking-tight uppercase">
-                                                        {tournament.name} <span className="text-emerald-500/50 mx-1">/</span> {categoryName} <span className="text-emerald-500/50 mx-1">/</span> {disciplineName}
-                                                    </h3>
-                                                );
-                                            })()}
-                                            <div className="flex items-center gap-4 mt-1">
-                                                <div className="flex items-center gap-1 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                                                    <Users size={12} className="text-emerald-500" /> {tournament.n_equipos} Equipos
-                                                </div>
-                                                <div className="flex items-center gap-1 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                                                    <CalendarDays size={12} className="text-emerald-500" /> {tournament.fecha[0]}
-                                                </div>
+                                    {/* HEADER CARD */}
+                                    <button
+                                        onClick={() => toggleTournament(tournament.id)}
+                                        className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0ae98a]/20 to-[#0ae98a]/5 flex items-center justify-center">
+                                                <SportIcon size={18} />
+                                            </div>
+
+                                            <div className="text-left">
+                                                <h3 className="text-sm sm:text-base font-semibold">
+                                                    {tournament.name}
+                                                </h3>
+                                                <p className="text-xs text-gray-400">
+                                                    {tournament.n_equipos} equipos
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className={`transition-transform duration-300 ${expandedTournaments.includes(tournament.id) ? 'rotate-180' : ''}`}>
-                                        <ChevronDown className="text-gray-600" />
-                                    </div>
-                                </button>
 
-                                <AnimatePresence>
-                                    {expandedTournaments.includes(tournament.id) && (
-                                        <motion.div
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{ height: 'auto', opacity: 1 }}
-                                            exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.4, ease: "circOut" }}
-                                        >
-                                            <div className="p-6 pt-0 space-y-8 border-t border-gray-800/50 bg-black/20">
-                                                <div className="pt-8">
+                                        <ChevronDown
+                                            className={`self-end sm:self-auto transition-transform text-[#0ae98a] ${expandedTournaments.includes(tournament.id) ? 'rotate-180' : ''}`}
+                                        />
+                                    </button>
+
+                                    {/* CONTENIDO */}
+                                    <AnimatePresence>
+                                        {expandedTournaments.includes(tournament.id) && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                            >
+                                                <div className="p-4 space-y-6 border-t border-[#13161c] bg-[#13161c]/60 backdrop-blur-sm">
                                                     <EquiposTorneo tournament={tournament} />
-                                                </div>
-                                                <div className="pt-4">
                                                     <CalendarioPartidos tournament={tournament} />
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </div>
-                        ))
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
-                        <div className="text-center text-gray-400 py-20 bg-[#13161c]/50 rounded-2xl border border-dashed border-gray-800 flex flex-col items-center justify-center">
-                            <Trophy className="text-gray-700 mb-6" size={64} />
-                            <p className="text-xl font-black tracking-tight text-gray-500 italic uppercase">Sin Operaciones Activas</p>
-                            <p className="text-[10px] text-gray-600 font-bold tracking-[0.2em] mt-2 uppercase">Inicia una nueva competencia arriba</p>
+                        <div className="text-center py-10 bg-[#1d2029] rounded-xl border border-dashed border-[#0ae98a]/20">
+                            <p className="text-gray-400">No hay torneos activos</p>
                         </div>
                     )}
                 </div>
 
-                {/* Dashboard Widgets */}
-                <div className="pt-12 border-t border-gray-800/50">
-                    <div className="flex items-center gap-3 mb-8">
-                        <LayoutDashboard className="text-emerald-500" size={24} />
-                        <h2 className="text-2xl font-black italic tracking-tighter uppercase text-gray-300">Resumen Analítico</h2>
-                    </div>
+                {/* DASHBOARD */}
+                <div>
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-300 mb-4">
+                        Resumen
+                    </h2>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div className="lg:col-span-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 overflow-x-auto bg-[#1d2029] rounded-xl p-2 border border-[#1d2029]">
                             <PosicionesTable data={mappedStandings} />
                         </div>
-                        <div className="space-y-6">
-                            <div className="bg-[#13161c] p-6 rounded-2xl border border-gray-800/50 h-full">
-                                <h4 className="text-xs font-black uppercase tracking-widest text-emerald-500 mb-6">Estado del Sistema</h4>
-                                <MatchResultCard data={{ resultadoAnterior: "DASHBOARD", perfil: { nombre: "ADMIN MONITOR", nivel: "Root" } }} />
-                            </div>
+
+                        <div className="bg-gradient-to-br from-[#1d2029] to-[#13161c] p-4 rounded-xl border border-[#1d2029] shadow-inner">
+                            <h4 className="text-xs text-[#0ae98a] mb-4 font-semibold tracking-wide">
+                                Estado del sistema
+                            </h4>
+                            <MatchResultCard data={{ resultadoAnterior: "DASHBOARD", perfil: { nombre: "ADMIN", nivel: "Root" } }} />
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     );

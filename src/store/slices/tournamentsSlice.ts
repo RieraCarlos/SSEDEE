@@ -7,6 +7,7 @@ import {
   addTeamToTournament, 
   fetchStandings, 
   fetchTournamentTeams,
+  fetchSportTeams,
   fetchTournamentMatches,
   fetchTournamentDetails,
   fetchTournamentStatsLeaders,
@@ -127,6 +128,18 @@ const tournamentsSlice = createSlice({
         state.tournamentTeams = action.payload;
       })
       .addCase(fetchTournamentTeams.rejected, (state, action) => {
+        state.teamsLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchSportTeams.pending, (state) => {
+        state.teamsLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchSportTeams.fulfilled, (state, action: PayloadAction<any[]>) => {
+        state.teamsLoading = false;
+        state.tournamentTeams = action.payload;
+      })
+      .addCase(fetchSportTeams.rejected, (state, action) => {
         state.teamsLoading = false;
         state.error = action.payload as string;
       })

@@ -35,7 +35,43 @@ export const fetchTournamentMatches = createAsyncThunk(
   "tournaments/fetchMatches",
   async (tournamentId: string | string[], { rejectWithValue }) => {
     try {
+      console.log('fetchTournamentMatches llamado con:', tournamentId);
       const ids = Array.isArray(tournamentId) ? tournamentId : [tournamentId];
+      const validIds = ids.filter(id => id && typeof id === 'string' && id.length > 0 && !id.includes('placeholder'));
+      
+      console.log('validIds:', validIds);
+      if (validIds.length === 0) {
+        console.log('No hay validIds, retornando []');
+        return [];
+      }
+
+      // 1. Smart Resolution: Check if any of these validIds are actually SPORT IDs
+      let resolvedTournamentIds = [...validIds];
+      
+      const { data: categorias } = await supabase
+        .from('categorias')
+        .select('id')
+        .in('id_deporte', validIds);
+
+      console.log('Categorías encontradas:', categorias);
+      if (categorias && categorias.length > 0) {
+        const catIds = categorias.map(c => c.id);
+        const { data: torneos } = await supabase
+          .from('torneos')
+          .select('id')
+          .in('id_categoria', catIds);
+          
+        console.log('Torneos encontrados:', torneos);
+        if (torneos && torneos.length > 0) {
+          const tIds = torneos.map(t => t.id);
+          // Combine original IDs with resolved Tournament IDs
+          resolvedTournamentIds = Array.from(new Set([...resolvedTournamentIds, ...tIds]));
+        }
+      }
+
+      console.log('resolvedTournamentIds:', resolvedTournamentIds);
+      
+      // 2. Fetch matches using all resolved Tournament IDs
       const { data, error } = await supabase
         .from('partidos_calendario')
         .select(`
@@ -44,10 +80,12 @@ export const fetchTournamentMatches = createAsyncThunk(
           local:equipo_local_id(name),
           visita:equipo_visitante_id(name)
         `)
-        .in('torneo_id', ids)
+        .in('torneo_id', resolvedTournamentIds)
         .order('fecha_partido', { ascending: true })
         .order('hora_inicio', { ascending: true });
       
+      console.log('Data de partidos:', data);
+      console.log('Error:', error);
       if (error) throw error;
       return data;
     } catch (error: any) {
@@ -95,11 +133,13 @@ export const fetchTournamentTeams = createAsyncThunk(
   async (tournamentId: string, { rejectWithValue }) => {
     try {
       // 1. Obtener IDs de equipos del torneo
-      const { data: tournament, error: tError } = await supabase
+      const { data: tournaments, error: tError } = await supabase
         .from('torneos')
         .select('equipos')
         .eq('id', tournamentId)
-        .single();
+        .limit(1);
+      
+      const tournament = tournaments?.[0];
       
       if (tError) throw tError;
       if (!tournament?.equipos || tournament.equipos.length === 0) return [];
@@ -123,11 +163,15 @@ export const fetchTournamentDetails = createAsyncThunk(
   "tournaments/fetchDetails",
   async (tournamentId: string, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase
+      if (!tournamentId || tournamentId.includes('placeholder')) return null;
+
+      const { data: tournaments, error: error } = await supabase
         .from('torneos')
         .select('name')
         .eq('id', tournamentId)
-        .single();
+        .limit(1);
+      
+      const data = tournaments?.[0];
       
       if (error) throw error;
       return data;
@@ -139,8 +183,36 @@ export const fetchTournamentDetails = createAsyncThunk(
 
 export const fetchTournamentStatsLeaders = createAsyncThunk(
   "tournaments/fetchStatsLeaders",
-  async (tournamentId: string, { rejectWithValue }) => {
+  async (tournamentId: string | string[], { rejectWithValue }) => {
     try {
+      const ids = Array.isArray(tournamentId) ? tournamentId : [tournamentId];
+      const validIds = ids.filter(id => id && typeof id === 'string' && id.length > 0 && !id.includes('placeholder'));
+      
+      if (validIds.length === 0) return [];
+
+      // Smart Resolution: Check if any of these validIds are SPORT IDs
+      let resolvedTournamentIds = [...validIds];
+      
+      const { data: categorias } = await supabase
+        .from('categorias')
+        .select('id')
+        .in('id_deporte', validIds);
+
+      if (categorias && categorias.length > 0) {
+        const catIds = categorias.map(c => c.id);
+        const { data: torneos } = await supabase
+          .from('torneos')
+          .select('id')
+          .in('id_categoria', catIds);
+          
+        if (torneos && torneos.length > 0) {
+          const tIds = torneos.map(t => t.id);
+          resolvedTournamentIds = Array.from(new Set([...resolvedTournamentIds, ...tIds]));
+        }
+      }
+
+      if (resolvedTournamentIds.length === 0) return [];
+
       const { data, error } = await supabase
         .from('partidos_sucesos')
         .select(`
@@ -149,7 +221,7 @@ export const fetchTournamentStatsLeaders = createAsyncThunk(
           equipo,
           partido:partidos_calendario!inner(torneo_id)
         `)
-        .eq('partido.torneo_id', tournamentId)
+        .in('partido.torneo_id', resolvedTournamentIds)
         .in('tipo', ['gol', 'punto_basket', 'punto_voley']);
       
       if (error) throw error;
@@ -177,3 +249,54 @@ export const updateTournamentMatch = createAsyncThunk(
     }
   }
 );
+
+export const fetchSportTeams = createAsyncThunk(
+  "tournaments/fetchSportTeams",
+  async (sportId: string, { rejectWithValue }) => {
+    try {
+      // 1. Obtener categorias asociadas al deporte
+      const { data: categorias, error: catError } = await supabase
+        .from('categorias')
+        .select('id')
+        .eq('id_deporte', sportId);
+
+      if (catError) throw catError;
+      if (!categorias || categorias.length === 0) return [];
+
+      const categoryIds = categorias.map(c => c.id);
+
+      // 2. Obtener torneos que pertenecen a estas categorias
+      const { data: torneos, error: tError } = await supabase
+        .from('torneos')
+        .select('equipos')
+        .in('id_categoria', categoryIds);
+
+      if (tError) throw tError;
+      if (!torneos || torneos.length === 0) return [];
+
+      // 3. Extraer todos los IDs de equipos (clubes) únicos de todos los torneos
+      const teamIdSet = new Set<string>();
+      torneos.forEach(t => {
+        if (t.equipos && Array.isArray(t.equipos)) {
+          t.equipos.forEach((id: string) => teamIdSet.add(id));
+        }
+      });
+
+      const uniqueTeamIds = Array.from(teamIdSet);
+      if (uniqueTeamIds.length === 0) return [];
+
+      // 4. Obtener detalles de los clubes
+      const { data: clubs, error: cError } = await supabase
+        .from('clubes')
+        .select('id, name, logo_url')
+        .in('id', uniqueTeamIds);
+
+      if (cError) throw cError;
+
+      return clubs || [];
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+

@@ -113,9 +113,18 @@ const PortalSection: React.FC<{
 // Mapeo dinámico de eventos por slug (Mantenido fuera para estabilidad de referencias)
 const EVENT_CONFIGS: Record<string, string[]> = {
   distrito: [
-    import.meta.env.VITE_ID_TOURNAMENT_FUTBOL,
-    import.meta.env.VITE_ID_TOURNAMENT_BASKETBALL,
-    import.meta.env.VITE_ID_TOURNAMENT_VOLEY
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_1,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_2,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_3,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_4,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_Años_Dorados,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_1F,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_2F,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_3F,
+    import.meta.env.VITE_ID_TOURNAMENT_Prueba_1
+  ].filter(id => id && !id.includes('placeholder')),
+  futsal: [
+    import.meta.env.VITE_ID_SPORT_FUTSAL
   ]
 };
 
@@ -133,7 +142,13 @@ export default function Eventos() {
   const DISTRITO_IDS = EVENT_CONFIGS[activeSlug || 'distrito'] || EVENT_CONFIGS['distrito'];
   const DISTRITO_ID = DISTRITO_IDS[0];
 
+  console.log('[Eventos] activeSlug:', activeSlug);
+  console.log('[Eventos] DISTRITO_IDS:', DISTRITO_IDS);
+  console.log('[Eventos] DISTRITO_ID:', DISTRITO_ID);
+
   const { activeMatches } = useLiveEvents(DISTRITO_IDS);
+
+  console.log('[Eventos] activeMatches:', activeMatches);
 
   return (
     <div className="min-h-screen bg-[#07080a] text-white flex flex-col font-sans selection:bg-emerald-500/30">

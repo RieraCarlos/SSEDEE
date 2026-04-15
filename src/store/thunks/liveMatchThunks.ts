@@ -27,7 +27,7 @@ export const fetchLiveMatchData = createAsyncThunk(
       }
 
       // 1.1 Obtener Deporte del torneo
-      const { data: tournamentData, error: tourError } = await supabase
+      const { data: tournaments, error: tourError } = await supabase
         .from('torneos')
         .select(`
           id_categoria,
@@ -39,7 +39,9 @@ export const fetchLiveMatchData = createAsyncThunk(
           )
         `)
         .eq('id', match.torneo_id)
-        .single();
+        .limit(1);
+      
+      const tournamentData = tournaments?.[0];
       
       if (tourError) {
         console.warn("No se pudo obtener la información del torneo:", tourError);

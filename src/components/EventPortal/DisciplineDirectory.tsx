@@ -5,7 +5,7 @@ import { Trophy, Shield, Zap, Target } from 'lucide-react';
 // Redux
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { fetchTournamentTeams } from '@/store/thunks/tournamentsThunks';
+import { fetchSportTeams } from '@/store/thunks/tournamentsThunks';
 import { selectTournamentTeams, selectTeamsLoading } from '@/store/slices/tournamentsSlice';
 
 interface Team {
@@ -15,54 +15,51 @@ interface Team {
   discipline?: string;
 }
 
-interface Discipline {
-  id: string;
-  name: string;
-  icon: string;
-}
-
 const DisciplineDirectory: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [activeTab, setActiveTab] = useState<string>('futbol');
+  const [activeTab, setActiveTab] = useState<string>('');
   
   // Selectores de Redux
   const reduxTeams = useAppSelector(selectTournamentTeams);
   const loading = useAppSelector(selectTeamsLoading);
 
-  const disciplines: Discipline[] = [
-    { id: 'futbol', name: 'Fútbol', icon: '⚽' },
-    { id: 'futsal', name: 'Fútbol Sala', icon: '👟' },
-    { id: 'basketball', name: 'Basketball', icon: '🏀' },
-    { id: 'voley', name: 'Voley', icon: '🏐' },
-    { id: 'natacion', name: 'Natación', icon: '🏊' }
-  ];
+  const env = import.meta.env as Record<string, string>;
+  const availableDisciplines = React.useMemo(
+    () => [
+      { id: 'futbol', name: 'Fútbol', icon: '⚽', envKey: 'VITE_ID_SPORT_FUTBOL', sportId: env.VITE_ID_SPORT_FUTBOL },
+      { id: 'futsal', name: 'Fútbol Sala', icon: '👟', envKey: 'VITE_ID_SPORT_FUTSAL', sportId: env.VITE_ID_SPORT_FUTSAL },
+      { id: 'basketball', name: 'Basketball', icon: '🏀', envKey: 'VITE_ID_SPORT_BASKETBALL', sportId: env.VITE_ID_SPORT_BASKETBALL },
+      { id: 'voley', name: 'Voley', icon: '🏐', envKey: 'VITE_ID_SPORT_VOLEY', sportId: env.VITE_ID_SPORT_VOLEY },
+      { id: 'natacion', name: 'Natación', icon: '🏊', envKey: 'VITE_ID_SPORT_NATACION', sportId: env.VITE_ID_SPORT_NATACION }
+    ].filter(d => d.sportId && !d.sportId.includes('placeholder')),
+    [
+      env.VITE_ID_SPORT_FUTBOL,
+      env.VITE_ID_SPORT_FUTSAL,
+      env.VITE_ID_SPORT_BASKETBALL,
+      env.VITE_ID_SPORT_VOLEY,
+      env.VITE_ID_SPORT_NATACION
+    ]
+  );
 
   useEffect(() => {
-    const sportToTournament: Record<string, string> = {
-      futbol: import.meta.env.VITE_ID_TOURNAMENT_FUTBOL,
-      basketball: import.meta.env.VITE_ID_TOURNAMENT_BASKETBALL,
-      voley: import.meta.env.VITE_ID_TOURNAMENT_VOLEY,
-      futsal: import.meta.env.VITE_ID_TOURNAMENT_FUTSAL,
-      natacion: import.meta.env.VITE_ID_TOURNAMENT_NATACION
-    };
-
-    const targetTournamentId = sportToTournament[activeTab];
-
-    // Omitir consulta si el ID es un placeholder (no es un UUID válido)
-    if (!targetTournamentId || targetTournamentId.includes('placeholder')) {
-      // Opcional: Podríamos limpiar el estado de Redux aquí si fuera necesario
-      return;
+    if (availableDisciplines.length === 0) return;
+    if (!activeTab || !availableDisciplines.some(d => d.id === activeTab)) {
+      setActiveTab(availableDisciplines[0].id);
     }
+  }, [activeTab, availableDisciplines]);
 
-    // Despachar el thunk de Redux
-    dispatch(fetchTournamentTeams(targetTournamentId));
-  }, [activeTab, dispatch]);
+  const selectedDiscipline = availableDisciplines.find(d => d.id === activeTab) || availableDisciplines[0];
+
+  useEffect(() => {
+    if (!selectedDiscipline?.sportId) return;
+    dispatch(fetchSportTeams(selectedDiscipline.sportId));
+  }, [selectedDiscipline, dispatch]);
 
   // Formatear los equipos obtenidos de Redux para la UI
   const teams: Team[] = reduxTeams.map((club: any) => ({
     id: club.id,
     name: club.name || 'Club Desconocido',
-    discipline: activeTab.toUpperCase(),
+    discipline: selectedDiscipline?.name || activeTab.toUpperCase(),
     logo_url: club.logo_url || `https://api.dicebear.com/7.x/identicon/svg?seed=${club.id}&backgroundColor=0f172a`
   }));
 
@@ -77,7 +74,7 @@ const DisciplineDirectory: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-2 p-1.5 bg-white/5 backdrop-blur-md rounded-2xl border border-white/5 overflow-x-auto">
-          {disciplines.map((d) => (
+          {availableDisciplines.length > 0 ? availableDisciplines.map((d) => (
             <button
               key={d.id}
               onClick={() => setActiveTab(d.id)}
@@ -89,7 +86,9 @@ const DisciplineDirectory: React.FC = () => {
               <span className="text-sm">{d.icon}</span>
               {d.name}
             </button>
-          ))}
+          )) : (
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">No hay disciplinas habilitadas en el entorno.</span>
+          )}
         </div>
       </div>
 

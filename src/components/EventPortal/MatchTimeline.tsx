@@ -29,11 +29,37 @@ const MatchTimeline: React.FC<{ tournamentId?: string | string[] }> = ({ tournam
   // Selectores de Redux
   const reduxMatches = useAppSelector(selectPortalMatches);
   const loading = useAppSelector(selectTimelineLoading);
+  const error = useAppSelector((state: any) => state.tournaments.timelineError);
+
+  const env = import.meta.env as Record<string, string>;
+  const defaultTournamentIds = React.useMemo(
+    () => Object.entries(env)
+      .filter(([key, value]) => key.startsWith('VITE_ID_TOURNAMENT_') && !key.includes('SPORT') && !!value && !value.includes('placeholder'))
+      .map(([, value]) => value),
+    [env]
+  );
+
+  const tournamentIds = React.useMemo(() => {
+    const providedIds = Array.isArray(tournamentId) ? tournamentId : tournamentId ? [tournamentId] : [];
+    const validProvidedIds = providedIds.filter(id => typeof id === 'string' && id.length > 0 && !id.includes('placeholder'));
+    return validProvidedIds.length > 0 ? validProvidedIds : defaultTournamentIds;
+  }, [tournamentId, defaultTournamentIds]);
 
   useEffect(() => {
-    if (!tournamentId || (Array.isArray(tournamentId) && tournamentId.length === 0)) return;
-    dispatch(fetchTournamentMatches(tournamentId));
-  }, [tournamentId, dispatch]);
+    if (tournamentIds.length === 0) return;
+    dispatch(fetchTournamentMatches(tournamentIds));
+  }, [tournamentIds, dispatch]);
+
+  if (tournamentIds.length === 0) {
+    return (
+      <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
+        <CalendarIcon className="mx-auto text-slate-800 mb-4" size={48} />
+        <p className="text-slate-600 text-xs font-black uppercase tracking-[0.3em]">
+          No hay torneos válidos configurados. Verifica tus variables de entorno.
+        </p>
+      </div>
+    );
+  }
 
   // Formatear los partidos obtenidos de Redux para la UI
   const matches: TimelineMatch[] = reduxMatches.map((m: any) => ({
@@ -84,6 +110,14 @@ const MatchTimeline: React.FC<{ tournamentId?: string | string[] }> = ({ tournam
               <Zap className="mx-auto text-emerald-500 animate-pulse" size={40} />
               <p className="text-slate-500 text-xs font-black uppercase tracking-[0.4em]">Sincronizando Calendario Oficial</p>
            </motion.div>
+        ) : error ? (
+          <motion.div 
+            key="error"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="py-20 text-center space-y-4"
+          >
+            <p className="text-red-500 text-sm">Error al cargar partidos: {error}</p>
+          </motion.div>
         ) : tournaments.length > 0 ? (
           <motion.div 
             key="content"

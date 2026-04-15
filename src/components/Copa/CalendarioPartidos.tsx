@@ -36,7 +36,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
     const [isDbHydrated, setIsDbHydrated] = useState(false);
     const [startTime, setStartTime] = useState("08:00");
     const [endTime, setEndTime] = useState("22:00");
-    const [matchType, setMatchType] = useState<"ida" | "idaVuelta">("ida");
+    const [matchType, setMatchType] = useState<"ida" | "idaVuelta" | "todosContraTodos" | "IdaVueltaTvsT">("ida");
     const [loadingSave, setLoadingSave] = useState(false);
     const [loadingPdf, setLoadingPdf] = useState(false);
     const [selectedMatchResults, setSelectedMatchResults] = useState<any | null>(null);
@@ -46,7 +46,9 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
     const { 
         generatedMatches, 
         setGeneratedMatches, 
-        generate 
+        generate,
+        status: generationStatus,
+        error: generationError,
     } = useCalendarGenerator(tournament);
 
     const hydrateFromInventory = async () => {
@@ -240,8 +242,8 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                         <Label className="text-gray-400 text-xs font-bold uppercase">Modalidad</Label>
                         <RadioGroup
                             value={matchType}
-                            onValueChange={(val: "ida" | "idaVuelta") => setMatchType(val)}
-                            className="flex gap-4 h-9 items-center"
+                            onValueChange={(val: "ida" | "idaVuelta" | "todosContraTodos") => setMatchType(val)}
+                            className="flex gap-4 h-9 items-center flex-wrap"
                             disabled={isDbHydrated}
                         >
                             <div className="flex items-center space-x-2">
@@ -252,17 +254,25 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                                 <RadioGroupItem value="idaVuelta" id="r-idavuelta" />
                                 <Label htmlFor="r-idavuelta" className="text-white cursor-pointer text-sm">Ida/Vuelta</Label>
                             </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="todosContraTodos" id="r-todos" />
+                                <Label htmlFor="r-todos" className="text-white cursor-pointer text-sm">Todos vs Todos</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="IdaVueltaTvsT" id="r-idavuelta-tvs" />
+                                <Label htmlFor="r-idavuelta-tvs" className="text-white cursor-pointer text-sm">Ida y Vuelta - Todos vs Todos</Label>
+                            </div>
                         </RadioGroup>
                     </div>
 
                     <div className="flex items-end gap-3">
                         <Button
                             onClick={() => generate({ startTime, endTime, matchType })}
-                            disabled={isDbHydrated}
+                            disabled={isDbHydrated || generationStatus === 'loading'}
                             className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-[#13161c] font-black italic h-10"
                         >
                             <PlayCircle className="mr-2 h-5 w-5" />
-                            {isDbHydrated ? 'CALENDARIO OFICIAL' : 'GENERAR SORTEO'}
+                            {generationStatus === 'loading' ? 'GENERANDO...' : isDbHydrated ? 'CALENDARIO OFICIAL' : 'GENERAR SORTEO'}
                         </Button>
 
                         {generatedMatches.length > 0 && !isDbHydrated && (

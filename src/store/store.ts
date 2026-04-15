@@ -5,6 +5,7 @@ import userReducer from './slices/userSlice'
 import tournamentsReducer from './slices/tournamentsSlice'
 import liveMatchReducer from './slices/liveMatchSlice'
 import administrationReducer from './slices/administrationSlice'
+import calendarReducer from './slices/calendarSlice'
 import { persistenceMiddleware } from './middleware/persistence'
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     tournaments: tournamentsReducer,
     liveMatch: liveMatchReducer,
     administration: administrationReducer,
+    calendar: calendarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
