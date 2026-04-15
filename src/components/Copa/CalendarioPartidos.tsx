@@ -48,7 +48,6 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
         setGeneratedMatches, 
         generate,
         status: generationStatus,
-        error: generationError,
     } = useCalendarGenerator(tournament);
 
     const hydrateFromInventory = async () => {

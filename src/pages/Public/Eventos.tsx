@@ -117,7 +117,7 @@ const EVENT_CONFIGS: Record<string, string[]> = {
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_2,
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_3,
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_4,
-    import.meta.env.VITE_ID_TOURNAMENT_Grupo_Años_Dorados,
+    import.meta.env.VITE_ID_TOURNAMENT_Grupo_Anos_Dorados,
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_1F,
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_2F,
     import.meta.env.VITE_ID_TOURNAMENT_Grupo_3F,

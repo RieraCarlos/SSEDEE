@@ -4,7 +4,7 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string
   readonly VITE_SUPABASE_ANON_KEY: string
   // Torneos habilitados
-  readonly VITE_ID_TOURNAMENT_Grupo_Años_Dorados: string
+  readonly VITE_ID_TOURNAMENT_Grupo_Anos_Dorados: string
   readonly VITE_ID_TOURNAMENT_Grupo_4: string
   readonly VITE_ID_TOURNAMENT_Grupo_3: string
   readonly VITE_ID_TOURNAMENT_Grupo_2: string

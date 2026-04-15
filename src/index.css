@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
 
 html {
   scroll-behavior: smooth;
@@ -55,7 +52,6 @@ html {
   --sidebar: #181b23;
   --sidebar-foreground: #e7eef5;
   --sidebar-border: rgba(255, 255, 255, 0.07);
-}
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
