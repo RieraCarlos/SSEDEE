@@ -63,19 +63,28 @@ const Scoreboard: React.FC = () => {
               {isFutsal && foulState && (
                 <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${
                   foulState.local.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
+                  foulState.local.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
                   foulState.local.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
                     'bg-black/40 border-white/5 text-gray-400'
                   }`}>
                   <span className="text-[9px] font-black uppercase tracking-tight">Faltas:</span>
                   <span className="text-sm font-black italic">{foulState.local.count}</span>
                   {foulState.local.atLimit && <AlertTriangle size={12} className="ml-1" />}
+                  {foulState.local.isAutoFreeThrow && <span className="text-[8px] font-bold">AUTO</span>}
                 </div>
               )}
 
-              {/* Futsal Foul Alert Message */}
+              {/* Futsal Foul Alert - Límite (count === 6) */}
               {isFutsal && foulState?.local.atLimit && (
                 <div className="mt-1 text-red-500 flex items-center gap-1 animate-bounce">
                   <span className="text-xs font-black italic tracking-tighter uppercase whitespace-nowrap">Límite: Otorgar Tiro Libre</span>
+                </div>
+              )}
+
+              {/* Futsal Auto-Tiro Libre (count > 6) */}
+              {isFutsal && foulState?.local.isAutoFreeThrow && (
+                <div className="mt-1 text-orange-500 flex items-center gap-1 animate-pulse">
+                  <span className="text-xs font-black italic tracking-tighter uppercase whitespace-nowrap">⚡ Auto Tiro Libre Activo</span>
                 </div>
               )}
 
@@ -137,19 +146,28 @@ const Scoreboard: React.FC = () => {
               {isFutsal && foulState && (
                 <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${
                   foulState.visita.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
+                  foulState.visita.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
                   foulState.visita.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
                     'bg-black/40 border-white/5 text-gray-400'
                   }`}>
                   <span className="text-[9px] font-black uppercase tracking-tight">Faltas:</span>
                   <span className="text-sm font-black italic">{foulState.visita.count}</span>
                   {foulState.visita.atLimit && <AlertTriangle size={12} className="ml-1" />}
+                  {foulState.visita.isAutoFreeThrow && <span className="text-[8px] font-bold">AUTO</span>}
                 </div>
               )}
 
-              {/* Futsal Foul Alert Message */}
+              {/* Futsal Foul Alert - Límite (count === 6) */}
               {isFutsal && foulState?.visita.atLimit && (
                 <div className="mt-1 text-red-500 flex items-center gap-1 animate-bounce">
                   <span className="text-xs font-black italic tracking-tighter uppercase whitespace-nowrap">Límite: Otorgar Tiro Libre</span>
+                </div>
+              )}
+
+              {/* Futsal Auto-Tiro Libre (count > 6) */}
+              {isFutsal && foulState?.visita.isAutoFreeThrow && (
+                <div className="mt-1 text-orange-500 flex items-center gap-1 animate-pulse">
+                  <span className="text-xs font-black italic tracking-tighter uppercase whitespace-nowrap">⚡ Auto Tiro Libre Activo</span>
                 </div>
               )}
 

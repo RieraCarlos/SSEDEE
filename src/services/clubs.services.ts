@@ -99,8 +99,6 @@ class ClubsApiService extends BaseApiService {
       const { data: { publicUrl } } = this.supabase.storage
         .from(bucket)
         .getPublicUrl(fileName);
-      console.log(publicUrl);
-      console.log(clubId);
       // 4. Actualizar Tabla Clubes
       const { error: updateError } = await this.supabase
         .from('clubes')

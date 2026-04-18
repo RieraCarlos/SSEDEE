@@ -113,7 +113,7 @@ export default function Productos() {
                       <p className="text-xs text-gray-300  h-12 mt-1">
                         {product.description}
                       </p>
-                      <Button asChild className="w-full mt-4 bg-[#0ae98a] text-[#07080a] font-bold hover:bg-[#0ae98a]/40">
+                      <Button asChild className="w-full mt-4 bg-[#0ae98a] text-[#07080a] font-bold hover:bg-[#0ae98a]/70">
                         <a href={product.whatsappUrl} target="_blank" rel="noopener noreferrer">
                           Contactar por WhatsApp
                         </a>

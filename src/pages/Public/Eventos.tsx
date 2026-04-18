@@ -142,13 +142,9 @@ export default function Eventos() {
   const DISTRITO_IDS = EVENT_CONFIGS[activeSlug || 'distrito'] || EVENT_CONFIGS['distrito'];
   const DISTRITO_ID = DISTRITO_IDS[0];
 
-  console.log('[Eventos] activeSlug:', activeSlug);
-  console.log('[Eventos] DISTRITO_IDS:', DISTRITO_IDS);
-  console.log('[Eventos] DISTRITO_ID:', DISTRITO_ID);
 
   const { activeMatches } = useLiveEvents(DISTRITO_IDS);
 
-  console.log('[Eventos] activeMatches:', activeMatches);
 
   return (
     <div className="min-h-screen bg-[#07080a] text-white flex flex-col font-sans selection:bg-emerald-500/30">

@@ -3,6 +3,9 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { addTeamToTournament } from "@/store/thunks/tournamentsThunks";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
+import { selectAuthUser } from "@/store/slices/authSlice";
+import { canEditClubRoster } from "@/utils/rosterPermissions";
+import { UpdateNominaModal } from "./UpdateNominaModal";
 import type { Tournament } from "@/api/type/tournaments.api";
 import { Button } from "@/components/ui/button";
 import {
@@ -152,6 +155,8 @@ export default function EquiposTorneo({ tournament }: EquiposTorneoProps) {
                                         key={teamId} 
                                         club={club} 
                                         fallbackId={teamId}
+                                        tournamentId={tournament.id}
+                                        onRosterUpdated={refreshData}
                                     />
                                 );
                             })
@@ -173,9 +178,14 @@ export default function EquiposTorneo({ tournament }: EquiposTorneoProps) {
  * Componente de Fila Individual (SRP)
  * Encapsula la lógica de subida de media por equipo.
  */
-function TeamRow({ club, fallbackId }: { club?: ClubWithPlayers, fallbackId: string }) {
+function TeamRow({ club, fallbackId, tournamentId, onRosterUpdated }: { club?: ClubWithPlayers, fallbackId: string, tournamentId: string, onRosterUpdated: () => void }) {
     const { uploadLogo, isUploading } = useTeamAssets();
     const [isHovered, setIsHovered] = useState(false);
+    
+    // NÓMINA ADDITIONS
+    const user = useAppSelector(selectAuthUser);
+    const canEditRoster = canEditClubRoster(user?.role);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0] && club) {
@@ -248,10 +258,36 @@ function TeamRow({ club, fallbackId }: { club?: ClubWithPlayers, fallbackId: str
 
             {/* Columna Jugadores */}
             <TableCell className="text-center">
-                <Badge variant="outline" className="bg-emerald-500/5 text-emerald-400 border-emerald-500/20 gap-1.5 px-3">
-                    <Users className="w-3 h-3" />
-                    <span className="font-black tabular-nums">{club.player_count || 0}</span>
-                </Badge>
+                <div className="flex flex-col items-center gap-2">
+                    <Badge variant="outline" className="bg-emerald-500/5 text-emerald-400 border-emerald-500/20 gap-1.5 px-3">
+                        <Users className="w-3 h-3" />
+                        <span className="font-black tabular-nums">{club.player_count || 0}</span>
+                    </Badge>
+                    {canEditRoster && (
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => setIsModalOpen(true)}
+                            className="h-6 text-[10px] text-emerald-400/80 hover:text-emerald-400 hover:bg-emerald-500/10 uppercase tracking-widest font-bold"
+                        >
+                            Actualizar
+                        </Button>
+                    )}
+                </div>
+                {/* Modal de nómina */}
+                {canEditRoster && (
+                    <UpdateNominaModal
+                        isOpen={isModalOpen}
+                        clubId={club.id}
+                        clubName={club.name}
+                        tournamentId={tournamentId}
+                        onClose={() => setIsModalOpen(false)}
+                        onSuccess={() => {
+                            setIsModalOpen(false);
+                            onRosterUpdated();
+                        }}
+                    />
+                )}
             </TableCell>
         </TableRow>
     );

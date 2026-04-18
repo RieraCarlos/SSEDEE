@@ -36,7 +36,7 @@ export default function Contactanos() {
             </CardHeader>
             <CardContent className="space-y-2 text-center -mt-5">
               {contactInfo.phoneNumbers.map((phone, index) => (
-                <Button key={index} className="w-full mt-4 bg-[#0ae98a] text-[#07080a] font-bold hover:bg-[#0ae98a]/40">
+                <Button key={index} className="w-full mt-4 bg-[#0ae98a] text-[#07080a] font-bold hover:bg-[#0ae98a]/70">
                     <a href={`https://wa.me/${phone}?text=Hola, necesito información sobre 'SSEDEE'.`} target="_blank" rel="noopener noreferrer">
                         Contactar por WhatsApp
                     </a>

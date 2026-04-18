@@ -73,7 +73,7 @@ export default function HowToCreateClub() {
 
           {/* CTA */}
           <div className="flex justify-center pt-6">
-            <Button className="bg-[#0ae98a] hover:bg-[#0ae98a]/50 text-black font-bold px-8 py-3 rounded-xl">
+            <Button className="bg-[#0ae98a] hover:bg-[#0ae98a]/80 text-black font-bold px-8 py-3 rounded-xl">
               <Link to={'/login'}>
                   Crear mi club
               </Link>

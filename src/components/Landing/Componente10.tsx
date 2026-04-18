@@ -39,7 +39,7 @@ export default function ClubLogoOffer() {
 
           {/* CTA */}
           <Button
-            className="w-full md:w-auto px-10 py-6 text-lg rounded-xl bg-[#0ae98a] text-black hover:bg-[#0ae98a]/50 transition-all font-bold shadow-lg"
+            className="w-full md:w-auto px-10 py-6 text-lg rounded-xl bg-[#0ae98a] text-black hover:bg-[#0ae98a]/80 transition-all font-bold shadow-lg"
           >
             <a href={`https://wa.me/593987984878?text=Hola, necesito información sobre los logos para 'SSEDEE'.`} target="_blank" rel="noopener noreferrer">
                 Contáctate con nosotros

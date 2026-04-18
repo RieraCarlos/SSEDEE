@@ -45,7 +45,6 @@ export default function HomeAdmin() {
     useEffect(() => {
         if (tournaments.length > 0) {
             const tournamentIds = tournaments.map(t => t.id);
-            console.log('HomeAdmin - Despachando fetchTournamentMatches con IDs:', tournamentIds);
             dispatch(fetchTournamentMatches(tournamentIds));
         }
     }, [tournaments, dispatch]);
@@ -53,25 +52,60 @@ export default function HomeAdmin() {
     // Selector de todos los partidos desde Redux
     const reduxMatches = useAppSelector(selectPortalMatches);
 
-    // Filtrar únicamente los partidos de los próximos 7 días
+    const parseLocalDate = (dateString: string) => {
+        const match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (match) {
+            const [, year, month, day] = match;
+            return new Date(Number(year), Number(month) - 1, Number(day));
+        }
+        const fallback = new Date(dateString);
+        fallback.setHours(0, 0, 0, 0);
+        return fallback;
+    };
+
+    // Filtrar únicamente los partidos de los próximos sábados
     const upcomingMatches = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const sevenDaysLater = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-        console.log('reduxMatches:', reduxMatches);
-        console.log('Total de partidos en Redux:', reduxMatches?.length || 0);
+        const formatLocalDateKey = (date: Date) => {
+            const year = date.getFullYear();
+            const month = `${date.getMonth() + 1}`.padStart(2, '0');
+            const day = `${date.getDate()}`.padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const getNextSaturday = (fromDate: Date) => {
+            const date = new Date(fromDate);
+            const dayOfWeek = date.getDay(); // 0 = Domingo, 6 = Sábado
+            const daysUntilSaturday = dayOfWeek === 6 ? 0 : (6 - dayOfWeek);
+            date.setDate(date.getDate() + daysUntilSaturday);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        };
+
+        // Generar los próximos 6 sábados en formato local YYYY-MM-DD
+        const upcomingSaturdaysKeys: string[] = [];
+        let currentSaturday = getNextSaturday(today);
+
+        for (let i = 0; i < 6; i++) {
+            upcomingSaturdaysKeys.push(formatLocalDateKey(currentSaturday));
+            currentSaturday.setDate(currentSaturday.getDate() + 7); // Siguiente sábado
+        }
 
         return (reduxMatches || [])
             .filter((match: any) => {
-                const matchDate = new Date(match.fecha_partido);
-                const isInRange = matchDate >= today && matchDate <= sevenDaysLater;
-                console.log(`Match: ${match.id}, Fecha: ${match.fecha_partido}, En rango: ${isInRange}`);
-                return isInRange;
+                const matchDate = parseLocalDate(match.fecha_partido);
+                const matchDateKey = formatLocalDateKey(matchDate);
+
+                // Verificar si el partido cae en uno de los próximos sábados
+                const isOnSaturday = upcomingSaturdaysKeys.includes(matchDateKey);
+
+                return isOnSaturday;
             })
             .sort((a: any, b: any) => {
-                const dateA = new Date(a.fecha_partido);
-                const dateB = new Date(b.fecha_partido);
+                const dateA = parseLocalDate(a.fecha_partido);
+                const dateB = parseLocalDate(b.fecha_partido);
                 if (dateA.getTime() !== dateB.getTime()) {
                     return dateA.getTime() - dateB.getTime();
                 }
@@ -112,8 +146,8 @@ export default function HomeAdmin() {
 
                     {isAdmin && user?.id && (
                         <div className="w-full sm:w-auto">
-                            <CreateTournamentModal 
-                                userId={user.id.toString()} 
+                            <CreateTournamentModal
+                                userId={user.id.toString()}
                                 onSuccess={refreshAllData}
                             />
                         </div>
@@ -127,7 +161,7 @@ export default function HomeAdmin() {
                     <div className="flex items-center gap-2 mb-4">
                         <Clock className="text-[#0ae98a]" size={20} />
                         <h2 className="text-lg sm:text-xl font-bold text-gray-300">
-                            Próximos encuentros (7 días)
+                            Próximos encuentros (sábados)
                         </h2>
                         <span className="text-xs px-2 py-1 rounded-full bg-[#0ae98a]/10 text-[#0ae98a] font-semibold">
                             {upcomingMatches.length}
@@ -137,13 +171,18 @@ export default function HomeAdmin() {
                     {loadingMatches ? (
                         <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className="flex-shrink-0 w-80 h-32 bg-[#1d2029] rounded-lg animate-pulse" />
+                                <div key={i} className="flex-shrink-0 w-72 h-40 bg-[#1d2029] rounded-xl animate-pulse border border-[#0ae98a]/10" />
                             ))}
                         </div>
                     ) : upcomingMatches.length > 0 ? (
-                        <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
+                        <motion.div
+                            className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar cursor-grab active:cursor-grabbing"
+                            drag="x"
+                            dragConstraints={{ left: -((upcomingMatches.length - 1) * 300), right: 0 }}
+                            dragElastic={0.1}
+                        >
                             {upcomingMatches.map((match) => {
-                                const matchDate = new Date(match.fecha_partido);
+                                const matchDate = parseLocalDate(match.fecha_partido);
                                 const formattedDate = matchDate.toLocaleDateString('es-AR', { month: 'short', day: 'numeric' });
                                 const formattedDay = matchDate.toLocaleDateString('es-AR', { weekday: 'short' });
 
@@ -152,74 +191,80 @@ export default function HomeAdmin() {
                                         key={match.id}
                                         initial={{ opacity: 0, x: 20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        className="flex-shrink-0 w-80 bg-[#1d2029] rounded-lg border border-[#1d2029] overflow-hidden hover:border-[#0ae98a]/30 transition-all shadow-lg hover:shadow-[#0ae98a]/10 p-4"
+                                        className="flex-shrink-0 w-72 bg-[#1d2029] rounded-xl border border-[#0ae98a]/10 overflow-hidden hover:border-[#0ae98a]/30 transition-all shadow-lg hover:shadow-[#0ae98a]/10"
                                     >
-                                        {/* Encabezado del partido */}
-                                        <div className="flex flex-col gap-3">
-                                            {/* Fecha y hora */}
-                                            <div className="flex items-center justify-between text-xs">
-                                                <span className="text-[#0ae98a] font-semibold uppercase">
-                                                    {formattedDay} {formattedDate}
-                                                </span>
-                                                <span className="text-gray-400 font-medium">
+                                        {/* Header compacto */}
+                                        <div className="bg-[#13161c]/50 px-4 py-3 border-b border-[#0ae98a]/10">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <Clock size={14} className="text-[#0ae98a]" />
+                                                    <span className="text-xs font-bold text-[#0ae98a] uppercase tracking-wide">
+                                                        {formattedDay} {formattedDate}
+                                                    </span>
+                                                </div>
+                                                <span className="text-xs text-white/60 font-medium">
                                                     {match.hora_inicio}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Contenido principal */}
+                                        <div className="p-4">
+                                            {/* Deporte */}
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <SportIcon size={16} />
+                                                <span className="text-xs text-white/60 uppercase tracking-wide">
+                                                    {match.torneos?.deporte?.name || 'Deporte'}
                                                 </span>
                                             </div>
 
                                             {/* Equipos */}
-                                            <div className="space-y-2">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex-1">
-                                                        <p className="text-sm font-semibold text-gray-300 truncate">
-                                                            {match.local?.name || 'Local'}
-                                                        </p>
-                                                    </div>
+                                            <div className="space-y-3">
+                                                <div className="text-center">
+                                                    <p className="text-sm font-bold text-white truncate">
+                                                        {match.local?.name || 'Local'}
+                                                    </p>
                                                 </div>
 
                                                 <div className="flex items-center justify-center">
-                                                    <div className="px-2 py-1 text-xs font-bold text-[#0ae98a] bg-[#0ae98a]/10 rounded">
-                                                        vs
+                                                    <div className="px-3 py-1 text-xs font-black text-[#0ae98a] bg-[#0ae98a]/10 rounded-full border border-[#0ae98a]/20">
+                                                        VS
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex-1">
-                                                        <p className="text-sm font-semibold text-gray-300 truncate">
-                                                            {match.visita?.name || 'Visitante'}
-                                                        </p>
-                                                    </div>
+                                                <div className="text-center">
+                                                    <p className="text-sm font-bold text-white truncate">
+                                                        {match.visita?.name || 'Visitante'}
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            {/* Torneos info */}
-                                            <div className="text-xs text-gray-500 border-t border-[#13161c] pt-2">
-                                                <p className="text-xs text-gray-400">{match.torneos?.name || 'Torneo sin nombre'}</p>
+                                            {/* Torneo */}
+                                            <div className="mt-3 pt-3 border-t border-[#0ae98a]/10">
+                                                <p className="text-xs text-white/40 truncate">
+                                                    {match.torneos?.name || 'Torneo'}
+                                                </p>
                                             </div>
 
-                                            {/* Botones de acción */}
-                                            <div className="flex gap-2 pt-2 border-t border-[#13161c]">
+                                            {/* Botón Live */}
+                                            <div className="mt-3">
                                                 <button
                                                     onClick={() => activateMatch(match.id)}
                                                     disabled={loadingLive}
-                                                    className="flex-1 flex items-center justify-center gap-2 bg-[#0ae98a] hover:bg-[#09d47a] disabled:opacity-50 disabled:cursor-not-allowed text-[#13161c] font-bold py-2 px-3 rounded-lg transition-all text-sm uppercase tracking-wide"
+                                                    className="w-full flex items-center justify-center gap-2 bg-[#0ae98a] hover:bg-[#0ae98a]/90 disabled:opacity-50 disabled:cursor-not-allowed text-[#13161c] font-bold py-2 px-4 rounded-lg transition-all text-sm uppercase tracking-wide shadow-lg hover:shadow-[#0ae98a]/20"
                                                 >
                                                     <Play size={14} />
                                                     {loadingLive ? 'Activando...' : 'LIVE'}
-                                                </button>
-                                                <button
-                                                    className="flex-1 bg-[#1d2029] hover:bg-[#2a2f38] border border-[#1d2029] hover:border-[#0ae98a]/30 text-gray-300 font-bold py-2 px-3 rounded-lg transition-all text-sm uppercase tracking-wide"
-                                                >
-                                                    Detalle
                                                 </button>
                                             </div>
                                         </div>
                                     </motion.div>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     ) : (
-                        <div className="text-center py-6 bg-[#1d2029]/40 rounded-lg border border-dashed border-[#0ae98a]/20">
-                            <p className="text-gray-400 text-sm">No hay encuentros programados para los próximos 7 días</p>
+                        <div className="text-center py-8 bg-[#1d2029]/40 rounded-xl border border-dashed border-[#0ae98a]/20">
+                            <p className="text-white/60 text-sm">No hay encuentros programados para los próximos sábados</p>
                         </div>
                     )}
                 </div>
@@ -241,7 +286,7 @@ export default function HomeAdmin() {
 
                     {loading ? (
                         <div className="space-y-3">
-                            {[1,2].map(i => (
+                            {[1, 2].map(i => (
                                 <div key={i} className="h-20 bg-[#1d2029] rounded-xl animate-pulse" />
                             ))}
                         </div>

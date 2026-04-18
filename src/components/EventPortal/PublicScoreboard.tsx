@@ -8,20 +8,6 @@ interface PublicScoreboardProps {
 }
 
 const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
-  const colors: Record<string, string> = {
-    futbol: '#10b981',
-    fútbol: '#10b981',
-    basketball: '#f97316',
-    baloncesto: '#f97316',
-    voley: '#3b82f6',
-    ecuavoley: '#3b82f6',
-    futsal: '#f43f5e',
-    'fútbol sala': '#f43f5e',
-    natacion: '#06b6d4',
-  };
-
-  const disciplineKey = (match.discipline || 'futbol').toLowerCase();
-  const accentColor = colors[disciplineKey] || '#10b981';
 
   // Helpers for displaying periods
   const getPeriodLabel = (p?: number) => {
@@ -34,32 +20,32 @@ const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
 
   return (
     <div 
-      className="group relative bg-[#0f172a]/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] md:rounded-[3rem] overflow-hidden transition-all duration-700 shadow-2xl hover:border-white/20"
-      style={{ boxShadow: `0 30px 100px -20px ${accentColor}15` }}
+      className="group relative bg-[#13161c] backdrop-blur-3xl border border-[#0ae98a]/10 rounded-[2rem] md:rounded-[3rem] overflow-hidden transition-all duration-700 shadow-2xl hover:border-[#0ae98a]/20"
+      style={{ boxShadow: `0 30px 100px -20px #0ae98a15` }}
     >
       {/* Premium Glass Top Highlight */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
       {/* 1. Header: Meta Info & Status */}
-      <div className="flex items-center justify-between px-6 md:px-10 py-5 bg-white/[0.04] border-b border-white/5">
+      <div className="flex items-center justify-between px-6 md:px-10 py-5 bg-[#1d2029]/50 backdrop-blur-sm border-b border-[#0ae98a]/10">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-600"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0ae98a] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0ae98a]"></span>
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-rose-500">Live Result</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#0ae98a]">Live Result</span>
           </div>
-          <div className="hidden md:block h-3 w-px bg-white/10" />
-          <div className="hidden md:flex items-center gap-2 text-slate-500 font-bold text-[9px] uppercase tracking-widest">
+          <div className="hidden md:block h-3 w-px bg-[#0ae98a]/20" />
+          <div className="hidden md:flex items-center gap-2 text-white/60 font-bold text-[9px] uppercase tracking-widest">
              <Timer size={10} />
              {getPeriodLabel(match.periodo)}
           </div>
         </div>
         
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
-           <Zap size={12} style={{ color: accentColor }} className="animate-pulse" />
-           <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-300">
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#1d2029]/50 border border-[#0ae98a]/10">
+           <Zap size={12} style={{ color: '#0ae98a' }} className="animate-pulse" />
+           <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-white/80">
              {match.discipline || 'Competencia'}
            </span>
         </div>
@@ -70,9 +56,9 @@ const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-0 relative z-10">
         
         {/* Mobile Period Indicator (Mobile Only) */}
-        <div className="md:hidden flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-2">
-            <Timer size={12} className="text-slate-400" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <div className="md:hidden flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-[#1d2029]/50 border border-[#0ae98a]/10 mb-2">
+            <Timer size={12} className="text-[#0ae98a]" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#0ae98a]">
                 {getPeriodLabel(match.periodo)}
             </span>
         </div>
@@ -153,9 +139,9 @@ const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
                 </AnimatePresence>
             </div>
             
-            <div className="mt-4 md:mt-2 flex items-center gap-2 px-5 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full shadow-lg shadow-emerald-500/5">
-                <Activity size={14} className="text-emerald-400" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400">Match Action</span>
+            <div className="mt-4 md:mt-2 flex items-center gap-2 px-5 py-2 bg-[#0ae98a]/10 border border-[#0ae98a]/20 rounded-full shadow-lg shadow-[#0ae98a]/5">
+                <Activity size={14} className="text-[#0ae98a]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#0ae98a]">Match Action</span>
             </div>
         </div>
 
@@ -212,18 +198,18 @@ const PublicScoreboard: React.FC<PublicScoreboardProps> = ({ match }) => {
       </div>
 
       {/* 3. Footer: Institutional Branding */}
-      <div className="py-5 bg-white/[0.03] border-t border-white/5 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12">
+      <div className="py-5 bg-[#0ae98a]/5 border-t border-[#0ae98a]/10 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12">
           <div className="flex items-center gap-3">
-            <div className="h-px w-8 bg-white/10" />
-            <p className="text-[8px] md:text-[9px] font-black text-slate-500 uppercase tracking-[0.4em]">
-              Suministro de Datos: <span className="text-slate-300">SSEDEE Monitor</span>
+            <div className="h-px w-8 bg-[#0ae98a]/20" />
+            <p className="text-[8px] md:text-[9px] font-black text-white/60 uppercase tracking-[0.4em]">
+              Suministro de Datos: <span className="text-white/80">SSEDEE Monitor</span>
             </p>
-            <div className="h-px w-8 bg-white/10" />
+            <div className="h-px w-8 bg-[#0ae98a]/20" />
           </div>
           
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
-            <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest leading-none">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0ae98a]/40 animate-pulse" />
+            <p className="text-[8px] font-bold text-[#0ae98a]/60 uppercase tracking-widest leading-none">
               Real-time Sync Active
             </p>
           </div>

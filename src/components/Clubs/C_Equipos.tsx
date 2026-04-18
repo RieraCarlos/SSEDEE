@@ -16,7 +16,7 @@ export interface Player {
   id: number | string;
   name: string;
   posicion: string;
-  isAssigned: boolean; 
+  isAssigned: boolean;
 }
 
 interface Team {
@@ -57,18 +57,18 @@ export default function C_Equipos() {
   const timeoutRef = useRef<number | null>(null);
 
   // --- Callbacks ---
-  const particionarArrayAleatoriamente = useCallback((array: Player[]): { playerA: Player[], playerB: Player[] } =>  {
+  const particionarArrayAleatoriamente = useCallback((array: Player[]): { playerA: Player[], playerB: Player[] } => {
     if (array.length !== ROSTER_SIZE) {
-        throw new Error(`El array debe contener exactamente ${ROSTER_SIZE} elementos.`);
+      throw new Error(`El array debe contener exactamente ${ROSTER_SIZE} elementos.`);
     }
-    const arrayCopia = [...array]; 
+    const arrayCopia = [...array];
     for (let i = 0; i < TEAM_SIZE; i++) {
-        const j = i + Math.floor(Math.random() * (arrayCopia.length - i)); 
-        [arrayCopia[i], arrayCopia[j]] = [arrayCopia[j], arrayCopia[i]];
+      const j = i + Math.floor(Math.random() * (arrayCopia.length - i));
+      [arrayCopia[i], arrayCopia[j]] = [arrayCopia[j], arrayCopia[i]];
     }
-    return { 
-      playerA: arrayCopia.slice(0, TEAM_SIZE), 
-      playerB: arrayCopia.slice(TEAM_SIZE) 
+    return {
+      playerA: arrayCopia.slice(0, TEAM_SIZE),
+      playerB: arrayCopia.slice(TEAM_SIZE)
     };
   }, []);
 
@@ -100,7 +100,7 @@ export default function C_Equipos() {
       toast.success(`Equipo ${winningTeam} guardado como ganador.`);
     });
   }, [dispatch, partidoId, user?.id_club]);
-  
+
   const handleCopyResult = useCallback(() => {
     if (!teamA || !teamB || !nameTeam) {
       toast.error('No hay datos del partido para copiar.');
@@ -170,7 +170,7 @@ export default function C_Equipos() {
         // Silently fail, means no teams are stored in DB which is a valid state
         console.log('No teams found in DB for this club.');
       });
-    
+
     dispatch(fetchGuardadoMatches({ clubId: user.id_club }));
   }, [dispatch, user?.id_club]);
 
@@ -189,7 +189,7 @@ export default function C_Equipos() {
         };
       });
     };
-    
+
     setTeamA(mapById(rawTeamData.equipoA));
     setTeamB(mapById(rawTeamData.equipoB));
   }, [rawTeamData, allClubPlayers]);
@@ -197,7 +197,7 @@ export default function C_Equipos() {
   // --- Render Logic ---
   const isRosterReady = assignedPlayers.length === ROSTER_SIZE;
   const teamsAreSet = teamA && teamB;
-  
+
   const renderTeamTable = (team: Team) => (
     <Card className="bg-transparent border-4 border-[#181b22] rounded-xl w-full">
       <CardContent className="p-0">
@@ -229,15 +229,15 @@ export default function C_Equipos() {
         <span className="text-2xl md:text-3xl font-bold text-white">Tabla de Equipos</span>
         {user?.role === "dt" && estadoPartido !== 'guardado' && (
           <div className='flex flex-col items-center'>
-            <Button 
-              className='p-3 rounded-lg text-white bg-gradient-to-r from-[#13161c] to-[#0ae98a] hover:from-[#13161c] hover:to-[#0ae98a]/50 transition-all duration-300 cursor-pointer disabled:to-gray-600 disabled:cursor-not-allowed' 
+            <Button
+              className='p-3 rounded-lg text-white bg-gradient-to-r from-[#13161c] to-[#0ae98a] hover:from-[#13161c] hover:to-[#0ae98a]/50 transition-all duration-300 cursor-pointer disabled:to-gray-600 disabled:cursor-not-allowed'
               onClick={handlePlayersTeam}
               disabled={!isRosterReady}
             >
-              <Trophy className="mr-2"/> {teamsAreSet ? 'Actualizar equipos' : 'Crear equipos'}
+              <Trophy className="mr-2" /> {teamsAreSet ? 'Actualizar equipos' : 'Crear equipos'}
             </Button>
             {!isRosterReady && (
-                <p className='text-xs text-yellow-400 mt-2 flex items-center'><AlertTriangle className="w-4 h-4 mr-1"/>Se necesitan {ROSTER_SIZE} jugadores en nómina.</p>
+              <p className='text-xs text-yellow-400 mt-2 flex items-center'><AlertTriangle className="w-4 h-4 mr-1" />Se necesitan {ROSTER_SIZE} jugadores en nómina.</p>
             )}
           </div>
         )}
@@ -246,20 +246,20 @@ export default function C_Equipos() {
       <div className="flex flex-col lg:flex-row items-center justify-center h-full">
         {assignedPlayers.length === 0 ? (
           <div className='flex flex-col justify-center items-center h-full'>
-              <Loader className='w-10 h-10 text-[#0ae98a] animate-spin' />
-              <p className="mt-4 text-gray-400">Esperando jugadores en la nómina...</p>
+            <Loader className='w-10 h-10 text-[#0ae98a] animate-spin' />
+            <p className="mt-4 text-gray-400">Esperando jugadores en la nómina...</p>
           </div>
         ) : (
           <div className='w-full flex flex-col items-center -mt-10'>
-              {teamsAreSet && partidoId && user?.role === 'dt' && isAlertSubmitTeams && estadoPartido === 'habilitado' ? (
-                <div className='mb-6'>
-                  <FormularioSeleccionarEquipoGanador teamA={teamA} teamB={teamB} partidoId={partidoId} onSave={handleSaveResult} />
-                </div>
-              ) : (isTeamWin && estadoPartido === 'guardado' ? (
-                <Button className='mb-6 p-3 rounded-lg text-white bg-gradient-to-r from-[#13161c] to-[#0ae98a] hover:from-[#13161c] hover:to-[#0ae98a]/50' onClick={handleCopyResult}>
-                  <MessageCircleCode className='mr-2'/> Enviar informe al grupo
-                </Button>
-              ) : null)}
+            {teamsAreSet && partidoId && user?.role === 'dt' && isAlertSubmitTeams && estadoPartido === 'habilitado' ? (
+              <div className='mb-6'>
+                <FormularioSeleccionarEquipoGanador teamA={teamA} teamB={teamB} partidoId={partidoId} onSave={handleSaveResult} />
+              </div>
+            ) : (isTeamWin && estadoPartido === 'guardado' ? (
+              <Button className='mb-6 p-3 rounded-lg text-white bg-gradient-to-r from-[#13161c] to-[#0ae98a] hover:from-[#13161c] hover:to-[#0ae98a]/50' onClick={handleCopyResult}>
+                <MessageCircleCode className='mr-2' /> Enviar informe al grupo
+              </Button>
+            ) : null)}
 
             {teamsAreSet ? (
               <div className='w-full flex flex-col lg:flex-row items-center justify-center gap-4 mb-4'>
@@ -280,7 +280,7 @@ export default function C_Equipos() {
             ) : (
               <div className='text-center text-gray-300 flex flex-col justify-center items-center h-full'>
                 {user?.role === "dt" ? <p>Presione "Crear equipos" para generar los equipos desde la nómina.</p> : <p>El DT aun no genera los equipos.</p>}
-                <ClipboardClock className="mt-2"/>
+                <ClipboardClock className="mt-2" />
               </div>
             )}
 
@@ -288,11 +288,11 @@ export default function C_Equipos() {
               <div className=''>
                 {isAlertSubmitTeams && !published ? (
                   <p className='text-sm text-[#0ae98a] font-bold'>Equipos Publicados</p>
-                ): !isTeamWin ? (
+                ) : !isTeamWin ? (
                   <Button className='p-3 rounded-lg text-white bg-gradient-to-r from-[#13161c] to-[#0ae98a] hover:from-[#13161c] hover:to-[#0ae98a]/50' onClick={handleSubmitTeamsPlayer} disabled={published || isSubmitting}>
                     Publicar equipos
                   </Button>
-                ): ''}
+                ) : ''}
                 {published && <p className='text-sm text-[#0ae98a] mt-2'>Equipos publicados correctamente.</p>}
               </div>
             )}

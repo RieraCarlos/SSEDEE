@@ -192,7 +192,7 @@ export default function CalendarioPartidos({ tournament }: CalendarioPartidosPro
                         onClick={handleExportPdf} 
                         variant="outline" 
                         disabled={loadingPdf}
-                        className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 gap-2 font-bold italic"
+                        className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-400 hover:text-emerald-400/20 gap-2 font-bold italic"
                     >
                         {loadingPdf ? (
                             <>

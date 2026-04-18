@@ -31,6 +31,15 @@ export const PlayerCsvSchema = z.object({
   fecha_nacimiento: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
 });
 
+export const NominaRowCsvSchema = z.object({
+  fullname: z.string().min(5, "Nombre de jugador requerido"),
+  email: z.string().email("Email de jugador inválido"),
+  posicion: z.string().optional(),
+  alias: z.string().optional(),
+  altura: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+  fecha_nacimiento: z.preprocess((val) => val === "" ? undefined : val, z.string().optional()),
+});
+
 export const CsvRowSchema = z.discriminatedUnion('role', [
   ClubCsvSchema,
   DtCsvSchema,
@@ -114,6 +123,55 @@ export const CsvService = {
               })),
             };
             resolve({ valid: true, errors: [], data: payload, raw });
+          }
+        },
+      });
+    });
+  },
+
+  /**
+   * Parsea un archivo CSV específicamente diseñado para actualizar la Nómina
+   * No requiere columna 'role' ni esquema de DT/Club.
+   */
+  async parseAndValidateNomina(file: File): Promise<{
+    valid: boolean;
+    errors: Array<{ row: number; column: string; message: string }>;
+    data: z.infer<typeof NominaRowCsvSchema>[] | null;
+    raw: any[];
+  }> {
+    return new Promise((resolve) => {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          const raw = results.data as any[];
+          const errors: Array<{ row: number; column: string; message: string }> = [];
+          const players: Array<z.infer<typeof NominaRowCsvSchema>> = [];
+
+          raw.forEach((row, index) => {
+            const validation = NominaRowCsvSchema.safeParse(row);
+
+            if (!validation.success) {
+              validation.error.issues.forEach((issue) => {
+                errors.push({
+                  row: index + 1,
+                  column: issue.path.join('.') || 'global',
+                  message: issue.message,
+                });
+              });
+            } else {
+              players.push(validation.data);
+            }
+          });
+
+          if (players.length === 0 && errors.length === 0) {
+            errors.push({ row: 0, column: 'global', message: 'No hay jugadores en el CSV' });
+          }
+
+          if (errors.length > 0) {
+            resolve({ valid: false, errors, data: null, raw });
+          } else {
+            resolve({ valid: true, errors: [], data: players, raw });
           }
         },
         error: (error) => {
