@@ -1,9 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import Nav from '@/components/Landing/Nav';
 import Footer from '@/components/Landing/Footer';
 import Scoreboard from './Scoreboard';
 import LiveRosters from './LiveRosters';
+import VerificationNomina from './VerificationNomina';
 import { useLiveMatch } from '@/hooks/useLiveMatch';
 import { useFutsalRules } from '@/hooks/useFutsalRules';
 import TiroLibreModal from '@/components/Live/TiroLibreModal';
@@ -11,9 +13,11 @@ import { useDisciplineConfig } from '@/hooks/useDisciplineConfig';
 import { generateMatchReportPDF } from '@/utils/generateMatchReport';
 import { selectAuthUser } from '@/store/slices/authSlice';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { Loader2, FileText, CheckCircle2, ChevronRight, AlertCircle, Waves, Trophy, Settings, FastForward } from 'lucide-react';
 import { useMatchLogic } from '@/hooks/useMatchLogic';
 import SportIcon from '@/components/common/SportIcon';
+import { selectNominaVerificacion, unlockEditMode, resetVerificacionState } from '@/store/slices/nominaVerificacionSlice';
 
 /**
  * Página Principal del Partido en Vivo
@@ -21,7 +25,16 @@ import SportIcon from '@/components/common/SportIcon';
  */
 export default function LiveMatch() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { matchId } = useParams<{ matchId: string }>();
   const user = useAppSelector(selectAuthUser);
+  const { status: nominaStatus, selections: nominaSelections } = useAppSelector(selectNominaVerificacion);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetVerificacionState());
+    };
+  }, [dispatch]);
   const {
     events,
     localName,
@@ -51,6 +64,7 @@ export default function LiveMatch() {
   const [isFinalizedState, setIsFinalizedState] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [isConfirmingFoul, setIsConfirmingFoul] = useState(false);
+  const [showNominaModal, setShowNominaModal] = useState(false);
 
   const isAdmin = user?.role === 'admin';
 
@@ -88,6 +102,10 @@ export default function LiveMatch() {
   } as React.CSSProperties;
 
   const handleLogEventAction = async (type: string, team: 'local' | 'visita', player: any) => {
+    if (nominaStatus !== 'completed') {
+      toast.error('Debe completar la verificación de nómina primero.');
+      return;
+    }
     await logEvent(type, team, player.id, player.fullname, { periodo: currentPeriod });
   };
 
@@ -117,7 +135,8 @@ export default function LiveMatch() {
       visitaRoster,
       observations,
       header_oficial: "Sistema de Seguimiento y Entretenimiento Deportivo en Ecuador",
-      config: activeConfig
+      config: activeConfig,
+      nominaSelections: nominaStatus === 'completed' ? nominaSelections : undefined
     });
   };
 
@@ -155,8 +174,14 @@ export default function LiveMatch() {
 
           {isAdmin && !isFinalizedState ? (
             <button
-              onClick={isLastPeriod ? () => setShowFinalizeModal(true) : advancePeriod}
-              disabled={isLoading}
+              onClick={() => {
+                if (nominaStatus !== 'completed') {
+                  toast.error('Debe verificar la nómina antes de iniciar.');
+                  return;
+                }
+                isLastPeriod ? setShowFinalizeModal(true) : advancePeriod();
+              }}
+              disabled={isLoading || nominaStatus !== 'completed'}
               className={`flex items-center gap-2 px-4 py-3 rounded-2xl transition-all group border border-white/5 shadow-xl active:scale-95 ${isLastPeriod
                   ? 'bg-red-600/20 border-red-500/30 hover:bg-red-600 text-red-500 hover:text-white'
                   : 'bg-indigo-600/20 border-indigo-500/30 hover:bg-indigo-600 text-indigo-400 hover:text-white'
@@ -175,9 +200,27 @@ export default function LiveMatch() {
           )}
         </div>
 
-        {/* Marcador Principal */}
+        {/* Marcador Principal o Verificación de Nómina Base */}
         <div className="w-full max-w-5xl relative">
-          <Scoreboard />
+          {nominaStatus === 'completed' ? (
+            <Scoreboard onUpdateNomina={() => {
+              dispatch(unlockEditMode());
+              setShowNominaModal(true);
+            }} isAdmin={isAdmin} />
+          ) : (
+            <VerificationNomina
+              matchId={matchId as string}
+              localRoster={localRoster}
+              visitaRoster={visitaRoster}
+              localName={localName}
+              visitaName={visitaName}
+              color={activeConfig?.color || '#10b981'}
+              onComplete={() => {
+                // Forzamos que el componente sepa que terminó
+                console.log('Nomina completed callback triggered');
+              }}
+            />
+          )}
         </div>
 
         {/* Modales de Reglas de Futsal */}
@@ -262,6 +305,29 @@ export default function LiveMatch() {
         )}
 
       </div>
+
+      {/* Modal de Actualización Dinámica de Nómina */}
+      {showNominaModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="relative w-full max-w-4xl animate-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setShowNominaModal(false)}
+              className="absolute -top-10 right-0 text-white hover:text-red-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2 transition-colors"
+            >
+              CERRAR MODAL
+            </button>
+            <VerificationNomina
+              matchId={matchId as string}
+              localRoster={localRoster}
+              visitaRoster={visitaRoster}
+              localName={localName}
+              visitaName={visitaName}
+              color={activeConfig?.color || '#10b981'}
+              onComplete={() => setShowNominaModal(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Modal de Finalización de Partido */}
       {showFinalizeModal && (

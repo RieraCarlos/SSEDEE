@@ -2,23 +2,38 @@ import React from 'react';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectLiveMatchState, selectLiveScores } from '@/store/slices/liveMatchSlice';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Shield, AlertTriangle } from 'lucide-react';
+import { Shield, AlertTriangle, Users, Trash2 } from 'lucide-react';
 import { useMatchLogic } from '@/hooks/useMatchLogic';
+import { useMatchEvents } from '@/hooks/useMatchEvents';
 import { useFutsalRules } from '@/hooks/useFutsalRules';
 
-const Scoreboard: React.FC = () => {
-  const { localName, localLogoUrl, visitaName, visitaLogoUrl, isLoading, config } = useAppSelector(selectLiveMatchState);
+interface ScoreboardProps {
+  onUpdateNomina?: () => void;
+  isAdmin?: boolean;
+}
+
+const Scoreboard: React.FC<ScoreboardProps> = ({ onUpdateNomina, isAdmin }) => {
+  const matchState = useAppSelector(selectLiveMatchState);
+  const { localName, localLogoUrl, visitaName, visitaLogoUrl, isLoading, config, events, activeMatchId, currentPeriod } = matchState;
   const { scoreLocal, scoreVisita } = useAppSelector(selectLiveScores);
   const { currentPeriodName, cardSummary } = useMatchLogic();
-  const { foulState, isFutsal } = useFutsalRules(async () => {}); // Solo vista
+  const { foulState, isFutsal } = useFutsalRules(async () => { }); // Solo vista
+  const { deleteEvent } = useMatchEvents(
+    activeMatchId || '',
+    { scoreLocal, scoreVisita },
+    currentPeriod,
+    config?.scoreRules || []
+  );
 
   const isVersus = config?.layoutMode === 'versus' || !config;
   const labels = config?.labels || { score: 'Goles', period: 'Tiempo', local: 'Local', visita: 'Visitante' };
 
+  const recentEvents = [...events].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
   return (
     <div className="bg-[#13161c] rounded-2xl border-2 border-gray-700 shadow-2xl overflow-hidden shadow-[var(--discipline-color)]/5 animate-in zoom-in-95 duration-500">
       <div
-        className="py-2 text-center border-b border-gray-700"
+        className="py-2 text-center border-b border-gray-700 flex"
         style={{ backgroundColor: 'var(--discipline-color-alpha)' }}
       >
         <h2
@@ -28,6 +43,16 @@ const Scoreboard: React.FC = () => {
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
           EN VIVO • {currentPeriodName.toUpperCase()}
         </h2>
+
+        {isAdmin && (
+          <button
+            onClick={onUpdateNomina}
+            className="absolute top-1.5 right-4 flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-[#0ae98a] hover:text-white transition-colors"
+          >
+            <Users className="w-3 h-3" />
+            Actualizar Nómina
+          </button>
+        )}
       </div>
 
       <div className="flex justify-between items-center p-4 md:p-10">
@@ -61,11 +86,10 @@ const Scoreboard: React.FC = () => {
 
               {/* Foul Counter and Alerts (Ciclo Inteligente) */}
               {isFutsal && foulState && (
-                <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${
-                  foulState.local.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
-                  foulState.local.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
-                  foulState.local.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
-                    'bg-black/40 border-white/5 text-gray-400'
+                <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${foulState.local.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
+                    foulState.local.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
+                      foulState.local.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
+                        'bg-black/40 border-white/5 text-gray-400'
                   }`}>
                   <span className="text-[9px] font-black uppercase tracking-tight">Faltas:</span>
                   <span className="text-sm font-black italic">{foulState.local.count}</span>
@@ -144,11 +168,10 @@ const Scoreboard: React.FC = () => {
 
               {/* Foul Counter and Alerts (Ciclo Inteligente) */}
               {isFutsal && foulState && (
-                <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${
-                  foulState.visita.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
-                  foulState.visita.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
-                  foulState.visita.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
-                    'bg-black/40 border-white/5 text-gray-400'
+                <div className={`mt-2 flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-sm transition-all duration-300 ${foulState.visita.atLimit ? 'bg-red-500/20 border-red-500/40 text-red-500 animate-pulse' :
+                    foulState.visita.isAutoFreeThrow ? 'bg-orange-500/20 border-orange-500/40 text-orange-500' :
+                      foulState.visita.count >= 4 ? 'bg-yellow-500/20 border-yellow-500/40 text-yellow-500' :
+                        'bg-black/40 border-white/5 text-gray-400'
                   }`}>
                   <span className="text-[9px] font-black uppercase tracking-tight">Faltas:</span>
                   <span className="text-sm font-black italic">{foulState.visita.count}</span>
@@ -195,6 +218,44 @@ const Scoreboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Historial Corto de Sucesos y Rollback */}
+      {isAdmin && recentEvents.length > 0 && (
+        <div className="border-t border-gray-800 bg-[#0a0b0f] p-4 text-[#13161c]">
+          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Sucesos Recientes</h4>
+          <div className="space-y-2 max-h-[250px] overflow-y-auto custom-scrollbar pr-2 pb-2">
+            {recentEvents.map(evt => (
+              <div key={evt.id} className="flex items-center justify-between bg-white/5 border border-white/5 p-2 rounded-lg group">
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-bold text-gray-400 bg-black/40 px-2 py-0.5 rounded uppercase">
+                    P{evt.periodo} • {evt.minute}'
+                  </span>
+                  <div>
+                    <div className="text-sm font-bold text-gray-200">
+                      {evt.playerName} <span className="text-gray-500 font-normal">({evt.team})</span>
+                    </div>
+                    <div className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--discipline-color)' }}>
+                      {(config?.scoreRules || []).find(r => r.id === evt.type)?.label || evt.type}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    if (window.confirm("¿Seguro que deseas anular esta acción?")) {
+                      deleteEvent(evt);
+                    }
+                  }}
+                  className="flex items-center gap-1 p-2 sm:px-3 sm:py-1.5 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-md transition-colors shadow-sm"
+                  title="Anular / Deshacer Acción"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="text-[10px] font-bold uppercase hidden sm:inline tracking-widest">Anular</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

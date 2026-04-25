@@ -14,6 +14,7 @@ interface MatchReportData {
   fecha?: string;
   header_oficial?: string;
   config: DisciplineConfig | null;
+  nominaSelections?: Record<string, 'presente' | 'atrasado' | 'inasistencia' | 'unassigned'>;
 }
 
 /**
@@ -228,8 +229,11 @@ export const generateMatchReportPDF = (data: MatchReportData) => {
   autoTable(doc, {
     startY: currentY + 2,
     margin: { right: 107 },
-    head: [['Jugador', 'Rol/Posición']],
-    body: (data.localRoster || []).map(p => [p.fullname, p.posicion || p.role]),
+    head: [['Jugador', 'Asistencia']],
+    body: (data.localRoster || []).map(p => {
+      const status = data.nominaSelections?.[p.id] || 'presente';
+      return [p.fullname, status.toUpperCase()];
+    }),
     theme: 'grid',
     headStyles: { fillColor: SECONDARY_COLOR },
     styles: { fontSize: 7 }
@@ -241,8 +245,11 @@ export const generateMatchReportPDF = (data: MatchReportData) => {
   autoTable(doc, {
     startY: rosterY,
     margin: { left: 107 },
-    head: [['Jugador', 'Rol/Posición']],
-    body: (data.visitaRoster || []).map(p => [p.fullname, p.posicion || p.role]),
+    head: [['Jugador', 'Asistencia']],
+    body: (data.visitaRoster || []).map(p => {
+      const status = data.nominaSelections?.[p.id] || 'presente';
+      return [p.fullname, status.toUpperCase()];
+    }),
     theme: 'grid',
     headStyles: { fillColor: SECONDARY_COLOR },
     styles: { fontSize: 7 }

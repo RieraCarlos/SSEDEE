@@ -8,12 +8,15 @@ import {
   fetchLiveMatchData, 
   finalizeMatchThunk 
 } from '@/store/thunks/liveMatchThunks';
+import { checkNominaVerificacionThunk, resetVerificacionState } from '@/store/slices/nominaVerificacionSlice';
 import { 
   addLiveEvent, 
+  removeLiveEvent,
   selectLiveMatchState, 
   selectLiveScores,
   selectLiveStatsSummary,
 } from '@/store/slices/liveMatchSlice';
+import { useMatchEvents } from './useMatchEvents';
 
 /**
  * Custom Hook para la Gestión del Partido en Vivo (SOLID)
@@ -24,7 +27,7 @@ export function useLiveMatch() {
   const dispatch = useAppDispatch();
   const matchState = useAppSelector(selectLiveMatchState);
   const scores = useAppSelector(selectLiveScores);
-  const stats = useAppSelector(selectLiveStatsSummary);
+  useAppSelector(selectLiveStatsSummary); // Subscription only for now
 
   const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
   const isValidMatchId = !!matchId && uuidRegex.test(matchId);
@@ -33,6 +36,7 @@ export function useLiveMatch() {
   useEffect(() => {
     if (isValidMatchId) {
       dispatch(fetchLiveMatchData(matchId));
+      dispatch(checkNominaVerificacionThunk(matchId));
     }
   }, [matchId, dispatch, isValidMatchId]);
 
@@ -65,6 +69,21 @@ export function useLiveMatch() {
           }));
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'partidos_sucesos',
+          filter: `partido_id=eq.${matchId}`,
+        },
+        (payload) => {
+          const oldEvent = payload.old as any;
+          if (oldEvent && oldEvent.id) {
+            dispatch(removeLiveEvent(oldEvent.id));
+          }
+        }
+      )
       .subscribe();
 
     const matchChannel = supabase
@@ -88,54 +107,17 @@ export function useLiveMatch() {
     return () => {
       supabase.removeChannel(eventsChannel);
       supabase.removeChannel(matchChannel);
+      dispatch(resetVerificacionState());
     };
   }, [matchId, isValidMatchId, dispatch]);
 
-  // 3. Acciones de Administración
-  const logEvent = useCallback(async (type: string, team: 'local' | 'visita', playerId: string, playerName: string, metadata?: any) => {
-    if (!isValidMatchId) return;
-
-    try {
-      // 1. Registrar el suceso detallado
-      const { error: eventError } = await supabase
-        .from('partidos_sucesos')
-        .insert([{
-          partido_id: matchId,
-          tipo: type,
-          equipo: team,
-          jugador_id: playerId,
-          jugador_nombre: playerName,
-          metadata: metadata,
-          periodo: metadata?.periodo || matchState.currentPeriod
-        }]);
-
-      if (eventError) throw eventError;
-
-      // 2. Sincronizar Marcador y Estadísticas Globales (Atomic Update)
-      // Nota: Aunque Redux se actualiza vía Realtime, forzamos un update aquí 
-      // para asegurar que el portal público (que solo lee partidos_calendario) se refresque.
-      
-      const scoreRules = matchState.config?.scoreRules || [];
-      const scoreRule = scoreRules.find(r => r.id === type);
-      const pointsToAdd = scoreRule?.points || (type === 'gol' || type === 'punto' ? 1 : 0);
-
-      // Calculamos los nuevos valores basados en el estado actual + el nuevo evento
-      const updateData: any = {
-        goles_local: team === 'local' ? scores.scoreLocal + pointsToAdd : scores.scoreLocal,
-        goles_visitante: team === 'visita' ? scores.scoreVisita + pointsToAdd : scores.scoreVisita
-      };
-
-      const { error: scoreError } = await supabase
-        .from('partidos_calendario')
-        .update(updateData)
-        .eq('id', matchId);
-
-      if (scoreError) console.error("Error sincronizando estadísticas:", scoreError);
-
-    } catch (error: any) {
-      toast.error("Error al registrar evento: " + error.message);
-    }
-  }, [matchId, isValidMatchId, scores, stats, matchState.config, matchState.currentPeriod]);
+  // 3. Acciones de Administración mediante Hook Externo
+  const { createEvent: logEvent, deleteEvent } = useMatchEvents(
+    isValidMatchId ? matchId : '',
+    { scoreLocal: scores.scoreLocal, scoreVisita: scores.scoreVisita },
+    matchState.currentPeriod,
+    matchState.config?.scoreRules || []
+  );
 
   const finalizeMatch = useCallback(async (observations: string) => {
     if (!isValidMatchId) return;
@@ -146,6 +128,7 @@ export function useLiveMatch() {
     ...matchState,
     ...scores,
     logEvent,
+    deleteEvent,
     finalizeMatch,
     isValidMatchId,
     error: matchState.error

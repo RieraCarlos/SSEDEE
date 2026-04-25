@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
 import { User } from 'lucide-react';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { selectNominaVerificacion } from '@/store/slices/nominaVerificacionSlice';
 import type { NominaMember, MatchEvent, DisciplineConfig } from '@/core/disciplines';
 
 interface PlayerListProps {
@@ -26,6 +28,7 @@ const PlayerList: React.FC<PlayerListProps> = memo(({
   isLoading,
   config
 }) => {
+  const { selections } = useAppSelector(selectNominaVerificacion);
 
   const getPlayerEvents = (playerId: string) => events.filter(e => e.playerId === playerId);
 
@@ -66,18 +69,20 @@ const PlayerList: React.FC<PlayerListProps> = memo(({
               return { ...s, count };
             });
 
-            // Specific indicator for Reds (Football logic) - can be generalized later
             const hasRedCard = pEvents.some(e => e.type === 'roja');
+            const isAbsent = selections[p.id] === 'inasistencia';
 
             return (
               <div
                 key={p.id}
-                onClick={() => isAdmin && onLogEvent(p)}
+                onClick={() => {
+                  if (isAdmin && !isAbsent) onLogEvent(p);
+                }}
                 className={`flex items-center justify-between p-3 rounded-xl transition-all border border-transparent 
-                   ${isAdmin ? 'cursor-pointer hover:bg-white/[0.03] group' : 'opacity-90'}`}
-                style={{ borderLeft: isAdmin ? '2px solid transparent' : 'none' }}
-                onMouseEnter={(e) => isAdmin && (e.currentTarget.style.borderLeftColor = 'var(--discipline-color)')}
-                onMouseLeave={(e) => isAdmin && (e.currentTarget.style.borderLeftColor = 'transparent')}
+                   ${isAbsent ? 'opacity-30 cursor-not-allowed grayscale' : isAdmin ? 'cursor-pointer hover:bg-white/[0.03] group' : 'opacity-90'}`}
+                style={{ borderLeft: isAdmin && !isAbsent ? '2px solid transparent' : 'none' }}
+                onMouseEnter={(e) => isAdmin && !isAbsent && (e.currentTarget.style.borderLeftColor = 'var(--discipline-color)')}
+                onMouseLeave={(e) => isAdmin && !isAbsent && (e.currentTarget.style.borderLeftColor = 'transparent')}
               >
                 <div className="flex items-center gap-3">
                   <div className="relative">

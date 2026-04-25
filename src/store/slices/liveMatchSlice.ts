@@ -92,6 +92,9 @@ const liveMatchSlice = createSlice({
         state.events.push(action.payload);
       }
     },
+    removeLiveEvent(state, action: PayloadAction<string>) {
+      state.events = state.events.filter(e => e.id !== action.payload);
+    },
     setLiveEvents(state, action: PayloadAction<MatchEvent[]>) {
       state.events = action.payload;
     },
@@ -122,6 +125,7 @@ const liveMatchSlice = createSlice({
 export const { 
   setActiveMatch, 
   addLiveEvent, 
+  removeLiveEvent,
   setLiveEvents, 
   setLiveRosters, 
   setLoading,

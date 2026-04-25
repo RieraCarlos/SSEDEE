@@ -3,28 +3,39 @@ import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { selectAuthUser } from "@/store/slices/authSlice";
 import { selectTournaments, selectStandings, selectTournamentsLoading, selectPortalMatches } from "@/store/slices/tournamentsSlice";
 import { fetchDeportes, fetchAllCategorias } from "@/store/slices/administrationSlice";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { fetchTournaments, fetchStandings, fetchTournamentMatches } from "@/store/thunks/tournamentsThunks";
 import { fetchClubs } from "@/store/thunks/clubsThunks";
 import EquiposTorneo from "../Copa/EquiposTorneo";
 import CalendarioPartidos from "../Copa/CalendarioPartidos";
-import PosicionesTable from "../Copa/PosicionesTable";
-import MatchResultCard from "../Copa/MatchResultCard";
+import ConsolidatedStandings from "../Copa/ConsolidatedStandings";
 import CreateTournamentModal from "../Copa/CreateTournamentModal";
 import { useLiveMatchSupabase } from "@/hooks/useLiveMatchSupabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Play, Clock } from "lucide-react";
 import SportIcon from "../common/SportIcon";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function HomeAdmin() {
     const user = useAppSelector(selectAuthUser);
     const dispatch = useAppDispatch();
     const tournaments = useAppSelector(selectTournaments);
-    const standings = useAppSelector(selectStandings);
+    useAppSelector(selectStandings); // Subscription only for now
     const loading = useAppSelector(selectTournamentsLoading);
 
     const [expandedTournaments, setExpandedTournaments] = useState<string[]>([]);
     const { activateMatch, loading: loadingLive } = useLiveMatchSupabase();
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 300;
+            scrollContainerRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    };
 
 
     const refreshAllData = useCallback(() => {
@@ -121,15 +132,8 @@ export default function HomeAdmin() {
         );
     };
 
-    const mappedStandings = (standings || []).map((s: any, index: number) => ({
-        id: index + 1,
-        nameClub: s.club?.name || "Club Desconocido",
-        puntos: s.pts || 0,
-        dg: s.gd || 0,
-        pj: s.pj || 0
-    }));
-
     const isAdmin = user?.role === 'admin';
+
 
     return (
         <div className="text-white min-h-screen flex flex-col bg-[#13161c] pb-16 rounded-xl">
@@ -161,12 +165,31 @@ export default function HomeAdmin() {
                     <div className="flex items-center gap-2 mb-4">
                         <Clock className="text-[#0ae98a]" size={20} />
                         <h2 className="text-lg sm:text-xl font-bold text-gray-300">
-                            Próximos encuentros (sábados)
+                            Próximos Encuentros
                         </h2>
-                        <span className="text-xs px-2 py-1 rounded-full bg-[#0ae98a]/10 text-[#0ae98a] font-semibold">
-                            {upcomingMatches.length}
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#0ae98a]/10 text-[#0ae98a] font-black uppercase tracking-tighter">
+                            Próximos {upcomingMatches.length}
                         </span>
                     </div>
+
+                    <div className="relative group/carousel">
+                        {/* Botones de Navegación */}
+                        {upcomingMatches.length > 3 && (
+                            <>
+                                <button 
+                                    onClick={() => scroll('left')}
+                                    className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1d2029] border border-[#0ae98a]/20 rounded-full flex items-center justify-center text-[#0ae98a] shadow-xl opacity-0 group-hover/carousel:opacity-100 hover:bg-[#0ae98a] hover:text-[#13161c] transition-all"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <button 
+                                    onClick={() => scroll('right')}
+                                    className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-[#1d2029] border border-[#0ae98a]/20 rounded-full flex items-center justify-center text-[#0ae98a] shadow-xl opacity-0 group-hover/carousel:opacity-100 hover:bg-[#0ae98a] hover:text-[#13161c] transition-all"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </>
+                        )}
 
                     {loadingMatches ? (
                         <div className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar">
@@ -175,14 +198,15 @@ export default function HomeAdmin() {
                             ))}
                         </div>
                     ) : upcomingMatches.length > 0 ? (
-                        <motion.div
-                            className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar cursor-grab active:cursor-grabbing"
-                            drag="x"
-                            dragConstraints={{ left: -((upcomingMatches.length - 1) * 300), right: 0 }}
-                            dragElastic={0.1}
+                        <div
+                            ref={scrollContainerRef}
+                            className="flex gap-4 overflow-x-auto pb-2 hide-scrollbar scroll-smooth snap-x snap-mandatory"
                         >
                             {upcomingMatches.map((match) => {
                                 const matchDate = parseLocalDate(match.fecha_partido);
+                                const todayObj = new Date();
+                                todayObj.setHours(0, 0, 0, 0);
+                                const isToday = matchDate.getTime() === todayObj.getTime();
                                 const formattedDate = matchDate.toLocaleDateString('es-AR', { month: 'short', day: 'numeric' });
                                 const formattedDay = matchDate.toLocaleDateString('es-AR', { weekday: 'short' });
 
@@ -197,12 +221,19 @@ export default function HomeAdmin() {
                                         <div className="bg-[#13161c]/50 px-4 py-3 border-b border-[#0ae98a]/10">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <Clock size={14} className="text-[#0ae98a]" />
-                                                    <span className="text-xs font-bold text-[#0ae98a] uppercase tracking-wide">
+                                                    {isToday ? (
+                                                        <div className="flex items-center gap-1 bg-red-500/20 border border-red-500/40 px-1.5 py-0.5 rounded animate-pulse">
+                                                            <span className="w-1 h-1 rounded-full bg-red-500"></span>
+                                                            <span className="text-[9px] text-red-500 font-black uppercase">HOY</span>
+                                                        </div>
+                                                    ) : (
+                                                        <Clock size={14} className="text-[#0ae98a]" />
+                                                    )}
+                                                    <span className={`text-xs font-bold uppercase tracking-wide ${isToday ? 'text-white' : 'text-[#0ae98a]'}`}>
                                                         {formattedDay} {formattedDate}
                                                     </span>
                                                 </div>
-                                                <span className="text-xs text-white/60 font-medium">
+                                                <span className={`text-xs font-medium ${isToday ? 'text-white/80' : 'text-white/60'}`}>
                                                     {match.hora_inicio}
                                                 </span>
                                             </div>
@@ -261,12 +292,13 @@ export default function HomeAdmin() {
                                     </motion.div>
                                 );
                             })}
-                        </motion.div>
+                        </div>
                     ) : (
                         <div className="text-center py-8 bg-[#1d2029]/40 rounded-xl border border-dashed border-[#0ae98a]/20">
-                            <p className="text-white/60 text-sm">No hay encuentros programados para los próximos sábados</p>
+                            <p className="text-white/60 text-sm italic">No hay encuentros programados próximos</p>
                         </div>
                     )}
+                    </div>
                 </div>
             </div>
 
@@ -351,16 +383,9 @@ export default function HomeAdmin() {
                         Resumen
                     </h2>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="lg:col-span-2 overflow-x-auto bg-[#1d2029] rounded-xl p-2 border border-[#1d2029]">
-                            <PosicionesTable data={mappedStandings} />
-                        </div>
-
-                        <div className="bg-gradient-to-br from-[#1d2029] to-[#13161c] p-4 rounded-xl border border-[#1d2029] shadow-inner">
-                            <h4 className="text-xs text-[#0ae98a] mb-4 font-semibold tracking-wide">
-                                Estado del sistema
-                            </h4>
-                            <MatchResultCard data={{ resultadoAnterior: "DASHBOARD", perfil: { nombre: "ADMIN", nivel: "Root" } }} />
+                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                        <div className="bg-[#1d2029] rounded-xl p-4 border border-[#1d2029]">
+                            <ConsolidatedStandings />
                         </div>
                     </div>
                 </div>

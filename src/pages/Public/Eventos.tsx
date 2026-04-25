@@ -9,6 +9,7 @@ import LiveMonitor from '@/components/EventPortal/LiveMonitor';
 import DisciplineDirectory from '@/components/EventPortal/DisciplineDirectory';
 import MatchTimeline from '@/components/EventPortal/MatchTimeline';
 import StatsLeaders from '@/components/EventPortal/StatsLeaders';
+import PublicStandings from '@/components/EventPortal/PublicStandings';
 
 // UI Components
 import { Card, CardContent } from '@/components/ui/card';
@@ -294,7 +295,16 @@ export default function Eventos() {
                     <MatchTimeline tournamentId={DISTRITO_IDS} />
                   </PortalSection>
 
-                  {/* 5. STATS & LEADERS */}
+                  {/* 5. CLASIFICACIÓN (TABLA DE POSICIONES) */}
+                  <PortalSection
+                    title="Clasificación General"
+                    subtitle="Tabla de posiciones consolidada"
+                    icon={<Trophy size={32} />}
+                  >
+                    <PublicStandings />
+                  </PortalSection>
+
+                  {/* 6. STATS & LEADERS */}
                   <PortalSection
                     title="Líderes de Estadísticas"
                     subtitle="Máximos anotadores del evento"

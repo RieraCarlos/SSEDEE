@@ -109,7 +109,7 @@ export const fetchStandings = createAsyncThunk(
       .from('tabla_posiciones')
       .select(`
         *,
-        club:clubes(name)
+        club:clubes(name, logo_url)
       `)
       .order('pts', { ascending: false })
       .order('gd', { ascending: false });
